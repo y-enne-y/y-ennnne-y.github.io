@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Stopwatch</title>
+    <style>
+        .stopwatch {
+            margin: 10px;
+            padding: 20px;
+            border: 1px solid #333;
+            display: inline-block;
+        }
+        .time-display {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="stopwatches-container">
+        <!-- 스톱워치들이 여기에 추가될 것입니다 -->
+    </div>
+    <button onclick="addStopwatch()">Add Stopwatch</button>
+
+    <script>
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+            const seconds = String(totalSeconds % 60).padStart(2, '0');
+            const milliseconds = String(ms % 1000).padStart(3, '0');
+            return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+        }
+
+        function addStopwatch() {
+            const container = document.getElementById("stopwatches-container");
+
+            const stopwatchDiv = document.createElement("div");
+            stopwatchDiv.className = "stopwatch";
+
+            const timeDisplay = document.createElement("div");
+            timeDisplay.className = "time-display";
+            timeDisplay.textContent = "00:00:00.000";
+
+            const startButton = document.createElement("button");
+            startButton.textContent = "Start";
+            const stopButton = document.createElement("button");
+            stopButton.textContent = "Stop";
+            const resetButton = document.createElement("button");
+            resetButton.textContent = "Reset";
+
+            let startTime, intervalId;
+            let elapsedTime = 0;
+            let running = false;
+
+            startButton.onclick = () => {
+                if (!running) {
+                    startTime = Date.now() - elapsedTime;
+                    intervalId = setInterval(() => {
+                        elapsedTime = Date.now() - startTime;
+                        timeDisplay.textContent = formatTime(elapsedTime);
+                    }, 10);
+                    running = true;
+                }
+            };
+
+            stopButton.onclick = () => {
+                clearInterval(intervalId);
+                running = false;
+            };
+
+            resetButton.onclick = () => {
+                clearInterval(intervalId);
+                elapsedTime = 0;
+                timeDisplay.textContent = "00:00:00.000";
+                running = false;
+            };
+
+            stopwatchDiv.appendChild(timeDisplay);
+            stopwatchDiv.appendChild(startButton);
+            stopwatchDiv.appendChild(stopButton);
+            stopwatchDiv.appendChild(resetButton);
+
+            container.appendChild(stopwatchDiv);
+        }
+    </script>
+
+</body>
+</html>
