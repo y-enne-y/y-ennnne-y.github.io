@@ -12,8 +12,6 @@
     
     인스타그램 : 없음.
     
-</body>
-</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,9 +31,15 @@
       margin-top: 50px;
     }
 
-    .button {
+    .button-container {
       display: inline-block;
       margin: 20px;
+      text-align: center;
+    }
+
+    .button {
+      display: inline-block;
+      margin-bottom: 10px;
       padding: 15px;
       font-size: 30px;
       border: none;
@@ -55,21 +59,36 @@
       transform: scale(1);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
+    .description {
+      font-size: 16px;
+      color: #333;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to my page</h1>
+    <h1>Welcome to My Website</h1>
     <p>Click the buttons below to connect!</p>
     
     <!-- Discord 버튼 -->
-    <button class="button" onclick="window.open('https://discord.com/invite/your-channel', '_blank')">💬</button>
+    <div class="button-container">
+      <button class="button" onclick="window.open('https://discord.com/invite/your-channel', '_blank')">💬</button>
+      <div class="description">Discord</div>
+    </div>
     
     <!-- 블로그 버튼 -->
-    <button class="button" onclick="window.open('https://blog.naver.com/alexeun67', '_blank')">📖</button>
+    <div class="button-container">
+      <button class="button" onclick="window.open('https://blog.naver.com/alexeun67', '_blank')">📖</button>
+      <div class="description">Blog</div>
+    </div>
     
     <!-- 인적사항 버튼 -->
-    <button class="button" onclick="window.open('https://your-portfolio.com', '_blank')">👤</button>
+    <div class="button-container">
+      <button class="button" onclick="window.open('https://your-portfolio.com', '_blank')">👤</button>
+      <div class="description">About Me</div>
+    </div>
   </div>
 </body>
 </html>
