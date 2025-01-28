@@ -21,6 +21,12 @@
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+    .check-time {
+      font-size: 24px; /* 더 큰 글씨 크기 */
+      color: red; /* 빨간색 */
+      font-weight: bold; /* 굵게 */
+      margin-top: 20px; /* 약간의 위쪽 여백 */
+    }
 
     .timer {
       font-size: 24px;
@@ -38,8 +44,8 @@
     <p>블로그: <a href="https://blog.naver.com/alexeun67" target="_blank">Visit my blog</a></p>
     <p><a href="index.html">Go Back to Home</a></p>
 
-    <!-- 남은 시간 표시 -->
-    <p>강의 만료 시점까지 남은 시간을 확인하세요:</p>
+     <!-- 남은 시간 표시 -->
+    <p class="check-time">남은 시간을 확인하세요:</p>
     <div class="timer" id="countdownTimer">Loading...</div>
   </div>
 
