@@ -12,12 +12,13 @@
     
     인스타그램 : 없음.
     
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Personal Website</title>
+  <title>나의 홈페이지</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -31,15 +32,9 @@
       margin-top: 50px;
     }
 
-    .button-container {
-      display: inline-block;
-      margin: 20px;
-      text-align: center;
-    }
-
     .button {
       display: inline-block;
-      margin-bottom: 10px;
+      margin: 20px;
       padding: 15px;
       font-size: 30px;
       border: none;
@@ -59,36 +54,25 @@
       transform: scale(1);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-
-    .description {
-      font-size: 16px;
-      color: #333;
-      margin-top: 5px;
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to My Website</h1>
-    <p>Click the buttons below to connect!</p>
+    <h1>나의 홈페이지</h1>
+    <p>아래 버튼을 클릭하여 연결하세요!</p>
     
-    <!-- Discord 버튼 -->
-    <div class="button-container">
-      <button class="button" onclick="window.location.href='https://discord.com/invite/your-channel'">💬</button>
-      <div class="description">Discord</div>
-    </div>
+    <!-- 디스코드 버튼 -->
+    <button class="button" onclick="window.open('https://discord.com/invite/your-channel', '_blank')">💬</button>
     
     <!-- 블로그 버튼 -->
-    <div class="button-container">
-      <button class="button" onclick="window.location.href='https://blog.naver.com/alexeun67'">📖</button>
-      <div class="description">Blog</div>
-    </div>
+    <button class="button" onclick="window.open('https://blog.naver.com/alexeun67', '_blank')">📖</button>
+    
+    <!-- 뉴스레터 등록 버튼 -->
+    <button class="button" onclick="window.open('newsletter.html', '_blank')">✉️</button>
     
     <!-- About Me 버튼 -->
-    <div class="button-container">
-      <button class="button" onclick="window.location.href='about.html'">👤</button>
-      <div class="description">About Me</div>
-    </div>
+    <button class="button" onclick="window.open('about.html', '_blank')">👤</button>
   </div>
 </body>
 </html>
+
