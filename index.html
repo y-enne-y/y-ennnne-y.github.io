@@ -30,12 +30,23 @@
 
     .container {
       margin-top: 50px;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .button {
-      display: inline-block;
-      margin: 20px;
-      padding: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 80px;
       font-size: 30px;
       border: none;
       border-radius: 50%;
@@ -54,25 +65,42 @@
       transform: scale(1);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
+    .label {
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
+  <h1>Welcome to My Website</h1>
+  <p>Click the buttons below to connect!</p>
+  
   <div class="container">
-    <h1>나의 홈페이지</h1>
-    <p>아래 버튼을 클릭하여 연결하세요!</p>
-    
-    <!-- 디스코드 버튼 -->
-    <button class="button" onclick="window.open('https://discord.com/invite/your-channel', '_blank')">💬</button>
-    
-    <!-- 블로그 버튼 -->
-    <button class="button" onclick="window.open('https://blog.naver.com/alexeun67', '_blank')">📖</button>
-    
-    <!-- 뉴스레터 등록 버튼 -->
-    <button class="button" onclick="window.open('newsletter.html', '_blank')">✉️</button>
-    
-    <!-- About Me 버튼 -->
-    <button class="button" onclick="window.open('about.html', '_blank')">👤</button>
+    <!-- 디스코드 -->
+    <div class="button-container">
+      <button class="button" onclick="window.open('https://discord.com/invite/your-channel', '_blank')">💬</button>
+      <div class="label">Discord</div>
+    </div>
+
+    <!-- 블로그 -->
+    <div class="button-container">
+      <button class="button" onclick="window.open('https://blog.naver.com/alexeun67', '_blank')">📖</button>
+      <div class="label">Blog</div>
+    </div>
+
+    <!-- 뉴스레터 -->
+    <div class="button-container">
+      <button class="button" onclick="window.open('newsletter.html', '_blank')">✉️</button>
+      <div class="label">News Letter</div>
+    </div>
+
+    <!-- About Me -->
+    <div class="button-container">
+      <button class="button" onclick="window.open('about.html', '_blank')">👤</button>
+      <div class="label">About Me</div>
+    </div>
   </div>
 </body>
 </html>
-
