@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,61 +21,97 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .check-time {
-      font-size: 24px; /* 더 큰 글씨 크기 */
-      color: red; /* 빨간색 */
-      font-weight: bold; /* 굵게 */
-      margin-top: 20px; /* 약간의 위쪽 여백 */
+      font-size: 24px;
+      color: red;
+      font-weight: bold;
+      margin-top: 20px;
     }
-
+    .date-info {
+      font-size: 24px;
+      color: black;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
     .timer {
       font-size: 24px;
       color: #333;
-      margin-top: 20px;
+      margin-top: 10px;
+    }
+    .links {
+      margin-top: 30px;
+    }
+    .links a {
+      display: inline-block;
+      margin: 10px;
+      font-size: 18px;
+      color: #0073e6;
+      text-decoration: none;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+    .button {
+      display: inline-block;
+      background-color: #0073e6;
+      color: white;
+      padding: 10px 15px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+    .button:hover {
+      background-color: #005bb5;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>About Me</h1>
-    <p>안녕하세요! 저는 [yenney]입니다. 이 웹사이트는 오로지 chat GPT를 통해서 만들었어요. 여기는 제가 관심 있는 것들과 제 배경에 대해 공유하는 공간입니다.
-      연락은 gang@yenney.kr로 문의주세요!</p>
+    <p>안녕하세요! 저는 [Yenney]입니다. 이 웹사이트는 오로지 ChatGPT를 통해서 만들었어요.<br>
+       여기는 제가 관심 있는 것들과 제 배경에 대해 공유하는 공간입니다.<br>
+       연락은 gang@yenney.kr로 문의 주세요!</p>
     <p>Discord 채널: <a href="https://discord.com/invite/your-channel" target="_blank">Join here</a></p>
     <p>블로그: <a href="https://blog.naver.com/alexeun67" target="_blank">Visit my blog</a></p>
-    <p><a href="index.html">Go Back to Home</a></p>
 
-     <!-- 남은 시간 표시 -->
-    <p class="check-time">남은 시간을 확인하세요:</p>
+    <!-- 공부 스케줄 링크 -->
+    <div class="links">
+      📖 공부 스케줄 <span>:</span> <a href="https://notion.so/YOUR_NOTION_LINK" target="_blank" class="button">보러가기</a>
+    </div>
+
+    <!-- 남은 시간 표시 -->
+    <p class="check-time">2025년 2월 4일까지 남은 시간을 확인하세요.</p>
     <div class="timer" id="countdownTimer">Loading...</div>
+
+    <!-- 홈으로 이동 링크 -->
+    <div class="links">
+      <a href="index.html">Back to Homepage</a>
+    </div>
   </div>
 
   <script>
-    // 목표 날짜와 시간 설정 (예: 2025년 12월 31일 23:59:59)
     const targetDate = new Date("2025-02-04T09:59:59");
 
-    // 남은 시간을 계산하고 업데이트하는 함수
     function updateCountdown() {
-      const now = new Date(); // 현재 시간
-      const remainingTime = targetDate - now; // 남은 시간 계산 (밀리초)
+      const now = new Date();
+      const remainingTime = targetDate - now;
 
       if (remainingTime > 0) {
-        // 남은 시간을 시, 분, 초로 변환
-        const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+        const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+        const totalHours = Math.floor(remainingTime / (1000 * 60 * 60));
+        const totalMinutes = Math.floor(remainingTime / (1000 * 60));
 
-        // HTML에 표시
         document.getElementById("countdownTimer").textContent =
-          `${hours}시간 ${minutes}분 ${seconds}초 남았습니다.`;
+          `${days}일 ${hours}시간 ${minutes}분 ${seconds}초 (${totalHours}시간 ${totalMinutes % 60}분 ${seconds}초)`;
       } else {
-        // 시간이 지났을 경우
         document.getElementById("countdownTimer").textContent = "시간이 다 되었습니다!";
       }
     }
 
-    // 1초마다 업데이트
     setInterval(updateCountdown, 1000);
-
-    // 초기 실행
     updateCountdown();
   </script>
 </body>
