@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Welcome to My Website</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,7 +20,7 @@
             justify-content: center;
             align-items: center;
             max-width: 300px;
-            margin: 50px auto;
+            margin: 20px auto;
         }
 
         .icon-wrapper {
@@ -45,6 +45,7 @@
         .icon img {
             width: 50px;
             height: 50px;
+            object-fit: contain;
         }
 
         .icon:hover {
@@ -61,29 +62,35 @@
             font-size: 14px;
             margin-top: 5px;
         }
+
+        /* 설명 텍스트 스타일 */
+        .description {
+            font-size: 16px;
+            color: #333;
+            margin: 10px auto 30px auto;
+            max-width: 500px;
+        }
     </style>
 </head>
 <body>
     <h1>Welcome to My Website</h1>
-    
+    <p class="description">This is my personal website where I share my blog, connect on Discord, and send out a weekly music newsletter.</p>
+
     <div class="container">
-        <!-- 디스코드 -->
         <div class="icon-wrapper">
             <a href="https://discord.com" target="_blank" class="icon">
-                <img src="discord-icon.png" alt="디스코드">
+                <img src="discord-icon.png" alt="Discord">
             </a>
             <div class="text">Discord</div>
         </div>
 
-        <!-- 블로그 -->
         <div class="icon-wrapper">
             <a href="https://blog.naver.com/alexeun67" target="_blank" class="icon">
-                <img src="blog-icon.png" alt="블로그">
+                <img src="blog-icon.png" alt="Blog">
             </a>
             <div class="text">Blog</div>
         </div>
 
-        <!-- About Me -->
         <div class="icon-wrapper">
             <a href="about.html" class="icon">
                 <img src="about-icon.png" alt="About Me">
@@ -91,12 +98,11 @@
             <div class="text">About Me</div>
         </div>
 
-        <!-- 뉴스레터 -->
         <div class="icon-wrapper">
             <a href="newsletter.html" class="icon">
-                <img src="newsletter-icon.png" alt="뉴스레터">
+                <img src="newsletter-icon.png" alt="Newsletter">
             </a>
-            <div class="text">뉴스레터</div>
+            <div class="text">Newsletter</div>
         </div>
     </div>
 </body>
