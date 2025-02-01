@@ -9,11 +9,13 @@
       font-family: Arial, sans-serif;
       text-align: center;
       background-color: #f9f9f9;
-      padding: 20px;
+      padding: 10px;
+      margin: 0;
     }
 
     .container {
-      max-width: 600px;
+      max-width: 100%;
+      width: 100%;
       margin: 0 auto;
       background: #fff;
       padding: 20px;
@@ -72,6 +74,25 @@
 
     .back-homepage {
       margin-top: 30px; /* 남은 시간 밑에 떨어지도록 간격 추가 */
+    }
+
+    /* 모바일에서 보기 좋게 조정 */
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+
+      .check-time, .timer {
+        font-size: 20px;
+      }
+
+      .links p {
+        font-size: 16px;
+      }
+
+      .back-homepage a {
+        font-size: 20px;
+      }
     }
   </style>
 </head>
