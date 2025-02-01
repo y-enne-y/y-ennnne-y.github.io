@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,68 +11,101 @@
             text-align: center;
             background-color: #f0f0f0;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
         .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             max-width: 400px;
-            margin: auto;
-        }
-
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-        }
-
-        /* 모달 스타일 */
-        #modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
+            margin: 50px auto;
             padding: 20px;
+            background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        #modal button {
-            background-color: #4CAF50;
+        h1 {
+            font-size: 24px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .form-group {
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: calc(100% - 20px);
+            max-width: 300px;  /* 입력창 최대 너비 제한 */
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
             color: white;
+            background-color: #007BFF;
             border: none;
-            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
+            transition: background 0.3s;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>🎵 뉴스레터 구독</h1>
-        <p>매주 한 곡씩 추천하는 뉴스레터를 받아보세요!</p>
+        <p>매주 한 곡의 노래를 추천하는 뉴스레터입니다.<br>좋은 음악과 함께하는 한 주를 원하신다면 구독하세요!</p>
 
-        <!-- 구독 폼 -->
-        <form onsubmit="subscribe(event)">
-            <input type="text" id="nickname" placeholder="닉네임" required>
-            <input type="email" id="email" placeholder="이메일" required>
-            <select id="gender">
-                <option>여</option>
-                <option>남</option>
-                <option>선택 안 함</option>
-            </select>
+        <form id="newsletter-form">
+            <div class="form-group">
+                <label for="nickname">닉네임</label>
+                <input type="text" id="nickname" name="nickname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">성별</label>
+                <select id="gender" name="gender">
+                    <option value="none">선택 안함</option>
+                    <option value="female">여</option>
+                    <option value="male">남</option>
+                </select>
+            </div>
+
             <button type="submit">구독 신청</button>
         </form>
     </div>
-
+</body>
+</html>
     <!-- 모달 창 -->
     <div id="modal">
         <p>✅ 구독 완료 되었습니다!</p>
