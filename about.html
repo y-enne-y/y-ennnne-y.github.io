@@ -51,6 +51,16 @@
     .links a:hover {
       text-decoration: underline;
     }
+    
+    /* 홈페이지로 돌아가기 버튼 크기 증가 */
+    .back-homepage a {
+      font-size: 24px;
+      color: #0073e6;
+      text-decoration: none;
+    }
+    .back-homepage a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -63,8 +73,7 @@
     <div class="links">
       <p>Discord 채널: <a href="https://discord.com/invite/your-channel" target="_blank">Join here</a></p>
       <p>블로그: <a href="https://blog.naver.com/alexeun67" target="_blank">Visit my blog</a></p>
-      <p>📖 공부 스케줄: <a href="https://www.notion.so/189ed5f83d398004a0daf75f3a6b1e9d?pvs=4" target="_blank">Take a look at my schedule
-</a></p>
+      <p>📖 공부 스케줄: <a href="https://www.notion.so/189ed5f83d398004a0daf75f3a6b1e9d?pvs=4" target="_blank">Take a look at my schedule</a></p>
     </div>
 
     <!-- 남은 시간 표시 -->
@@ -72,7 +81,7 @@
     <div class="timer" id="countdownTimer">Loading...</div>
 
     <!-- 홈으로 이동 링크 -->
-    <div class="links">
+    <div class="back-homepage">
       <a href="index.html">Back to Homepage</a>
     </div>
   </div>
@@ -101,6 +110,4 @@
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
-  </script>
-</body>
-</html>
+  </scri
