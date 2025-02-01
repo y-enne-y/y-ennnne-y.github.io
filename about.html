@@ -11,10 +11,10 @@
       background-color: #f9f9f9;
       padding: 10px;
       margin: 0;
-      overflow-x: hidden; /* 수평 스크롤 숨기기 */
+      overflow-x: hidden;
       box-sizing: border-box;
       word-wrap: break-word;
-      word-break: break-word; /* 긴 단어가 잘리지 않도록 처리 */
+      word-break: break-word;
     }
 
     .container {
@@ -28,24 +28,28 @@
       box-sizing: border-box;
     }
 
-    .check-time {
-      font-size: 24px;
-      color: red;
-      font-weight: bold;
-      margin-top: 20px;
-    }
-
-    .date-info {
-      font-size: 24px;
-      color: black;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .timer {
+    .countdown-box {
       font-size: 24px;
       color: #333;
-      margin-top: 10px;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f1f1f1;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .check-time, .timer, .timer-details {
+      margin: 10px 0;
+    }
+
+    .check-time {
+      color: red;
+      font-weight: bold;
+    }
+
+    .timer-details {
+      font-size: 24px;
+      color: #333;
     }
 
     .links {
@@ -55,8 +59,8 @@
     .links p {
       font-size: 18px;
       margin: 10px 0;
-      word-break: keep-all; /* 단어 중간에 줄바꿈 방지 */
-      white-space: nowrap; /* 줄바꿈을 방지 */
+      word-break: keep-all;
+      white-space: nowrap;
     }
 
     .links a {
@@ -65,10 +69,9 @@
     }
 
     .links a:hover {
-      text-decoration: none; /* 밑줄 없애기 */
+      text-decoration: none;
     }
 
-    /* 홈페이지로 돌아가기 버튼 스타일 */
     .back-homepage a {
       font-size: 24px;
       color: #0073e6;
@@ -76,20 +79,19 @@
     }
 
     .back-homepage a:hover {
-      text-decoration: none; /* 커서 올렸을 때 밑줄 없애기 */
+      text-decoration: none;
     }
 
     .back-homepage {
       margin-top: 30px;
     }
 
-    /* 모바일에서 보기 좋게 조정 */
     @media (max-width: 600px) {
       .container {
         padding: 15px;
       }
 
-      .check-time, .timer {
+      .check-time, .timer, .timer-details {
         font-size: 20px;
       }
 
@@ -116,10 +118,12 @@
       <p>📖 공부 스케줄: <a href="https://www.notion.so/189ed5f83d398004a0daf75f3a6b1e9d?pvs=4" target="_blank">Take a look at my schedule</a></p>
     </div>
 
-    <!-- 남은 시간 표시 -->
-    <p class="check-time">2025년 2월 4일까지 남은 시간</p>
-    <div class="timer" id="countdownTimer">Loading...</div>
-    <div class="timer-details" id="countdownDetails"> </div>
+    <!-- 남은 시간 표시 박스 -->
+    <div class="countdown-box">
+      <p class="check-time">2025년 2월 4일까지 남은 시간</p>
+      <div class="timer" id="countdownTimer">Loading...</div>
+      <div class="timer-details" id="countdownDetails"> </div>
+    </div>
 
     <!-- 홈으로 이동 링크 -->
     <div class="back-homepage">
@@ -144,7 +148,7 @@
 
         document.getElementById("countdownTimer").textContent =
           `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
-        
+
         document.getElementById("countdownDetails").textContent =
           `(${totalHours}시간 ${totalMinutes % 60}분 ${seconds}초)`;
       } else {
