@@ -12,95 +12,112 @@
     
     인스타그램 : 없음.
     
-
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>나의 홈페이지</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to My Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
 
-    .container {
-      margin-top: 50px;
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-    }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            max-width: 300px;
+            margin: 20px auto;
+        }
 
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+        .icon-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 80px;
-      height: 80px;
-      font-size: 30px;
-      border: none;
-      border-radius: 50%;
-      background-color: #fff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-    }
+        .icon {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-    .button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    }
+        .icon img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
 
-    .button:active {
-      transform: scale(1);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+        .icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
 
-    .label {
-      margin-top: 10px;
-      font-size: 16px;
-      font-weight: bold;
-    }
-  </style>
+        .icon:active {
+            transform: scale(1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .text {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* 설명 텍스트 스타일 */
+        .description {
+            font-size: 16px;
+            color: #333;
+            margin: 10px auto 30px auto;
+            max-width: 500px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Welcome to My Website</h1>
-  <p>Click the buttons below to connect!</p>
-  
-  <div class="container">
-    <!-- 디스코드 -->
-    <div class="button-container">
-      <button class="button" onclick="window.open('https://discord.com/invite/your-channel', '_blank')">💬</button>
-      <div class="label">Discord</div>
-    </div>
+    <h1>Welcome to My Website</h1>
+    <p class="description">This is my personal website where I share my blog, connect on Discord, and send out a weekly music newsletter.</p>
 
-    <!-- 블로그 -->
-    <div class="button-container">
-      <button class="button" onclick="window.open('https://blog.naver.com/alexeun67', '_blank')">📖</button>
-      <div class="label">Blog</div>
-    </div>
+    <div class="container">
+        <div class="icon-wrapper">
+            <a href="https://discord.com" target="_blank" class="icon">
+                <img src="discord-icon.png" alt="Discord">
+            </a>
+            <div class="text">Discord</div>
+        </div>
 
-    <!-- 뉴스레터 -->
-    <div class="button-container">
-      <button class="button" onclick="window.open('newsletter.html', '_blank')">✉️</button>
-      <div class="label">News Letter</div>
-    </div>
+        <div class="icon-wrapper">
+            <a href="https://yourblog.com" target="_blank" class="icon">
+                <img src="blog-icon.png" alt="Blog">
+            </a>
+            <div class="text">Blog</div>
+        </div>
 
-    <!-- About Me -->
-    <div class="button-container">
-      <button class="button" onclick="window.open('about.html', '_blank')">👤</button>
-      <div class="label">About Me</div>
+        <div class="icon-wrapper">
+            <a href="about.html" class="icon">
+                <img src="about-icon.png" alt="About Me">
+            </a>
+            <div class="text">About Me</div>
+        </div>
+
+        <div class="icon-wrapper">
+            <a href="newsletter.html" class="icon">
+                <img src="newsletter-icon.png" alt="Newsletter">
+            </a>
+            <div class="text">Newsletter</div>
+        </div>
     </div>
-  </div>
 </body>
 </html>
