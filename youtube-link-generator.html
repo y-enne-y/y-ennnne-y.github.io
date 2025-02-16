@@ -8,7 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 50px;
+            margin: 20px;
         }
         input, button, textarea {
             margin: 5px;
@@ -19,34 +19,74 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
         }
         #videoUrl {
-            width: 90vw;
+            width: 100%;
             max-width: 400px;
-            height: 100px;
+            height: 80px;
             resize: vertical;
             word-break: break-all;
             overflow-x: auto;
             white-space: nowrap;
         }
+        .time-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .time-inputs div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .youtube-icon img {
+            width: 50px;
+            cursor: pointer;
+        }
+        button {
+            width: 90%;
+            max-width: 400px;
+        }
+        @media (max-width: 480px) {
+            .time-inputs {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="youtube-icon">
+        <a href="https://www.youtube.com/" target="_blank">
+            <img src="youtube-icon.png" alt="YouTube">
+        </a>
+    </div>
+
     <h2>YouTube Timestamp Link Generator</h2>
-    <label for="videoUrl">유튜브 링크:</label>
-    <textarea id="videoUrl" placeholder="https://youtu.be/abcdefghijk"></textarea>
+    <div class="input-group">
+        <label for="videoUrl">유튜브 링크:</label>
+        <textarea id="videoUrl" placeholder="https://youtu.be/abcdefghijk"></textarea>
+    </div>
     <br>
-    <div class="input-group">
-        <label for="hours">시간:</label>
-        <input type="number" id="hours" min="0" value="0">
-    </div>
-    <div class="input-group">
-        <label for="minutes">분:</label>
-        <input type="number" id="minutes" min="0" value="0">
-    </div>
-    <div class="input-group">
-        <label for="seconds">초:</label>
-        <input type="number" id="seconds" min="0" value="0">
+    <div class="time-inputs">
+        <div>
+            <label for="hours">시간:</label>
+            <input type="number" id="hours" min="0" value="0">
+        </div>
+        <div>
+            <label for="minutes">분:</label>
+            <input type="number" id="minutes" min="0" value="0">
+        </div>
+        <div>
+            <label for="seconds">초:</label>
+            <input type="number" id="seconds" min="0" value="0">
+        </div>
     </div>
     <br>
     <button onclick="generateLink()">링크 생성</button>
