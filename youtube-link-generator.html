@@ -43,6 +43,11 @@
         .youtube-icon img {
             width: 120px;
         }
+        #linkInfo {
+            font-weight: bold;
+            margin-top: 10px;
+            display: none; /* 기본적으로 숨김 */
+        }
     </style>
 </head>
 <body>
@@ -72,6 +77,8 @@
         </div>
         <br>
         <button onclick="generateLink()">링크 생성</button>
+
+        <p id="linkInfo">생성된 링크를 클릭하면 동영상으로 연결됩니다</p>
         <p id="output"></p>
         <button id="copyButton" onclick="copyToClipboard()" style="display:none;">링크 복사</button>
     </div>
@@ -87,6 +94,7 @@
             if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
                 document.getElementById("output").innerHTML = "올바른 유튜브 링크를 입력하세요.";
                 document.getElementById("copyButton").style.display = "none";
+                document.getElementById("linkInfo").style.display = "none";
                 return;
             }
             
@@ -98,12 +106,16 @@
             } else {
                 document.getElementById("output").innerHTML = "올바른 유튜브 링크를 입력하세요.";
                 document.getElementById("copyButton").style.display = "none";
+                document.getElementById("linkInfo").style.display = "none";
                 return;
             }
             
             document.getElementById("output").innerHTML = `<a href="${newUrl}" target="_blank">${newUrl}</a>`;
             document.getElementById("copyButton").style.display = "inline-block";
             document.getElementById("copyButton").setAttribute("data-link", newUrl);
+            
+            // 링크 안내 문구 표시
+            document.getElementById("linkInfo").style.display = "block";
         }
 
         function copyToClipboard() {
