@@ -19,79 +19,59 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
         }
         #videoUrl {
-            width: 100%;
+            width: 90vw;
             max-width: 400px;
-            height: 80px;
+            height: 100px;
             resize: vertical;
-            word-break: break-all;
+            word-break: break-word;
             overflow-x: auto;
-            white-space: nowrap;
+            white-space: normal;
         }
-        .time-inputs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
+        .container {
             max-width: 400px;
             margin: 0 auto;
         }
-        .time-inputs div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .youtube-icon {
+            text-align: center;
+            margin-bottom: 20px;
         }
         .youtube-icon img {
-            width: 50px;
-            cursor: pointer;
-        }
-        button {
-            width: 90%;
-            max-width: 400px;
-        }
-        @media (max-width: 480px) {
-            .time-inputs {
-                flex-direction: column;
-                align-items: center;
-            }
+            width: 120px;
         }
     </style>
 </head>
 <body>
     <div class="youtube-icon">
         <a href="https://www.youtube.com/" target="_blank">
-            <img src="youtube-icon.png" alt="YouTube">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" 
+                 alt="YouTube">
         </a>
     </div>
 
-    <h2>YouTube Timestamp Link Generator</h2>
-    <div class="input-group">
+    <div class="container">
+        <h2>YouTube Timestamp Link Generator</h2>
         <label for="videoUrl">유튜브 링크:</label>
         <textarea id="videoUrl" placeholder="https://youtu.be/abcdefghijk"></textarea>
-    </div>
-    <br>
-    <div class="time-inputs">
-        <div>
+        <br>
+        <div class="input-group">
             <label for="hours">시간:</label>
             <input type="number" id="hours" min="0" value="0">
         </div>
-        <div>
+        <div class="input-group">
             <label for="minutes">분:</label>
             <input type="number" id="minutes" min="0" value="0">
         </div>
-        <div>
+        <div class="input-group">
             <label for="seconds">초:</label>
             <input type="number" id="seconds" min="0" value="0">
         </div>
+        <br>
+        <button onclick="generateLink()">링크 생성</button>
+        <p id="output"></p>
+        <button id="copyButton" onclick="copyToClipboard()" style="display:none;">링크 복사</button>
     </div>
-    <br>
-    <button onclick="generateLink()">링크 생성</button>
-    <p id="output"></p>
-    <button id="copyButton" onclick="copyToClipboard()" style="display:none;">링크 복사</button>
 
     <script>
         function generateLink() {
