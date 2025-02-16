@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Timestamp Link Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input, button, textarea {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #videoUrl {
+            width: 90vw;
+            max-width: 400px;
+            height: 100px;
+            resize: vertical;
+            word-break: break-all;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <h2>YouTube Timestamp Link Generator</h2>
+    <label for="videoUrl">유튜브 링크:</label>
+    <textarea id="videoUrl" placeholder="https://youtu.be/abcdefghijk"></textarea>
+    <br>
+    <div class="input-group">
+        <label for="hours">시간:</label>
+        <input type="number" id="hours" min="0" value="0">
+    </div>
+    <div class="input-group">
+        <label for="minutes">분:</label>
+        <input type="number" id="minutes" min="0" value="0">
+    </div>
+    <div class="input-group">
+        <label for="seconds">초:</label>
+        <input type="number" id="seconds" min="0" value="0">
+    </div>
+    <br>
+    <button onclick="generateLink()">링크 생성</button>
+    <p id="output"></p>
+    <button id="copyButton" onclick="copyToClipboard()" style="display:none;">링크 복사</button>
+
+    <script>
+        function generateLink() {
+            let url = document.getElementById("videoUrl").value.trim();
+            let hours = parseInt(document.getElementById("hours").value) || 0;
+            let minutes = parseInt(document.getElementById("minutes").value) || 0;
+            let seconds = parseInt(document.getElementById("seconds").value) || 0;
+            let time = (hours * 3600) + (minutes * 60) + seconds;
+            
+            if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
+                document.getElementById("output").innerHTML = "올바른 유튜브 링크를 입력하세요.";
+                document.getElementById("copyButton").style.display = "none";
+                return;
+            }
+            
+            let newUrl;
+            if (url.includes("youtu.be")) {
+                newUrl = url + "?t=" + time;
+            } else if (url.includes("watch?v=")) {
+                newUrl = url + "&t=" + time + "s";
+            } else {
+                document.getElementById("output").innerHTML = "올바른 유튜브 링크를 입력하세요.";
+                document.getElementById("copyButton").style.display = "none";
+                return;
+            }
+            
+            document.getElementById("output").innerHTML = `<a href="${newUrl}" target="_blank">${newUrl}</a>`;
+            document.getElementById("copyButton").style.display = "inline-block";
+            document.getElementById("copyButton").setAttribute("data-link", newUrl);
+        }
+
+        function copyToClipboard() {
+            let link = document.getElementById("copyButton").getAttribute("data-link");
+            navigator.clipboard.writeText(link).then(() => {
+                alert("링크가 복사되었습니다!");
+            }).catch(err => {
+                console.error("복사 실패: ", err);
+            });
+        }
+    </script>
+</body>
+</html>
