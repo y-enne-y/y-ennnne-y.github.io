@@ -54,6 +54,16 @@
       return date.toLocaleTimeString("ko-KR", { hour12: false });
     }
 
+    function formatRemaining(seconds) {
+      if (seconds < 60) {
+        return `${seconds}초`;
+      } else {
+        const min = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        return `${min}분 ${sec}초`;
+      }
+    }
+
     function getNextChangeTimes(now) {
       const elapsed = now.getTime() - baseTime.getTime();
       const passedCycles = Math.floor(elapsed / cycle);
@@ -76,7 +86,7 @@
       let html = `<div class="line"><span class="label">현재 시각:</span> ${currentTime}</div><br>`;
 
       nextChanges.forEach((change, i) => {
-        html += `<div class="line"><span class="label">${i + 1}번째 신호 변경:</span> ${formatTime(change.time)} (남은 시간: ${change.remaining}초)</div>`;
+        html += `<div class="line"><span class="label">${i + 1}번째 신호 변경:</span> ${formatTime(change.time)} (남은 시간: ${formatRemaining(change.remaining)})</div>`;
       });
 
       document.getElementById("output").innerHTML = html;
