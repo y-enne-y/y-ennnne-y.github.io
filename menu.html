@@ -35,6 +35,25 @@
   <div id="contentArea"></div>
 
   <script>
+    const emojiRules = [
+      { emoji: "🐖", keywords: ["돼지고기", "돼지", "pork"] },
+      { emoji: "🐄", keywords: ["소고기", "쇠고기", "beef"] },
+      { emoji: "🐟", keywords: ["생선", "고등어", "fish", "mackerel"] },
+      { emoji: "🥚", keywords: ["달걀", "계란", "egg"] }
+    ];
+
+    function getEmoji(text) {
+      text = text.toLowerCase();
+      for (const rule of emojiRules) {
+        for (const word of rule.keywords) {
+          if (text.includes(word)) {
+            return ` <span class="emoji">${rule.emoji}</span>`;
+          }
+        }
+      }
+      return "";
+    }
+
     const data = {
       mon: [
         {
@@ -62,19 +81,21 @@
         {
           name: "맛나샘",
           menus: [
-            { item: "사골떡만둣국", roman: "Sagol Tteok Mandu Guk", eng: "Beef Bone Rice Cake Dumpling Soup", price: "5300" }
+            { item: "사골떡만둣국", roman: "Sagol Tteok Mandu Guk", eng: "Beef Bone Rice Cake Dumpling Soup", price: "5300" },
+            { item: "짜장밥 & 계란후라이", roman: "Jjajangbap & Gyeran Fry", eng: "Black Bean Sauce Rice & Fried Egg", price: "5000" }
           ]
         },
         {
           name: "한경관",
           menus: [
-            { item: "돌솥비빔밥", roman: "Dolsot Bibimbap", eng: "Hot Stone Pot Bibimbap", price: "7000" }
+            { item: "치즈돈까스", roman: "Cheese Donkkaseu", eng: "Cheese Pork Cutlet", price: "7000" }
           ]
         },
         {
           name: "부를샘",
           menus: [
-            { item: "치즈돈까스", roman: "Cheese Donkkaseu", eng: "Cheese Pork Cutlet", price: "7500" }
+            { item: "훈제오리덮밥", roman: "Hunje O-ri Deopbap", eng: "Smoked Duck Rice Bowl", price: "8000" },
+            { item: "두부김치", roman: "Dubu Kimchi", eng: "Tofu with Stir-fried Kimchi", price: "6500" }
           ]
         }
       ],
@@ -82,19 +103,20 @@
         {
           name: "맛나샘",
           menus: [
-            { item: "김치찌개", roman: "Kimchi Jjigae", eng: "Kimchi Stew", price: "5000" }
+            { item: "고등어조림", roman: "Godeungeo Jorim", eng: "Braised Mackerel", price: "5500" },
+            { item: "계란말이덮밥", roman: "Gyeranmari Deopbap", eng: "Rolled Omelet Rice Bowl", price: "5200" }
           ]
         },
         {
           name: "한경관",
           menus: [
-            { item: "돈육김치볶음정식", roman: "Donyuk Kimchi Bokkeum Jeongsik", eng: "Stir-fried Pork with Kimchi Set", price: "7000" }
+            { item: "나가사키짬뽕", roman: "Nagasaki Jjamppong", eng: "Nagasaki Seafood Noodle Soup", price: "7300" }
           ]
         },
         {
           name: "부를샘",
           menus: [
-            { item: "직화불고기정식", roman: "Jikhwa Bulgogi Jeongsik", eng: "Fire-grilled Bulgogi Set", price: "8000" }
+            { item: "버섯불고기정식", roman: "Beoseot Bulgogi Jeongsik", eng: "Mushroom Bulgogi Set", price: "7500" }
           ]
         }
       ],
@@ -102,20 +124,20 @@
         {
           name: "맛나샘",
           menus: [
-            { item: "순대국", roman: "Soondae Guk", eng: "Blood Sausage Soup", price: "5800" },
-            { item: "철판베이컨김치볶음밥 & 계란후라이", roman: "Cheolpan Bacon Kimchi Bokkeumbap & Gyeran Fry", eng: "Grilled Bacon Kimchi Fried Rice & Fried Egg", price: "5000" }
+            { item: "철판제육볶음", roman: "Cheolpan Jeyuk Bokkeum", eng: "Iron Plate Pork Stir-fry", price: "5500" },
+            { item: "김치찌개 & 계란찜", roman: "Kimchi Jjigae & Gyeran Jjim", eng: "Kimchi Stew & Steamed Egg", price: "5200" }
           ]
         },
         {
           name: "한경관",
           menus: [
-            { item: "고등어구이정식", roman: "Godeungeo Gui Jeongsik", eng: "Grilled Mackerel Set", price: "7000" }
+            { item: "햄버그스테이크", roman: "Hamburg Steak", eng: "Hamburg-style Steak", price: "7300" }
           ]
         },
         {
           name: "부를샘",
           menus: [
-            { item: "스팸마요덮밥", roman: "Spam Mayo Deopbap", eng: "Spam Mayo Rice Bowl", price: "7000" }
+            { item: "돈코츠라멘", roman: "Donkotsu Ramen", eng: "Tonkotsu Ramen (Pork Broth)", price: "8500" }
           ]
         }
       ],
@@ -123,19 +145,20 @@
         {
           name: "맛나샘",
           menus: [
-            { item: "짬뽕순두부", roman: "Jjamppong Soondubu", eng: "Spicy Seafood Soft Tofu Stew", price: "5000" }
+            { item: "스팸마요덮밥", roman: "Spam Mayo Deopbap", eng: "Spam Mayo Rice Bowl", price: "5300" },
+            { item: "소고기우동", roman: "Sogogi Udon", eng: "Beef Udon Noodle Soup", price: "5500" }
           ]
         },
         {
           name: "한경관",
           menus: [
-            { item: "제육볶음정식", roman: "Jeyuk Bokkeum Jeongsik", eng: "Spicy Pork Stir-fry Set", price: "7000" }
+            { item: "불고기버거", roman: "Bulgogi Burger", eng: "Korean BBQ Burger", price: "6700" }
           ]
         },
         {
           name: "부를샘",
           menus: [
-            { item: "불닭마요덮밥", roman: "Buldak Mayo Deopbap", eng: "Spicy Chicken Mayo Rice Bowl", price: "7500" }
+            { item: "김치볶음밥 & 계란프라이", roman: "Kimchi Bokkeumbap & Gyeran Fry", eng: "Kimchi Fried Rice & Fried Egg", price: "7200" }
           ]
         }
       ],
@@ -143,37 +166,14 @@
         {
           name: "맛나샘",
           menus: [
-            { item: "착돌된장찌개", roman: "Chakdol Doenjang Jjigae", eng: "Beef Soybean Paste Stew", price: "5800" },
-            { item: "등심돈가스정식", roman: "Deungsim Donkkaseu Jeongsik", eng: "Pork Loin Cutlet Set", price: "5800" }
+            { item: "참치김치찌개", roman: "Chamchi Kimchi Jjigae", eng: "Tuna Kimchi Stew", price: "5300" },
+            { item: "계란덮밥", roman: "Gyeran Deopbap", eng: "Egg Rice Bowl", price: "4800" }
           ]
         }
       ]
     };
 
     const contentArea = document.getElementById('contentArea');
-
-    function getEmojiTags(text) {
-      const keywords = [
-        { word: "돼지", emoji: "🐖" },
-        { word: "돼지고기", emoji: "🐖" },
-        { word: "pork", emoji: "🐖" },
-        { word: "소고기", emoji: "🐄" },
-        { word: "쇠고기", emoji: "🐄" },
-        { word: "beef", emoji: "🐄" },
-        { word: "생선", emoji: "🐟" },
-        { word: "fish", emoji: "🐟" },
-        { word: "달걀", emoji: "🥚" },
-        { word: "계란", emoji: "🥚" },
-        { word: "egg", emoji: "🥚" }
-      ];
-      let emojis = "";
-      keywords.forEach(({ word, emoji }) => {
-        if (text.toLowerCase().includes(word)) {
-          emojis += ` <span class="emoji">${emoji}</span>`;
-        }
-      });
-      return emojis;
-    }
 
     Object.keys(data).forEach(day => {
       const container = document.createElement('div');
@@ -189,9 +189,9 @@
         res.menus.forEach(m => {
           const item = document.createElement('div');
           item.className = 'menu-item';
-          const emojis = getEmojiTags(`${m.item} ${m.roman} ${m.eng}`);
+          const emoji = getEmoji(`${m.item} ${m.roman} ${m.eng}`);
           item.innerHTML = `
-            <strong>${m.item}</strong>${emojis}<br>
+            <strong>${m.item}</strong>${emoji}<br>
             ${m.roman}<br>
             ${m.eng}<br>
             <span class="price">₩${m.price}</span>
