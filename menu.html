@@ -7,7 +7,7 @@
   <style>
     body { font-family: sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
     header { background: #1a73e8; color: white; padding: 1rem; text-align: center; }
-    .tabs { display: flex; justify-content: center; background: #ececec; }
+    .tabs { display: flex; justify-content: center; background: #ececec; flex-wrap: wrap; }
     .tab { padding: 0.8rem 1.2rem; cursor: pointer; }
     .tab.active { background: #1a73e8; color: white; font-weight: bold; }
     .content { display: none; padding: 1rem; }
@@ -31,23 +31,29 @@
     <div class="tab" data-day="fri">금</div>
     <div class="tab" data-day="sat">토</div>
   </div>
-  <div id="contentArea">
-    <!-- 여기에 요일별 콘텐츠가 삽입될 예정 -->
-  </div>
+  <div id="contentArea"></div>
+
   <script>
     const data = {
       mon: [
         {
           name: "맛나샘",
           menus: [
-            { category: "Hotbowl", item: "쇠고기영양탕", roman: "Soegogi Yeongyangtang", eng: "Beef Nutrient Soup", price: "5800" },
-            { category: "Hotbowl", item: "순두부찌개", roman: "Soondubu Jjigae", eng: "Soft Tofu Stew", price: "5000" }
+            { item: "쇠고기영양탕", roman: "Soegogi Yeongyangtang", eng: "Beef Nutrient Soup", price: "5800" },
+            { item: "순두부찌개", roman: "Soondubu Jjigae", eng: "Soft Tofu Stew", price: "5000" }
           ]
         },
         {
           name: "한경관",
           menus: [
-            { category: "1층 중식", item: "소고기만두전골", roman: "Sogogi Mandu Jeongol", eng: "Beef Dumpling Hot Pot", price: "7500" }
+            { item: "소고기만두전골", roman: "Sogogi Mandu Jeongol", eng: "Beef Dumpling Hot Pot", price: "7500" }
+          ]
+        },
+        {
+          name: "부를샘",
+          menus: [
+            { item: "볶음자장면", roman: "Bokkeum Jjajangmyeon", eng: "Stir-fried Black Bean Noodles", price: "7000" },
+            { item: "부패 & 순대야채볶음", roman: "Buffet & Sundae Yachae Bokkeum", eng: "Buffet & Stir-fried Blood Sausage with Veggies", price: "10000" }
           ]
         }
       ],
@@ -55,11 +61,62 @@
         {
           name: "맛나샘",
           menus: [
-            { category: "Hotbowl", item: "사골떡만둣국", roman: "Sagol Tteok Mandu Guk", eng: "Beef Bone Rice Cake Dumpling Soup", price: "5300" }
+            { item: "사골떡만둣국", roman: "Sagol Tteok Mandu Guk", eng: "Beef Bone Rice Cake Dumpling Soup", price: "5300" }
+          ]
+        },
+        {
+          name: "한경관",
+          menus: [
+            { item: "돌솥비빔밥", roman: "Dolsot Bibimbap", eng: "Hot Stone Pot Bibimbap", price: "7000" }
+          ]
+        },
+        {
+          name: "부를샘",
+          menus: [
+            { item: "치즈돈까스", roman: "Cheese Donkkaseu", eng: "Cheese Pork Cutlet", price: "7500" }
           ]
         }
       ],
-      // 수~토요일도 같은 구조로 추가 가능
+      wed: [
+        {
+          name: "맛나샘",
+          menus: [
+            { item: "김치찌개", roman: "Kimchi Jjigae", eng: "Kimchi Stew", price: "5000" }
+          ]
+        },
+        {
+          name: "한경관",
+          menus: [
+            { item: "돈육김치볶음정식", roman: "Donyuk Kimchi Bokkeum Jeongsik", eng: "Stir-fried Pork with Kimchi Set", price: "7000" }
+          ]
+        }
+      ],
+      thu: [
+        {
+          name: "맛나샘",
+          menus: [
+            { item: "순대국", roman: "Soondae Guk", eng: "Blood Sausage Soup", price: "5800" },
+            { item: "철판베이컨김치볶음밥 & 계란후라이", roman: "Cheolpan Bacon Kimchi Bokkeumbap & Gyeran Fry", eng: "Grilled Bacon Kimchi Fried Rice & Fried Egg", price: "5000" }
+          ]
+        }
+      ],
+      fri: [
+        {
+          name: "맛나샘",
+          menus: [
+            { item: "짬뽕순두부", roman: "Jjamppong Soondubu", eng: "Spicy Seafood Soft Tofu Stew", price: "5000" }
+          ]
+        }
+      ],
+      sat: [
+        {
+          name: "맛나샘",
+          menus: [
+            { item: "착돌된장찌개", roman: "Chakdol Doenjang Jjigae", eng: "Beef Soybean Paste Stew", price: "5800" },
+            { item: "등심돈가스정식", roman: "Deungsim Donkkaseu Jeongsik", eng: "Pork Loin Cutlet Set", price: "5800" }
+          ]
+        }
+      ]
     };
 
     const contentArea = document.getElementById('contentArea');
