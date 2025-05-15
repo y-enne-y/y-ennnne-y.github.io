@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주간 학식 식단표</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    header { background: #1a73e8; color: white; padding: 1rem; text-align: center; }
+    .tabs { display: flex; justify-content: center; background: #ececec; }
+    .tab { padding: 0.8rem 1.2rem; cursor: pointer; }
+    .tab.active { background: #1a73e8; color: white; font-weight: bold; }
+    .content { display: none; padding: 1rem; }
+    .content.active { display: block; }
+    .restaurant { margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 8px; background: white; }
+    .restaurant h2 { margin: 0; padding: 0.8rem 1rem; background: #f0f0f0; cursor: pointer; }
+    .menu-section { display: none; padding: 0 1rem 1rem; }
+    .menu-item { margin-bottom: 0.5rem; }
+    .price { font-weight: bold; color: #1a73e8; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>연세대학교 주간 학식 식단표</h1>
+  </header>
+  <div class="tabs" id="dayTabs">
+    <div class="tab active" data-day="mon">월</div>
+    <div class="tab" data-day="tue">화</div>
+    <div class="tab" data-day="wed">수</div>
+    <div class="tab" data-day="thu">목</div>
+    <div class="tab" data-day="fri">금</div>
+    <div class="tab" data-day="sat">토</div>
+  </div>
+  <div id="contentArea">
+    <!-- 여기에 요일별 콘텐츠가 삽입될 예정 -->
+  </div>
+  <script>
+    const data = {
+      mon: [
+        {
+          name: "맛나샘",
+          menus: [
+            { category: "Hotbowl", item: "쇠고기영양탕", roman: "Soegogi Yeongyangtang", eng: "Beef Nutrient Soup", price: "5800" },
+            { category: "Hotbowl", item: "순두부찌개", roman: "Soondubu Jjigae", eng: "Soft Tofu Stew", price: "5000" }
+          ]
+        },
+        {
+          name: "한경관",
+          menus: [
+            { category: "1층 중식", item: "소고기만두전골", roman: "Sogogi Mandu Jeongol", eng: "Beef Dumpling Hot Pot", price: "7500" }
+          ]
+        }
+      ],
+      tue: [
+        {
+          name: "맛나샘",
+          menus: [
+            { category: "Hotbowl", item: "사골떡만둣국", roman: "Sagol Tteok Mandu Guk", eng: "Beef Bone Rice Cake Dumpling Soup", price: "5300" }
+          ]
+        }
+      ],
+      // 수~토요일도 같은 구조로 추가 가능
+    };
+
+    const contentArea = document.getElementById('contentArea');
+
+    Object.keys(data).forEach(day => {
+      const container = document.createElement('div');
+      container.className = `content ${day === 'mon' ? 'active' : ''}`;
+      container.id = `content-${day}`;
+      data[day].forEach(res => {
+        const r = document.createElement('div');
+        r.className = 'restaurant';
+        const h = document.createElement('h2');
+        h.textContent = res.name;
+        const section = document.createElement('div');
+        section.className = 'menu-section';
+        res.menus.forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'menu-item';
+          item.innerHTML = `
+            <strong>${m.item}</strong><br>
+            ${m.roman}<br>
+            ${m.eng}<br>
+            <span class="price">₩${m.price}</span>
+          `;
+          section.appendChild(item);
+        });
+        h.onclick = () => {
+          section.style.display = section.style.display === 'block' ? 'none' : 'block';
+        };
+        r.appendChild(h);
+        r.appendChild(section);
+        container.appendChild(r);
+      });
+      contentArea.appendChild(container);
+    });
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(`content-${tab.dataset.day}`).classList.add('active');
+      };
+    });
+  </script>
+</body>
+</html>
