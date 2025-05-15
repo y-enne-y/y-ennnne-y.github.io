@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>신호등 시간표</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    .time-box {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .line {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <h1>신호등 시간표</h1>
+  <div class="time-box" id="output">
+    계산 중...
+  </div>
+
+  <script>
+    const baseTime = new Date("2025-05-12T10:10:40"); // 기준 시각
+    const cycle = 170 * 1000; // 170초를 밀리초로
+
+    function formatTime(date) {
+      return date.toLocaleTimeString("ko-KR", { hour12: false });
+    }
+
+    function getNextChangeTimes(now) {
+      const elapsed = now.getTime() - baseTime.getTime();
+      const passedCycles = Math.floor(elapsed / cycle);
+      const nextTimes = [];
+
+      for (let i = 1; i <= 3; i++) {
+        const nextChange = new Date(baseTime.getTime() + (passedCycles + i) * cycle);
+        const remaining = Math.round((nextChange.getTime() - now.getTime()) / 1000);
+        nextTimes.push({ time: nextChange, remaining });
+      }
+
+      return nextTimes;
+    }
+
+    function update() {
+      const now = new Date();
+      const currentTime = formatTime(now);
+      const nextChanges = getNextChangeTimes(now);
+
+      let html = `<div class="line"><span class="label">현재 시각:</span> ${currentTime}</div><br>`;
+
+      nextChanges.forEach((change, i) => {
+        html += `<div class="line"><span class="label">${i + 1}번째 신호 변경:</span> ${formatTime(change.time)} (남은 시간: ${change.remaining}초)</div>`;
+      });
+
+      document.getElementById("output").innerHTML = html;
+    }
+
+    update();
+    setInterval(update, 1000); // 1초마다 업데이트
+  </script>
+</body>
+</html>
