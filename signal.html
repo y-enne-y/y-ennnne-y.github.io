@@ -180,5 +180,205 @@
     update();
     setInterval(update, 1000);
   </script>
+  <!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>신호등 시간표</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    .time-box {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .line {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #444;
+    }
+
+    .toggle-section {
+      margin-top: 2rem;
+      text-align: left;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .toggle-button {
+      width: 100%;
+      text-align: left;
+      padding: 10px;
+      font-size: 1rem;
+      background-color: #e0e0e0;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+
+    .toggle-content {
+      display: none;
+      background-color: white;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .toggle-content ul {
+      padding-left: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>신호등 시간표</h1>
+
+  <!-- ✅ 실시간 신호등 정보 -->
+  <div class="time-box" id="output">계산 중...</div>
+
+  <!-- ✅ 지하철 시간표 토글 -->
+  <div class="toggle-section">
+    <!-- 아래 토글 버튼들은 필요에 따라 자유롭게 수정 가능 -->
+    <button class="toggle-button" onclick="toggleContent('hour5')">▶ 5시대 지하철 시간</button>
+    <div id="hour5" class="toggle-content">
+      <ul><li>05:33:00</li><li>05:54:00</li></ul>
+    </div>
+
+    <button class="toggle-button" onclick="toggleContent('hour6')">▶ 6시대 지하철 시간</button>
+    <div id="hour6" class="toggle-content">
+      <ul><li>06:10:00</li><li>06:20:00</li><li>06:27:00</li><li>06:34:00</li><li>06:38:00</li><li>06:44:00</li><li>06:50:00</li><li>06:57:00</li></ul>
+    </div>
+
+    <button class="toggle-button" onclick="toggleContent('hour7')">▶ 7시대 지하철 시간</button>
+    <div id="hour7" class="toggle-content">
+      <ul><li>07:03:00</li><li>07:08:00</li><li>07:11:00</li><li>07:17:00</li><li>07:21:00</li><li>07:31:00</li><li>07:35:00</li><li>07:38:00</li><li>07:42:00</li><li>07:45:00</li><li>07:49:00</li><li>07:53:00</li><li>07:57:00</li></ul>
+    </div>
+
+    <button class="toggle-button" onclick="toggleContent('hour8')">▶ 8시대 지하철 시간</button>
+    <div id="hour8" class="toggle-content">
+      <ul><li>08:00:00</li><li>08:04:00</li><li>08:07:00</li><li>08:11:00</li><li>08:14:00</li><li>08:18:00</li><li>08:21:00</li><li>08:25:00</li><li>08:28:00</li><li>08:32:00</li><li>08:36:00</li><li>08:41:00</li><li>08:46:00</li><li>08:51:00</li><li>08:57:00</li></ul>
+    </div>
+
+    <button class="toggle-button" onclick="toggleContent('hour9')">▶ 9시대 지하철 시간</button>
+    <div id="hour9" class="toggle-content">
+      <ul><li>09:01:00</li><li>09:07:00</li><li>09:11:00</li><li>09:14:00</li><li>09:17:00</li><li>09:22:00</li><li>09:27:00</li><li>09:33:00</li><li>09:37:00</li><li>09:42:00</li><li>09:47:00</li><li>09:52:00</li><li>09:58:00</li></ul>
+    </div>
+
+    <button class="toggle-button" onclick="toggleContent('hour10')">▶ 10시대 지하철 시간</button>
+    <div id="hour10" class="toggle-content">
+      <ul><li>10:03:00</li><li>10:09:00</li><li>10:15:00</li><li>10:21:00</li><li>10:27:00</li><li>10:33:00</li><li>10:39:00</li><li>10:45:00</li><li>10:51:00</li><li>10:57:00</li></ul>
+    </div>
+
+    <button class="toggle-button" onclick="toggleContent('hour11')">▶ 11시대 지하철 시간</button>
+    <div id="hour11" class="toggle-content">
+      <ul><li>11:03:00</li><li>11:09:00</li><li>11:15:00</li><li>11:21:00</li><li>11:27:00</li><li>11:33:00</li><li>11:39:00</li><li>11:45:00</li><li>11:51:00</li><li>11:57:00</li></ul>
+    </div>
+  </div>
+
+  <!-- ✅ 토글 기능 스크립트 -->
+  <script>
+    function toggleContent(id) {
+      const content = document.getElementById(id);
+      const isVisible = content.style.display === "block";
+      document.querySelectorAll(".toggle-content").forEach(c => c.style.display = "none");
+      content.style.display = isVisible ? "none" : "block";
+    }
+  </script>
+
+  <!-- ✅ 신호등 실시간 계산 스크립트 -->
+  <script>
+    const baseTime = new Date("2025-05-15T22:17:00"); // 기준 시각
+    const cycle = 170 * 1000;
+
+    function formatTime(date) {
+      return date.toLocaleTimeString("ko-KR", { hour12: false });
+    }
+
+    function formatRemaining(seconds) {
+      if (seconds < 60) {
+        return `${seconds}초`;
+      } else {
+        const min = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        return `${min}분 ${sec}초`;
+      }
+    }
+
+    function getNextChangeTimes(now) {
+      const elapsed = now.getTime() - baseTime.getTime();
+      const passedCycles = Math.floor(elapsed / cycle);
+      const nextTimes = [];
+
+      for (let i = 1; i <= 3; i++) {
+        const nextChange = new Date(baseTime.getTime() + (passedCycles + i) * cycle);
+        const remaining = Math.round((nextChange.getTime() - now.getTime()) / 1000);
+        nextTimes.push({ time: nextChange, remaining });
+      }
+
+      return nextTimes;
+    }
+
+    function update() {
+      const now = new Date();
+      const currentTime = formatTime(now);
+      const nextChanges = getNextChangeTimes(now);
+
+      let html = `<div class="line"><span class="label">현재 시각:</span> ${currentTime}</div><br>`;
+      nextChanges.forEach((change, i) => {
+        html += `<div class="line"><span class="label">${i + 1}번째 신호 변경:</span> ${formatTime(change.time)} (남은 시간: ${formatRemaining(change.remaining)})</div>`;
+      });
+
+      document.getElementById("output").innerHTML = html;
+    }
+
+    update();
+    setInterval(update, 1000);
+  </script>
+  <!-- ✅ 홈으로 돌아가기 버튼 -->
+<div style="margin-top: 3rem;">
+  <a href="index.html" style="
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #e0e0e0;
+    color: black;
+    border-radius: 6px;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s;
+  " onmouseover="this.style.backgroundColor='#d0d0d0'" onmouseout="this.style.backgroundColor='#e0e0e0'">
+    🏠 홈으로
+  </a>
+</div>
+
 </body>
 </html>
+
