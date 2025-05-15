@@ -17,6 +17,7 @@
     .menu-section { display: none; padding: 0 1rem 1rem; }
     .menu-item { margin-bottom: 0.5rem; }
     .price { font-weight: bold; color: #1a73e8; }
+    .emoji { margin-left: 6px; }
   </style>
 </head>
 <body>
@@ -151,6 +152,29 @@
 
     const contentArea = document.getElementById('contentArea');
 
+    function getEmojiTags(text) {
+      const keywords = [
+        { word: "돼지", emoji: "🐖" },
+        { word: "돼지고기", emoji: "🐖" },
+        { word: "pork", emoji: "🐖" },
+        { word: "소고기", emoji: "🐄" },
+        { word: "쇠고기", emoji: "🐄" },
+        { word: "beef", emoji: "🐄" },
+        { word: "생선", emoji: "🐟" },
+        { word: "fish", emoji: "🐟" },
+        { word: "달걀", emoji: "🥚" },
+        { word: "계란", emoji: "🥚" },
+        { word: "egg", emoji: "🥚" }
+      ];
+      let emojis = "";
+      keywords.forEach(({ word, emoji }) => {
+        if (text.toLowerCase().includes(word)) {
+          emojis += ` <span class="emoji">${emoji}</span>`;
+        }
+      });
+      return emojis;
+    }
+
     Object.keys(data).forEach(day => {
       const container = document.createElement('div');
       container.className = `content ${day === 'mon' ? 'active' : ''}`;
@@ -165,8 +189,9 @@
         res.menus.forEach(m => {
           const item = document.createElement('div');
           item.className = 'menu-item';
+          const emojis = getEmojiTags(`${m.item} ${m.roman} ${m.eng}`);
           item.innerHTML = `
-            <strong>${m.item}</strong><br>
+            <strong>${m.item}</strong>${emojis}<br>
             ${m.roman}<br>
             ${m.eng}<br>
             <span class="price">₩${m.price}</span>
