@@ -97,3 +97,128 @@
   </script>
 </body>
 </html>
+<!-- ✅ 전체 지하철 시간표 토글 (5~11시대) -->
+<div class="toggle-section">
+
+  <button class="toggle-button" onclick="toggleContent('hour5')">▶ 5시대 지하철 시간</button>
+  <div id="hour5" class="toggle-content">
+    <ul>
+      <li>05:33:00</li>
+      <li>05:54:00</li>
+    </ul>
+  </div>
+
+  <button class="toggle-button" onclick="toggleContent('hour6')">▶ 6시대 지하철 시간</button>
+  <div id="hour6" class="toggle-content">
+    <ul>
+      <li>06:10:00</li>
+      <li>06:20:00</li>
+      <li>06:27:00</li>
+      <li>06:34:00</li>
+      <li>06:38:00</li>
+      <li>06:44:00</li>
+      <li>06:50:00</li>
+      <li>06:57:00</li>
+    </ul>
+  </div>
+
+  <button class="toggle-button" onclick="toggleContent('hour7')">▶ 7시대 지하철 시간</button>
+  <div id="hour7" class="toggle-content">
+    <ul>
+      <li>07:03:00</li>
+      <li>07:08:00</li>
+      <li>07:11:00</li>
+      <li>07:17:00</li>
+      <li>07:21:00</li>
+      <li>07:31:00</li>
+      <li>07:35:00</li>
+      <li>07:38:00</li>
+      <li>07:42:00</li>
+      <li>07:45:00</li>
+      <li>07:49:00</li>
+      <li>07:53:00</li>
+      <li>07:57:00</li>
+    </ul>
+  </div>
+
+  <button class="toggle-button" onclick="toggleContent('hour8')">▶ 8시대 지하철 시간</button>
+  <div id="hour8" class="toggle-content">
+    <ul>
+      <li>08:00:00</li>
+      <li>08:04:00</li>
+      <li>08:07:00</li>
+      <li>08:11:00</li>
+      <li>08:14:00</li>
+      <li>08:18:00</li>
+      <li>08:21:00</li>
+      <li>08:25:00</li>
+      <li>08:28:00</li>
+      <li>08:32:00</li>
+      <li>08:36:00</li>
+      <li>08:41:00</li>
+      <li>08:46:00</li>
+      <li>08:51:00</li>
+      <li>08:57:00</li>
+    </ul>
+  </div>
+
+  <button class="toggle-button" onclick="toggleContent('hour9')">▶ 9시대 지하철 시간</button>
+  <div id="hour9" class="toggle-content">
+    <ul>
+      <li>09:01:00</li>
+      <li>09:07:00</li>
+      <li>09:11:00</li>
+      <li>09:14:00</li>
+      <li>09:17:00</li>
+      <li>09:22:00</li>
+      <li>09:27:00</li>
+      <li>09:33:00</li>
+      <li>09:37:00</li>
+      <li>09:42:00</li>
+      <li>09:47:00</li>
+      <li>09:52:00</li>
+      <li>09:58:00</li>
+    </ul>
+  </div>
+
+  <button class="toggle-button" onclick="toggleContent('hour10')">▶ 10시대 지하철 시간</button>
+  <div id="hour10" class="toggle-content">
+    <ul>
+      <li>10:03:00</li>
+      <li>10:09:00</li>
+      <li>10:15:00</li>
+      <li>10:21:00</li>
+      <li>10:27:00</li>
+      <li>10:33:00</li>
+      <li>10:39:00</li>
+      <li>10:45:00</li>
+      <li>10:51:00</li>
+      <li>10:57:00</li>
+    </ul>
+  </div>
+
+  <button class="toggle-button" onclick="toggleContent('hour11')">▶ 11시대 지하철 시간</button>
+  <div id="hour11" class="toggle-content">
+    <ul>
+      <li>11:03:00</li>
+      <li>11:09:00</li>
+      <li>11:15:00</li>
+      <li>11:21:00</li>
+      <li>11:27:00</li>
+      <li>11:33:00</li>
+      <li>11:39:00</li>
+      <li>11:45:00</li>
+      <li>11:51:00</li>
+      <li>11:57:00</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function toggleContent(id) {
+    const content = document.getElementById(id);
+    const isVisible = content.style.display === "block";
+    document.querySelectorAll(".toggle-content").forEach(c => c.style.display = "none");
+    content.style.display = isVisible ? "none" : "block";
+  }
+</script>
