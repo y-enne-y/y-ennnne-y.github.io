@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Me</title>
-    
+
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
     </style>
-    
+
     <style>
         /* 기본 스타일 초기화 및 설정 */
         body {
@@ -51,15 +51,14 @@
             color: #6c757d; /* 약간 연한 회색 글씨 */
             margin-bottom: 32px;
         }
-        
-        /* ▼▼▼▼▼ 영어 설명을 위한 스타일 추가 ▼▼▼▼▼ */
+
+        /* 영어 설명을 위한 스타일 */
         .english-sub {
             font-size: 0.85em; /* 부모 글씨 크기의 85% */
             color: #899096;
             display: inline-block; /* 줄바꿈 등 적용을 위해 추가 */
             margin-top: 4px; /* 위쪽 텍스트와의 간격 */
         }
-        /* ▲▲▲▲▲ 여기까지 추가 ▲▲▲▲▲ */
 
         /* 링크 목록을 감싸는 컨테이너 */
         .links-section {
@@ -81,7 +80,7 @@
             font-weight: 500;
             transition: background-color 0.2s, color 0.2s, transform 0.2s;
         }
-        
+
         .links-section li a .english-sub {
             margin-left: 8px; /* 한국어와 영어 사이 간격 */
         }
@@ -108,6 +107,7 @@
             color: #495057;
             transition: transform 0.2s;
             display: inline-block;
+            text-align: center; /* 아이콘과 텍스트 가운데 정렬 */
         }
 
         .icon-item a:hover {
@@ -116,19 +116,29 @@
 
         .icon-item img {
             width: 80px;
+            display: block; /* 이미지 아래 텍스트 중앙 정렬 */
+            margin: 0 auto;
         }
 
         .icon-item span {
             font-size: 60px;
+            display: block; /* 아이콘 아래 텍스트 중앙 정렬 */
+            margin: 0 auto;
         }
 
         .icon-item p {
             font-size: 0.875rem; /* 14px */
             font-weight: 500;
             margin-top: 8px;
-            line-height: 1.5; /* 줄 간격 설정 */
+            line-height: 1.3; /* 줄 간격 조절 */
         }
         
+        .icon-item p .english-sub {
+            display: block; /* 영어 설명이 새 줄에 나오도록 */
+            margin-top: 2px; /* 영어 설명과의 간격 조절 */
+            font-size: 0.75em; /* 영어 텍스트를 더 작게 */
+        }
+
         /* 하단 링크 스타일 (홈페이지로 돌아가기) */
         .back-link {
             display: inline-block;
