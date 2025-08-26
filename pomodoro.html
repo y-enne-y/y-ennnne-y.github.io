@@ -284,4 +284,67 @@
                     updateTimerDisplay(timeLeftInSeconds);
                     updateProgressBar(timeLeftInSeconds, totalTimeInSeconds);
                 } else {
-                    // 시간이 다 되면 세
+                    // 시간이 다 되면 세션 전환
+                    if (isWorking) {
+                        isWorking = false;
+                        startNextSession();
+                    } else {
+                        isWorking = true;
+                        currentCycle++;
+                        startNextSession();
+                    }
+                }
+            }, 1000); // 1초 간격은 유지
+        }
+
+        // 뽀모도로 완료
+        function finishPomodoro() {
+            document.title = '뽀모도로 완료! 🎉';
+            timerDisplay.textContent = "완료!";
+            sessionInfo.innerHTML = "<strong>모든 세션을 완료했습니다! 수고하셨어요.</strong>";
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        // 일시정지/재개
+        function pauseTimer() {
+            if (!timerInterval && !isPaused) return; // 타이머가 시작되지 않았으면 아무것도 안함
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseButton.textContent = "재개";
+                document.title = '일시정지됨';
+                clearInterval(timerInterval); // 일시정지 시 인터벌 중지
+            } else {
+                pauseButton.textContent = "일시정지";
+                document.title = isWorking ? '작업 중! 🔥' : '휴식 시간 🧘';
+                runTimer(); // 재개 시 타이머 다시 시작
+            }
+        }
+        
+        // 초기화
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            isWorking = true;
+            isPaused = false;
+            currentCycle = 1;
+            const initialTime = parseInt(workMinutesInput.value) * 60;
+            
+            updateTimerDisplay(initialTime);
+            updateProgressBar(initialTime, initialTime);
+            updateSessionInfo('대기 중');
+            document.title = '뽀모도로 타이머';
+            startButton.textContent = "시작";
+            pauseButton.textContent = "일시정지";
+        }
+
+        // 버튼 클릭 이벤트 리스너
+        startButton.addEventListener('click', startTimer);
+        pauseButton.addEventListener('click', pauseTimer);
+        resetButton.addEventListener('click', resetTimer);
+
+        // 페이지 로드 시 초기화
+        resetTimer();
+    </script>
+</body>
+</html>
