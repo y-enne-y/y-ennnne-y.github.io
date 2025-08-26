@@ -16,7 +16,6 @@
             color: #333;
             text-align: center;
         }
-
         .container {
             background-color: #ffffff;
             padding: 30px;
@@ -25,11 +24,7 @@
             width: 90%;
             max-width: 500px;
         }
-
-        h1 {
-            color: #1c1e21;
-        }
-
+        h1 { color: #1c1e21; }
         .real-time-clock {
             font-size: 16px;
             color: #606770;
@@ -38,26 +33,22 @@
             padding: 8px;
             border-radius: 6px;
         }
-
         .settings {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 20px;
         }
-
         .input-group {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
         }
-
         .input-group label {
             margin-bottom: 5px;
             font-weight: 500;
             color: #606770;
         }
-
         .input-group input {
             width: 100%;
             padding: 10px;
@@ -66,24 +57,18 @@
             box-sizing: border-box;
             font-size: 16px;
         }
-
-        .timer-display-wrapper {
-            margin: 20px 0;
-        }
-        
+        .timer-display-wrapper { margin: 20px 0; }
         .timer-display {
             font-size: 48px;
             font-weight: bold;
             color: #007bff;
         }
-        
         #pauseDurationDisplay {
             font-size: 18px;
             color: #6c757d;
             height: 24px;
             margin-top: 4px;
         }
-
         .progress-bar-container {
             width: 100%;
             height: 20px;
@@ -92,32 +77,26 @@
             overflow: hidden;
             margin: 10px 0;
         }
-
         .progress-bar {
             height: 100%;
             width: 100%;
             background-color: #007bff;
             transition: width 0.5s linear;
         }
-
         .session-info {
             margin: 15px 0;
             color: #606770;
             line-height: 1.6;
         }
-        
         #updatedEndTimeDisplay {
             color: #dc3545;
             font-weight: bold;
         }
-        
-        /* ▼▼▼▼▼ [CSS 추가] 완료 메시지 스타일 ▼▼▼▼▼ */
         .completion-message {
             font-weight: bold;
             color: #28a745;
             margin-top: 8px;
         }
-
         .controls button {
             padding: 12px 24px;
             font-size: 16px;
@@ -128,47 +107,33 @@
             transition: background-color 0.2s;
             font-weight: bold;
         }
-
         #startButton { background-color: #28a745; color: white; }
-        #startButton:hover { background-color: #218838; }
-
         #pauseButton { background-color: #ffc107; color: #333; }
-        #pauseButton:hover { background-color: #e0a800; }
-
         #resetButton { background-color: #dc3545; color: white; }
-        #resetButton:hover { background-color: #c82333; }
-        
-        .back-link {
-            margin-top: 30px;
-        }
-
+        .back-link { margin-top: 30px; }
         .back-link a {
             color: #0073e6;
             text-decoration: none;
             font-weight: 500;
         }
-
-        .back-link a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>뽀모도로 타이머 🍅</h1>
+        <h1 data-i18n-key="pageTitle"></h1>
         <div class="real-time-clock" id="realTimeClock"></div>
 
         <div class="settings">
             <div class="input-group">
-                <label for="workMinutes">작업 시간 (분)</label>
+                <label for="workMinutes" data-i18n-key="workLabel"></label>
                 <input type="number" id="workMinutes" value="25" min="0">
             </div>
             <div class="input-group">
-                <label for="restMinutes">휴식 시간 (분)</label>
+                <label for="restMinutes" data-i18n-key="restLabel"></label>
                 <input type="number" id="restMinutes" value="5" min="0">
             </div>
             <div class="input-group">
-                <label for="cycles">반복 횟수</label>
+                <label for="cycles" data-i18n-key="cyclesLabel"></label>
                 <input type="number" id="cycles" value="4" min="1">
             </div>
         </div>
@@ -182,23 +147,124 @@
             <div id="progressBar" class="progress-bar"></div>
         </div>
 
-        <div id="sessionInfo" class="session-info">
-            <strong>현재 상태:</strong> 대기 중
-        </div>
+        <div id="sessionInfo" class="session-info"></div>
 
         <div class="controls">
-            <button id="startButton">시작</button>
-            <button id="pauseButton">일시정지</button>
-            <button id="resetButton">초기화</button>
+            <button id="startButton" data-i18n-key="startButton"></button>
+            <button id="pauseButton" data-i18n-key="pauseButton"></button>
+            <button id="resetButton" data-i18n-key="resetButton"></button>
         </div>
 
         <div class="back-link">
-            <a href="about.html">About Me 페이지로 돌아가기</a>
+            <a href="about.html" data-i18n-key="backLink"></a>
         </div>
     </div>
 
     <script>
-        // HTML 요소 가져오기
+        const translations = {
+            ko: {
+                pageTitle: "뽀모도로 타이머 🍅",
+                currentTimePrefix: "현재 시각:",
+                workLabel: "작업 시간 (분)",
+                restLabel: "휴식 시간 (분)",
+                cyclesLabel: "반복 횟수",
+                startButton: "시작",
+                pauseButton: "일시정지",
+                resetButton: "초기화",
+                resumeButton: "재개",
+                backLink: "About Me 페이지로 돌아가기",
+                statusWaiting: "대기 중",
+                statusWork: "작업",
+                statusRest: "휴식",
+                statusComplete: "모든 세션 완료!",
+                infoStatus: "현재 상태:",
+                infoStart: "시작:",
+                infoEnd: "종료:",
+                infoUpdatedEnd: "변경된 종료:",
+                docTitleWork: "작업 중! 🔥",
+                docTitleRest: "휴식 시간 🧘",
+                docTitlePaused: "일시정지됨",
+                docTitleComplete: "뽀모도로 완료! 🎉",
+                docTitleDefault: "뽀모도로 타이머",
+                finishMessage: "모든 세션을 완료했습니다!",
+                finishMessageSub: "수고하셨어요.",
+                pausePrefix: "+",
+                pauseUnitSecond: "초",
+                pauseUnitMinute: "분"
+            },
+            en: {
+                pageTitle: "Pomodoro Timer 🍅",
+                currentTimePrefix: "Current Time:",
+                workLabel: "Work Time (min)",
+                restLabel: "Rest Time (min)",
+                cyclesLabel: "Cycles",
+                startButton: "Start",
+                pauseButton: "Pause",
+                resetButton: "Reset",
+                resumeButton: "Resume",
+                backLink: "Back to About Me",
+                statusWaiting: "Waiting",
+                statusWork: "Work",
+                statusRest: "Rest",
+                statusComplete: "All Sessions Complete!",
+                infoStatus: "Status:",
+                infoStart: "Start:",
+                infoEnd: "End:",
+                infoUpdatedEnd: "Updated End:",
+                docTitleWork: "Working! 🔥",
+                docTitleRest: "Resting 🧘",
+                docTitlePaused: "Paused",
+                docTitleComplete: "Pomodoro Complete! 🎉",
+                docTitleDefault: "Pomodoro Timer",
+                finishMessage: "All sessions have been completed!",
+                finishMessageSub: "Good work.",
+                pausePrefix: "+",
+                pauseUnitSecond: "s",
+                pauseUnitMinute: "m"
+            },
+            // ▼▼▼▼▼ [JS 추가] 스페인어 번역 ▼▼▼▼▼
+            es: {
+                pageTitle: "Temporizador Pomodoro 🍅",
+                currentTimePrefix: "Hora actual:",
+                workLabel: "Tiempo de trabajo (min)",
+                restLabel: "Tiempo de descanso (min)",
+                cyclesLabel: "Ciclos",
+                startButton: "Iniciar",
+                pauseButton: "Pausa",
+                resetButton: "Reiniciar",
+                resumeButton: "Reanudar",
+                backLink: "Volver a Sobre Mí",
+                statusWaiting: "Esperando",
+                statusWork: "Trabajo",
+                statusRest: "Descanso",
+                statusComplete: "¡Todas las sesiones completadas!",
+                infoStatus: "Estado:",
+                infoStart: "Inicio:",
+                infoEnd: "Fin:",
+                infoUpdatedEnd: "Fin actualizado:",
+                docTitleWork: "¡Trabajando! 🔥",
+                docTitleRest: "Descansando 🧘",
+                docTitlePaused: "En pausa",
+                docTitleComplete: "¡Pomodoro completado! 🎉",
+                docTitleDefault: "Temporizador Pomodoro",
+                finishMessage: "¡Todas las sesiones han sido completadas!",
+                finishMessageSub: "Buen trabajo.",
+                pausePrefix: "+",
+                pauseUnitSecond: "s",
+                pauseUnitMinute: "m"
+            }
+        };
+
+        // ▼▼▼▼▼ [JS 수정] 언어 감지 로직 확장 ▼▼▼▼▼
+        function getUserLanguage() {
+            const userLang = navigator.language || navigator.userLanguage; 
+            if (userLang.startsWith('ko')) return 'ko';
+            if (userLang.startsWith('es')) return 'es';
+            return 'en'; // 그 외 모든 언어는 영어로
+        }
+        const lang = getUserLanguage();
+        const t = translations[lang];
+
         const workMinutesInput = document.getElementById('workMinutes');
         const restMinutesInput = document.getElementById('restMinutes');
         const cyclesInput = document.getElementById('cycles');
@@ -211,28 +277,27 @@
         const realTimeClock = document.getElementById('realTimeClock');
         const pauseDurationDisplay = document.getElementById('pauseDurationDisplay');
 
-        // 타이머 상태 변수
-        let timerInterval;
-        let totalTimeInSeconds;
-        let isWorking = true;
-        let isPaused = false;
-        let currentCycle = 1;
-        let totalCycles;
-        let endTime;
-        let timeLeftOnPause;
-        
-        let pauseInterval;
-        let secondsPaused;
-        
-        let lastSessionInfo = {}; // ▼▼▼▼▼ [JS 추가] 마지막 세션 정보를 저장할 변수 ▼▼▼▼▼
+        let timerInterval, totalTimeInSeconds, isWorking = true, isPaused = false, currentCycle = 1, totalCycles, endTime, timeLeftOnPause, pauseInterval, secondsPaused;
+        let lastSessionInfo = {};
 
-        // KST 현재 시각 표시
+        function applyTranslations() {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n-key]').forEach(el => {
+                const key = el.dataset.i18nKey;
+                if (t[key]) {
+                    el.textContent = t[key];
+                }
+            });
+        }
+
         function updateRealTimeClock() {
             const now = new Date();
-            realTimeClock.textContent = `현재 시각: ${now.toLocaleTimeString([], { hour12: false })}`;
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            realTimeClock.textContent = `${t.currentTimePrefix} ${hours}:${minutes}:${seconds}`;
         }
         setInterval(updateRealTimeClock, 1000);
-        updateRealTimeClock();
 
         function updateTimerDisplay(seconds) {
             const minutes = Math.floor(seconds / 60);
@@ -241,39 +306,35 @@
         }
 
         function updateProgressBar(timeLeft, totalTime) {
-            const percentage = (timeLeft / totalTime) * 100;
-            progressBar.style.width = `${percentage}%`;
+            progressBar.style.width = `${(timeLeft / totalTime) * 100}%`;
         }
         
         function updateSessionInfo(status, startTime, sessionEndTime, updatedEndTime = null) {
             const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-            let infoText = `<strong>현재 상태:</strong> ${status}<br>`;
+            let infoText = `<strong>${t.infoStatus}</strong> ${status}<br>`;
             if (startTime && sessionEndTime) {
-                infoText += `<strong>시작:</strong> ${formatTime(startTime)} | <strong>종료:</strong> ${formatTime(sessionEndTime)}`;
+                infoText += `<strong>${t.infoStart}</strong> ${formatTime(startTime)} | <strong>${t.infoEnd}</strong> ${formatTime(sessionEndTime)}`;
             }
             if (updatedEndTime) {
-                infoText += `<br><span id="updatedEndTimeDisplay"><strong>변경된 종료:</strong> ${formatTime(updatedEndTime)}</span>`;
+                infoText += `<br><span id="updatedEndTimeDisplay"><strong>${t.infoUpdatedEnd}</strong> ${formatTime(updatedEndTime)}</span>`;
             }
             sessionInfo.innerHTML = infoText;
         }
 
         function formatPauseTime(totalSeconds) {
             if (totalSeconds < 60) {
-                return `(+${totalSeconds}초)`;
+                return `(${t.pausePrefix}${totalSeconds}${t.pauseUnitSecond})`;
             } else {
                 const minutes = Math.floor(totalSeconds / 60);
                 const seconds = totalSeconds % 60;
-                return `(+${minutes}분 ${seconds}초)`;
+                return `(${t.pausePrefix}${minutes}${t.pauseUnitMinute} ${seconds}${t.pauseUnitSecond})`;
             }
         }
 
         function startTimer() {
-            if (timerInterval) return; 
-
+            if (timerInterval) return;
             isPaused = false;
-            startButton.textContent = "시작";
             totalCycles = parseInt(cyclesInput.value);
-            
             startNextSession();
         }
 
@@ -282,115 +343,83 @@
                 finishPomodoro();
                 return;
             }
-            
             clearInterval(timerInterval);
-
-            const workMinutes = parseInt(workMinutesInput.value);
-            const restMinutes = parseInt(restMinutesInput.value);
             let sessionDurationSeconds;
-
+            const sessionTypeKey = isWorking ? 'Work' : 'Rest';
+            
             if (isWorking) {
-                sessionDurationSeconds = workMinutes * 60;
+                sessionDurationSeconds = workMinutesInput.value * 60;
                 progressBar.style.backgroundColor = '#007bff';
-                document.title = '작업 중! 🔥';
+                document.title = t.docTitleWork;
             } else {
-                sessionDurationSeconds = restMinutes * 60;
+                sessionDurationSeconds = restMinutesInput.value * 60;
                 progressBar.style.backgroundColor = '#28a745';
-                document.title = '휴식 시간 🧘';
+                document.title = t.docTitleRest;
             }
 
             totalTimeInSeconds = sessionDurationSeconds;
-            
             const now = new Date();
             const startTime = now;
             endTime = new Date(now.getTime() + sessionDurationSeconds * 1000);
+            const sessionStatusText = `${t['status' + sessionTypeKey]} (${currentCycle}/${totalCycles})`;
             
-            const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
-            
-            // ▼▼▼▼▼ [JS 수정] 마지막 세션 정보 저장 ▼▼▼▼▼
-            lastSessionInfo = { status: sessionType, start: startTime, end: endTime };
-            
-            updateSessionInfo(sessionType, startTime, endTime);
-
+            lastSessionInfo = { status: sessionStatusText, start: startTime, end: endTime };
+            updateSessionInfo(sessionStatusText, startTime, endTime);
             runTimer();
         }
 
         function runTimer() {
             timerInterval = setInterval(() => {
-                const now = new Date();
-                const timeLeftInSeconds = (endTime.getTime() - now.getTime()) / 1000;
-                
+                const timeLeftInSeconds = (endTime.getTime() - new Date().getTime()) / 1000;
                 if (timeLeftInSeconds >= 0) {
                     updateTimerDisplay(timeLeftInSeconds);
                     updateProgressBar(timeLeftInSeconds, totalTimeInSeconds);
                 } else {
+                    isWorking = !isWorking;
                     if (isWorking) {
-                        isWorking = false;
-                        startNextSession();
-                    } else {
-                        isWorking = true;
                         currentCycle++;
-                        startNextSession();
                     }
+                    startNextSession();
                 }
             }, 1000);
         }
 
-        // ▼▼▼▼▼ [핵심 수정] 완료 함수 로직 변경 ▼▼▼▼▼
         function finishPomodoro() {
-            document.title = '뽀모도로 완료! 🎉';
-            timerDisplay.textContent = "완료!";
-            
-            // 마지막 세션 정보를 바탕으로 화면을 다시 그림
-            updateSessionInfo(
-                lastSessionInfo.status, 
-                lastSessionInfo.start, 
-                lastSessionInfo.end
-            );
-            
-            // 완료 메시지를 추가함
-            sessionInfo.innerHTML += `<div class="completion-message">모든 세션을 완료했습니다! 수고하셨어요.</div>`;
-            
+            document.title = t.docTitleComplete;
+            timerDisplay.textContent = t.statusComplete.split('!')[0];
+            updateSessionInfo(t.statusComplete, lastSessionInfo.start, lastSessionInfo.end);
+            sessionInfo.innerHTML += `<div class="completion-message">${t.finishMessage} ${t.finishMessageSub}</div>`;
             clearInterval(timerInterval);
             timerInterval = null;
         }
         
         function pauseTimer() {
             if (!endTime || currentCycle > totalCycles) return;
-
             isPaused = !isPaused;
-
             if (isPaused) {
-                pauseButton.textContent = "재개";
-                document.title = '일시정지됨';
-                
+                pauseButton.textContent = t.resumeButton;
+                document.title = t.docTitlePaused;
                 timeLeftOnPause = (endTime.getTime() - new Date().getTime()) / 1000;
                 clearInterval(timerInterval);
-
                 secondsPaused = 0;
                 pauseDurationDisplay.textContent = formatPauseTime(secondsPaused);
                 pauseInterval = setInterval(() => {
                     secondsPaused++;
                     pauseDurationDisplay.textContent = formatPauseTime(secondsPaused);
                 }, 1000);
-
             } else {
-                pauseButton.textContent = "일시정지";
-                document.title = isWorking ? '작업 중! 🔥' : '휴식 시간 🧘';
-                
+                pauseButton.textContent = t.pauseButton;
+                document.title = isWorking ? t.docTitleWork : t.docTitleRest;
                 clearInterval(pauseInterval);
                 pauseDurationDisplay.textContent = '';
-                
                 const originalEndTime = endTime;
                 const newEndTime = new Date(new Date().getTime() + timeLeftOnPause * 1000);
                 endTime = newEndTime;
-                
-                const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
+                const sessionTypeKey = isWorking ? 'Work' : 'Rest';
+                const sessionStatusText = `${t['status' + sessionTypeKey]} (${currentCycle}/${totalCycles})`;
                 const sessionStartTime = new Date(originalEndTime.getTime() - totalTimeInSeconds * 1000);
-                
-                lastSessionInfo = { status: sessionType, start: sessionStartTime, end: newEndTime };
-                updateSessionInfo(sessionType, sessionStartTime, originalEndTime, newEndTime);
-
+                lastSessionInfo = { status: sessionStatusText, start: sessionStartTime, end: newEndTime };
+                updateSessionInfo(sessionStatusText, sessionStartTime, originalEndTime, newEndTime);
                 runTimer();
             }
         }
@@ -401,25 +430,24 @@
             pauseDurationDisplay.textContent = '';
             timerInterval = null;
             endTime = null;
-            lastSessionInfo = {}; // 마지막 세션 정보도 초기화
+            lastSessionInfo = {};
             isWorking = true;
             isPaused = false;
             currentCycle = 1;
             const initialTime = parseInt(workMinutesInput.value) * 60;
-            
             updateTimerDisplay(initialTime);
             updateProgressBar(initialTime, initialTime);
-            updateSessionInfo('대기 중');
-            document.title = '뽀모도로 타이머';
-            startButton.textContent = "시작";
-            pauseButton.textContent = "일시정지";
+            updateSessionInfo(t.statusWaiting);
+            document.title = t.docTitleDefault;
         }
 
+        applyTranslations();
+        resetTimer();
+        updateRealTimeClock();
+        
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
         resetButton.addEventListener('click', resetTimer);
-
-        resetTimer();
     </script>
 </body>
 </html>
