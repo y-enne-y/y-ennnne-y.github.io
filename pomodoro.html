@@ -217,10 +217,12 @@
         let pauseInterval;
         let secondsPaused;
 
-        // ▼▼▼▼▼ [핵심 수정] (KST) 문구 제거 ▼▼▼▼▼
         function updateRealTimeClock() {
             const now = new Date();
-            realTimeClock.textContent = `현재 시각: ${now.toLocaleTimeString([], { hour12: false })}`;
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            realTimeClock.textContent = `현재 시각: ${hours}:${minutes}:${seconds}`;
         }
         setInterval(updateRealTimeClock, 1000);
         updateRealTimeClock();
@@ -390,7 +392,8 @@
 
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
-        resetButton.addEventListener('click', resetButton);
+        // ▼▼▼▼▼ [핵심 수정] resetButton이 resetTimer 함수를 호출하도록 수정 ▼▼▼▼▼
+        resetButton.addEventListener('click', resetTimer);
 
         resetTimer();
     </script>
