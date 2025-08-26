@@ -191,7 +191,8 @@
         let isPaused = false;
         let currentCycle = 1;
         let totalCycles;
-        let endTime; // ▼▼▼▼▼ [수정] 종료 시간을 저장할 변수 ▼▼▼▼▼
+        let endTime;
+        let timeLeftOnPause; // ▼▼▼▼▼ [수정] 일시정지 시 남은 시간을 저장할 변수 ▼▼▼▼▼
 
         // KST 현재 시각 표시
         function updateRealTimeClock() {
@@ -227,7 +228,7 @@
 
         // 타이머 시작 함수
         function startTimer() {
-            if (timerInterval) return; // 이미 실행 중이면 무시
+            if (timerInterval) return; 
 
             isPaused = false;
             startButton.textContent = "시작";
@@ -243,7 +244,7 @@
                 return;
             }
             
-            clearInterval(timerInterval); // 이전 인터벌 클리어
+            clearInterval(timerInterval);
 
             const workMinutes = parseInt(workMinutesInput.value);
             const restMinutes = parseInt(restMinutesInput.value);
@@ -262,7 +263,6 @@
             totalTimeInSeconds = sessionDurationSeconds;
             
             const now = new Date();
-            // ▼▼▼▼▼ [수정] endTime을 전역 변수에 저장 ▼▼▼▼▼
             endTime = new Date(now.getTime() + sessionDurationSeconds * 1000);
             
             const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
@@ -274,9 +274,6 @@
         // 타이머 실행 (1초마다 반복)
         function runTimer() {
             timerInterval = setInterval(() => {
-                if (isPaused) return;
-
-                // ▼▼▼▼▼ [핵심 수정] 남은 시간을 매번 새로 계산합니다 ▼▼▼▼▼
                 const now = new Date();
                 const timeLeftInSeconds = (endTime.getTime() - now.getTime()) / 1000;
                 
@@ -284,7 +281,6 @@
                     updateTimerDisplay(timeLeftInSeconds);
                     updateProgressBar(timeLeftInSeconds, totalTimeInSeconds);
                 } else {
-                    // 시간이 다 되면 세션 전환
                     if (isWorking) {
                         isWorking = false;
                         startNextSession();
@@ -294,7 +290,7 @@
                         startNextSession();
                     }
                 }
-            }, 1000); // 1초 간격은 유지
+            }, 1000);
         }
 
         // 뽀모도로 완료
@@ -306,18 +302,31 @@
             timerInterval = null;
         }
 
-        // 일시정지/재개
+        // ▼▼▼▼▼ [핵심 수정] 일시정지/재개 로직 변경 ▼▼▼▼▼
         function pauseTimer() {
-            if (!timerInterval && !isPaused) return; // 타이머가 시작되지 않았으면 아무것도 안함
+            // 타이머가 시작되지 않았거나, 이미 완료된 상태면 아무것도 안 함
+            if (!endTime || currentCycle > totalCycles) return;
+
             isPaused = !isPaused;
+
             if (isPaused) {
+                // 일시정지 로직
                 pauseButton.textContent = "재개";
                 document.title = '일시정지됨';
-                clearInterval(timerInterval); // 일시정지 시 인터벌 중지
+                
+                // 남은 시간을 계산해서 저장
+                timeLeftOnPause = (endTime.getTime() - new Date().getTime()) / 1000;
+                clearInterval(timerInterval);
             } else {
+                // 재개 로직
                 pauseButton.textContent = "일시정지";
                 document.title = isWorking ? '작업 중! 🔥' : '휴식 시간 🧘';
-                runTimer(); // 재개 시 타이머 다시 시작
+                
+                // 현재 시간에 아까 저장했던 남은 시간을 더해서 새로운 종료 시간 설정
+                endTime = new Date(new Date().getTime() + timeLeftOnPause * 1000);
+                
+                // 타이머 다시 시작
+                runTimer();
             }
         }
         
@@ -325,6 +334,7 @@
         function resetTimer() {
             clearInterval(timerInterval);
             timerInterval = null;
+            endTime = null; // 종료 시간 초기화
             isWorking = true;
             isPaused = false;
             currentCycle = 1;
