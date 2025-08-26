@@ -217,10 +217,9 @@
         let pauseInterval;
         let secondsPaused;
 
-        // ▼▼▼▼▼ [수정 1] 24시간 형식으로 현재 시각 표시 ▼▼▼▼▼
+        // ▼▼▼▼▼ [핵심 수정] (KST) 문구 제거 ▼▼▼▼▼
         function updateRealTimeClock() {
             const now = new Date();
-            // hour12: false 옵션을 추가하여 24시간 형식으로 강제합니다.
             realTimeClock.textContent = `현재 시각: ${now.toLocaleTimeString([], { hour12: false })}`;
         }
         setInterval(updateRealTimeClock, 1000);
@@ -237,9 +236,7 @@
             progressBar.style.width = `${percentage}%`;
         }
         
-        // ▼▼▼▼▼ [수정 2] 24시간 형식으로 시작/종료 시각 표시 ▼▼▼▼▼
         function updateSessionInfo(status, startTime, sessionEndTime, updatedEndTime = null) {
-            // hour12: false 옵션을 추가합니다.
             const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             let infoText = `<strong>현재 상태:</strong> ${status}<br>`;
             if (startTime && sessionEndTime) {
