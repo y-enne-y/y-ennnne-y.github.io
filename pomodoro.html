@@ -186,12 +186,12 @@
 
         // 타이머 상태 변수
         let timerInterval;
-        let timeLeftInSeconds;
         let totalTimeInSeconds;
         let isWorking = true;
         let isPaused = false;
         let currentCycle = 1;
         let totalCycles;
+        let endTime; // ▼▼▼▼▼ [수정] 종료 시간을 저장할 변수 ▼▼▼▼▼
 
         // KST 현재 시각 표시
         function updateRealTimeClock() {
@@ -203,24 +203,24 @@
         updateRealTimeClock();
 
         // 타이머 디스플레이 업데이트
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeftInSeconds / 60);
-            const seconds = timeLeftInSeconds % 60;
-            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        function updateTimerDisplay(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.round(seconds % 60);
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
         }
 
         // 진행률 바 업데이트
-        function updateProgressBar() {
-            const percentage = (timeLeftInSeconds / totalTimeInSeconds) * 100;
+        function updateProgressBar(timeLeft, totalTime) {
+            const percentage = (timeLeft / totalTime) * 100;
             progressBar.style.width = `${percentage}%`;
         }
         
         // 세션 정보 업데이트
-        function updateSessionInfo(status, startTime, endTime) {
+        function updateSessionInfo(status, startTime, sessionEndTime) {
             const formatTime = (date) => date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
             let infoText = `<strong>현재 상태:</strong> ${status}<br>`;
-            if(startTime && endTime) {
-                infoText += `<strong>시작:</strong> ${formatTime(startTime)} | <strong>종료:</strong> ${formatTime(endTime)}`;
+            if(startTime && sessionEndTime) {
+                infoText += `<strong>시작:</strong> ${formatTime(startTime)} | <strong>종료:</strong> ${formatTime(sessionEndTime)}`;
             }
             sessionInfo.innerHTML = infoText;
         }
@@ -242,24 +242,28 @@
                 finishPomodoro();
                 return;
             }
+            
+            clearInterval(timerInterval); // 이전 인터벌 클리어
 
             const workMinutes = parseInt(workMinutesInput.value);
             const restMinutes = parseInt(restMinutesInput.value);
+            let sessionDurationSeconds;
 
             if (isWorking) {
-                timeLeftInSeconds = workMinutes * 60;
+                sessionDurationSeconds = workMinutes * 60;
                 progressBar.style.backgroundColor = '#007bff';
                 document.title = '작업 중! 🔥';
             } else {
-                timeLeftInSeconds = restMinutes * 60;
+                sessionDurationSeconds = restMinutes * 60;
                 progressBar.style.backgroundColor = '#28a745';
                 document.title = '휴식 시간 🧘';
             }
 
-            totalTimeInSeconds = timeLeftInSeconds;
+            totalTimeInSeconds = sessionDurationSeconds;
             
             const now = new Date();
-            const endTime = new Date(now.getTime() + timeLeftInSeconds * 1000);
+            // ▼▼▼▼▼ [수정] endTime을 전역 변수에 저장 ▼▼▼▼▼
+            endTime = new Date(now.getTime() + sessionDurationSeconds * 1000);
             
             const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
             updateSessionInfo(sessionType, now, endTime);
@@ -272,76 +276,12 @@
             timerInterval = setInterval(() => {
                 if (isPaused) return;
 
-                timeLeftInSeconds--;
-                updateTimerDisplay();
-                updateProgressBar();
-
-                if (timeLeftInSeconds < 0) {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-
-                    // 세션 전환
-                    if (isWorking) {
-                        isWorking = false;
-                        // 휴식 세션 시작
-                        startNextSession();
-                    } else {
-                        isWorking = true;
-                        currentCycle++;
-                        // 다음 작업 세션 시작
-                        startNextSession();
-                    }
-                }
-            }, 1000);
-        }
-
-        // 뽀모도로 완료
-        function finishPomodoro() {
-            document.title = '뽀모도로 완료! 🎉';
-            timerDisplay.textContent = "완료!";
-            sessionInfo.innerHTML = "<strong>모든 세션을 완료했습니다! 수고하셨어요.</strong>";
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
-
-        // 일시정지/재개
-        function pauseTimer() {
-            if (!timerInterval) return;
-            isPaused = !isPaused;
-            if (isPaused) {
-                pauseButton.textContent = "재개";
-                document.title = '일시정지됨';
-            } else {
-                pauseButton.textContent = "일시정지";
-                document.title = isWorking ? '작업 중! 🔥' : '휴식 시간 🧘';
-            }
-        }
-        
-        // 초기화
-        function resetTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            isWorking = true;
-            isPaused = false;
-            currentCycle = 1;
-            timeLeftInSeconds = parseInt(workMinutesInput.value) * 60;
-            totalTimeInSeconds = timeLeftInSeconds;
-            
-            updateTimerDisplay();
-            updateProgressBar();
-            updateSessionInfo('대기 중');
-            document.title = '뽀모도로 타이머';
-            startButton.textContent = "시작";
-            pauseButton.textContent = "일시정지";
-        }
-
-        // 버튼 클릭 이벤트 리스너
-        startButton.addEventListener('click', startTimer);
-        pauseButton.addEventListener('click', pauseTimer);
-        resetButton.addEventListener('click', resetTimer);
-
-        // 페이지 로드 시 초기화
-        resetTimer();
-    </script>
-</body>
-</html>
+                // ▼▼▼▼▼ [핵심 수정] 남은 시간을 매번 새로 계산합니다 ▼▼▼▼▼
+                const now = new Date();
+                const timeLeftInSeconds = (endTime.getTime() - now.getTime()) / 1000;
+                
+                if (timeLeftInSeconds >= 0) {
+                    updateTimerDisplay(timeLeftInSeconds);
+                    updateProgressBar(timeLeftInSeconds, totalTimeInSeconds);
+                } else {
+                    // 시간이 다 되면 세
