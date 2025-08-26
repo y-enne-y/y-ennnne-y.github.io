@@ -106,9 +106,8 @@
             line-height: 1.6;
         }
         
-        /* ▼▼▼▼▼ [CSS 추가] 변경된 종료 시각 스타일 ▼▼▼▼▼ */
         #updatedEndTimeDisplay {
-            color: #dc3545; /* 강조를 위해 붉은색 계열 사용 */
+            color: #dc3545;
             font-weight: bold;
         }
 
@@ -218,11 +217,11 @@
         let pauseInterval;
         let secondsPaused;
 
-        // KST 현재 시각 표시
+        // ▼▼▼▼▼ [수정 1] 24시간 형식으로 현재 시각 표시 ▼▼▼▼▼
         function updateRealTimeClock() {
             const now = new Date();
-            const options = { timeZone: 'Asia/Seoul', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-            realTimeClock.textContent = `현재 시각 (KST): ${now.toLocaleTimeString('ko-KR', options)}`;
+            // hour12: false 옵션을 추가하여 24시간 형식으로 강제합니다.
+            realTimeClock.textContent = `현재 시각: ${now.toLocaleTimeString([], { hour12: false })}`;
         }
         setInterval(updateRealTimeClock, 1000);
         updateRealTimeClock();
@@ -238,21 +237,20 @@
             progressBar.style.width = `${percentage}%`;
         }
         
-        // [JS 수정] 세션 정보 업데이트 함수 개선
+        // ▼▼▼▼▼ [수정 2] 24시간 형식으로 시작/종료 시각 표시 ▼▼▼▼▼
         function updateSessionInfo(status, startTime, sessionEndTime, updatedEndTime = null) {
-            const formatTime = (date) => date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+            // hour12: false 옵션을 추가합니다.
+            const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             let infoText = `<strong>현재 상태:</strong> ${status}<br>`;
             if (startTime && sessionEndTime) {
                 infoText += `<strong>시작:</strong> ${formatTime(startTime)} | <strong>종료:</strong> ${formatTime(sessionEndTime)}`;
             }
-            // 변경된 종료 시각이 있으면 추가로 표시
             if (updatedEndTime) {
                 infoText += `<br><span id="updatedEndTimeDisplay"><strong>변경된 종료:</strong> ${formatTime(updatedEndTime)}</span>`;
             }
             sessionInfo.innerHTML = infoText;
         }
 
-        // [JS 수정] 일시정지 시간 포맷 함수 버그 수정
         function formatPauseTime(totalSeconds) {
             if (totalSeconds < 60) {
                 return `(+${totalSeconds}초)`;
@@ -336,14 +334,12 @@
             timerInterval = null;
         }
         
-        // [JS 수정] 일시정지/재개 로직 전체 개선
         function pauseTimer() {
             if (!endTime || currentCycle > totalCycles) return;
 
             isPaused = !isPaused;
 
             if (isPaused) {
-                // 일시정지 로직
                 pauseButton.textContent = "재개";
                 document.title = '일시정지됨';
                 
@@ -358,18 +354,16 @@
                 }, 1000);
 
             } else {
-                // 재개 로직
                 pauseButton.textContent = "일시정지";
                 document.title = isWorking ? '작업 중! 🔥' : '휴식 시간 🧘';
                 
                 clearInterval(pauseInterval);
                 pauseDurationDisplay.textContent = '';
                 
-                const originalEndTime = endTime; // 원래 종료 시간 저장
-                const newEndTime = new Date(new Date().getTime() + timeLeftOnPause * 1000); // 새로운 종료 시간 계산
-                endTime = newEndTime; // 전역 변수 업데이트
+                const originalEndTime = endTime;
+                const newEndTime = new Date(new Date().getTime() + timeLeftOnPause * 1000);
+                endTime = newEndTime;
                 
-                // 화면에 원래 종료 시각과 변경된 종료 시각을 함께 표시
                 const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
                 const sessionStartTime = new Date(originalEndTime.getTime() - totalTimeInSeconds * 1000);
                 updateSessionInfo(sessionType, sessionStartTime, originalEndTime, newEndTime);
