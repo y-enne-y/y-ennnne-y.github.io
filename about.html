@@ -86,4 +86,80 @@
       .container { padding: 15px; }
       .countdown-box { font-size: 20px; }
       .links p { font-size: 16px; }
-      .back
+      .back-homepage a { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>About Me</h1>
+    <p>안녕하세요! 저는 [Yenney]입니다. 이 웹사이트는 오로지 ChatGPT를 통해서 만들었어요.<br>
+       여기는 제가 관심 있는 것들과 제 배경에 대해 공유하는 공간입니다.<br>
+       연락은 gang@yenney.kr로 문의 주세요!</p>
+    
+    <div class="links">
+      <p>Discord 채널: <a href="https://discord.com/invite/your-channel" target="_blank">Join here</a></p>
+      <p>블로그: <a href="https://blog.naver.com/alexeun67" target="_blank">Visit my blog</a></p>
+      <p>📖 공부 스케줄: <a href="https://www.notion.so/TODAY-18ded5f83d3980f38ae7ccd73c7645c6?pvs=4" target="_blank">Take a look at my schedule</a></p>
+    </div>
+
+        <div class="countdown-box">
+      <p class="check-time">2025년 2월 4일까지 남은 시간</p>
+      <div class="timer" id="countdownTimer">Loading...</div>
+      <div class="timer-details" id="countdownDetails"> </div>
+    </div>
+
+        <div class="back-homepage">
+      <a href="index.html">Back to Homepage</a>
+    </div>
+
+    <div class="icon-container">
+      
+      <div class="youtube-section">
+        <a href="youtube-link-generator.html" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube" width="120">
+        </a>
+        <p>유튜브 링크 생성기</p>
+      </div>
+
+      <div class="pomodoro-section"> 
+        <a href="pomodoro.html" style="text-decoration: none; color: #333;"> 
+          <span style="font-size: 50px;">🍅</span> 
+          <p>뽀모도로 타이머</p> 
+        </a> 
+      </div>
+
+    </div>
+      </div>
+
+  <script>
+    const targetDate = new Date("2025-02-04T09:59:59");
+
+    function updateCountdown() {
+      const now = new Date();
+      const remainingTime = targetDate - now;
+
+      if (remainingTime > 0) {
+        const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+        const totalHours = Math.floor(remainingTime / (1000 * 60 * 60));
+        const totalMinutes = Math.floor(remainingTime / (1000 * 60));
+
+        document.getElementById("countdownTimer").textContent =
+          `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+
+        document.getElementById("countdownDetails").textContent =
+          `(${totalHours}시간 ${totalMinutes % 60}분 ${seconds}초)`;
+      } else {
+        document.getElementById("countdownTimer").textContent = "시간이 다 되었습니다!";
+        document.getElementById("countdownDetails").textContent = "";
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
