@@ -77,7 +77,6 @@
             color: #007bff;
         }
         
-        /* ▼▼▼▼▼ [CSS 추가] 일시정지 시간 스타일 ▼▼▼▼▼ */
         #pauseDurationDisplay {
             font-size: 18px;
             color: #6c757d;
@@ -197,7 +196,7 @@
         const progressBar = document.getElementById('progressBar');
         const sessionInfo = document.getElementById('sessionInfo');
         const realTimeClock = document.getElementById('realTimeClock');
-        const pauseDurationDisplay = document.getElementById('pauseDurationDisplay'); // [JS 추가] 일시정지 시간 표시 요소
+        const pauseDurationDisplay = document.getElementById('pauseDurationDisplay');
 
         // 타이머 상태 변수
         let timerInterval;
@@ -208,8 +207,8 @@
         let totalCycles;
         let endTime;
         let timeLeftOnPause;
+        let sessionStartTime; // ▼▼▼▼▼ [JS 추가] 현재 세션의 시작 시간을 저장할 변수 ▼▼▼▼▼
         
-        // [JS 추가] 일시정지 시간 카운터를 위한 변수
         let pauseInterval;
         let secondsPaused;
 
@@ -240,6 +239,16 @@
                 infoText += `<strong>시작:</strong> ${formatTime(startTime)} | <strong>종료:</strong> ${formatTime(sessionEndTime)}`;
             }
             sessionInfo.innerHTML = infoText;
+        }
+
+        function formatPauseTime(totalSeconds) {
+            if (totalSeconds < 60) {
+                return `(+${totalSeconds}초)`;
+            } else {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                return `(+${minutes}분 ${seconds}초)`;
+            }
         }
 
         function startTimer() {
@@ -277,10 +286,11 @@
             totalTimeInSeconds = sessionDurationSeconds;
             
             const now = new Date();
+            sessionStartTime = now; // ▼▼▼▼▼ [JS 수정] 세션 시작 시각 저장 ▼▼▼▼▼
             endTime = new Date(now.getTime() + sessionDurationSeconds * 1000);
             
             const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
-            updateSessionInfo(sessionType, now, endTime);
+            updateSessionInfo(sessionType, sessionStartTime, endTime); // ▼▼▼▼▼ [JS 수정] 저장된 시작 시각 사용 ▼▼▼▼▼
 
             runTimer();
         }
@@ -314,49 +324,49 @@
             timerInterval = null;
         }
         
-        // ▼▼▼▼▼ [JS 수정] 일시정지/재개 로직에 시간 카운터 추가 ▼▼▼▼▼
         function pauseTimer() {
             if (!endTime || currentCycle > totalCycles) return;
 
             isPaused = !isPaused;
 
             if (isPaused) {
-                // 일시정지 로직
                 pauseButton.textContent = "재개";
                 document.title = '일시정지됨';
                 
                 timeLeftOnPause = (endTime.getTime() - new Date().getTime()) / 1000;
                 clearInterval(timerInterval);
 
-                // 일시정지 시간 카운터 시작
                 secondsPaused = 0;
-                pauseDurationDisplay.textContent = `(+${secondsPaused}초)`;
+                pauseDurationDisplay.textContent = formatPauseTime(secondsPaused);
                 pauseInterval = setInterval(() => {
                     secondsPaused++;
-                    pauseDurationDisplay.textContent = `(+${secondsPaused}초)`;
+                    pauseDurationDisplay.textContent = formatPauseTime(secondsPaused);
                 }, 1000);
 
             } else {
-                // 재개 로직
                 pauseButton.textContent = "일시정지";
                 document.title = isWorking ? '작업 중! 🔥' : '휴식 시간 🧘';
                 
-                // 일시정지 시간 카운터 중지 및 숨기기
                 clearInterval(pauseInterval);
                 pauseDurationDisplay.textContent = '';
                 
                 endTime = new Date(new Date().getTime() + timeLeftOnPause * 1000);
                 
+                // ▼▼▼▼▼ [핵심 수정] 변경된 종료 시각을 화면에 다시 업데이트 ▼▼▼▼▼
+                const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
+                updateSessionInfo(sessionType, sessionStartTime, endTime);
+
                 runTimer();
             }
         }
         
         function resetTimer() {
             clearInterval(timerInterval);
-            clearInterval(pauseInterval); // 일시정지 카운터도 초기화
-            pauseDurationDisplay.textContent = ''; // 일시정지 시간 텍스트 제거
+            clearInterval(pauseInterval);
+            pauseDurationDisplay.textContent = '';
             timerInterval = null;
             endTime = null;
+            sessionStartTime = null; // ▼▼▼▼▼ [JS 추가] 초기화 시 시작 시간도 비움 ▼▼▼▼▼
             isWorking = true;
             isPaused = false;
             currentCycle = 1;
@@ -370,12 +380,10 @@
             pauseButton.textContent = "일시정지";
         }
 
-        // 버튼 클릭 이벤트 리스너
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
         resetButton.addEventListener('click', resetButton);
 
-        // 페이지 로드 시 초기화
         resetTimer();
     </script>
 </body>
