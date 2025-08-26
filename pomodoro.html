@@ -110,6 +110,13 @@
             color: #dc3545;
             font-weight: bold;
         }
+        
+        /* ▼▼▼▼▼ [CSS 추가] 완료 메시지 스타일 ▼▼▼▼▼ */
+        .completion-message {
+            font-weight: bold;
+            color: #28a745;
+            margin-top: 8px;
+        }
 
         .controls button {
             padding: 12px 24px;
@@ -216,13 +223,13 @@
         
         let pauseInterval;
         let secondsPaused;
+        
+        let lastSessionInfo = {}; // ▼▼▼▼▼ [JS 추가] 마지막 세션 정보를 저장할 변수 ▼▼▼▼▼
 
+        // KST 현재 시각 표시
         function updateRealTimeClock() {
             const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            realTimeClock.textContent = `현재 시각: ${hours}:${minutes}:${seconds}`;
+            realTimeClock.textContent = `현재 시각: ${now.toLocaleTimeString([], { hour12: false })}`;
         }
         setInterval(updateRealTimeClock, 1000);
         updateRealTimeClock();
@@ -299,6 +306,10 @@
             endTime = new Date(now.getTime() + sessionDurationSeconds * 1000);
             
             const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
+            
+            // ▼▼▼▼▼ [JS 수정] 마지막 세션 정보 저장 ▼▼▼▼▼
+            lastSessionInfo = { status: sessionType, start: startTime, end: endTime };
+            
             updateSessionInfo(sessionType, startTime, endTime);
 
             runTimer();
@@ -325,10 +336,21 @@
             }, 1000);
         }
 
+        // ▼▼▼▼▼ [핵심 수정] 완료 함수 로직 변경 ▼▼▼▼▼
         function finishPomodoro() {
             document.title = '뽀모도로 완료! 🎉';
             timerDisplay.textContent = "완료!";
-            sessionInfo.innerHTML = "<strong>모든 세션을 완료했습니다! 수고하셨어요.</strong>";
+            
+            // 마지막 세션 정보를 바탕으로 화면을 다시 그림
+            updateSessionInfo(
+                lastSessionInfo.status, 
+                lastSessionInfo.start, 
+                lastSessionInfo.end
+            );
+            
+            // 완료 메시지를 추가함
+            sessionInfo.innerHTML += `<div class="completion-message">모든 세션을 완료했습니다! 수고하셨어요.</div>`;
+            
             clearInterval(timerInterval);
             timerInterval = null;
         }
@@ -365,6 +387,8 @@
                 
                 const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
                 const sessionStartTime = new Date(originalEndTime.getTime() - totalTimeInSeconds * 1000);
+                
+                lastSessionInfo = { status: sessionType, start: sessionStartTime, end: newEndTime };
                 updateSessionInfo(sessionType, sessionStartTime, originalEndTime, newEndTime);
 
                 runTimer();
@@ -377,6 +401,7 @@
             pauseDurationDisplay.textContent = '';
             timerInterval = null;
             endTime = null;
+            lastSessionInfo = {}; // 마지막 세션 정보도 초기화
             isWorking = true;
             isPaused = false;
             currentCycle = 1;
@@ -392,7 +417,6 @@
 
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
-        // ▼▼▼▼▼ [핵심 수정] resetButton이 resetTimer 함수를 호출하도록 수정 ▼▼▼▼▼
         resetButton.addEventListener('click', resetTimer);
 
         resetTimer();
