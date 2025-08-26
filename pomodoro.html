@@ -103,6 +103,13 @@
         .session-info {
             margin: 15px 0;
             color: #606770;
+            line-height: 1.6;
+        }
+        
+        /* ▼▼▼▼▼ [CSS 추가] 변경된 종료 시각 스타일 ▼▼▼▼▼ */
+        #updatedEndTimeDisplay {
+            color: #dc3545; /* 강조를 위해 붉은색 계열 사용 */
+            font-weight: bold;
         }
 
         .controls button {
@@ -207,7 +214,6 @@
         let totalCycles;
         let endTime;
         let timeLeftOnPause;
-        let sessionStartTime; // ▼▼▼▼▼ [JS 추가] 현재 세션의 시작 시간을 저장할 변수 ▼▼▼▼▼
         
         let pauseInterval;
         let secondsPaused;
@@ -232,15 +238,21 @@
             progressBar.style.width = `${percentage}%`;
         }
         
-        function updateSessionInfo(status, startTime, sessionEndTime) {
+        // [JS 수정] 세션 정보 업데이트 함수 개선
+        function updateSessionInfo(status, startTime, sessionEndTime, updatedEndTime = null) {
             const formatTime = (date) => date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
             let infoText = `<strong>현재 상태:</strong> ${status}<br>`;
-            if(startTime && sessionEndTime) {
+            if (startTime && sessionEndTime) {
                 infoText += `<strong>시작:</strong> ${formatTime(startTime)} | <strong>종료:</strong> ${formatTime(sessionEndTime)}`;
+            }
+            // 변경된 종료 시각이 있으면 추가로 표시
+            if (updatedEndTime) {
+                infoText += `<br><span id="updatedEndTimeDisplay"><strong>변경된 종료:</strong> ${formatTime(updatedEndTime)}</span>`;
             }
             sessionInfo.innerHTML = infoText;
         }
 
+        // [JS 수정] 일시정지 시간 포맷 함수 버그 수정
         function formatPauseTime(totalSeconds) {
             if (totalSeconds < 60) {
                 return `(+${totalSeconds}초)`;
@@ -286,11 +298,11 @@
             totalTimeInSeconds = sessionDurationSeconds;
             
             const now = new Date();
-            sessionStartTime = now; // ▼▼▼▼▼ [JS 수정] 세션 시작 시각 저장 ▼▼▼▼▼
+            const startTime = now;
             endTime = new Date(now.getTime() + sessionDurationSeconds * 1000);
             
             const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
-            updateSessionInfo(sessionType, sessionStartTime, endTime); // ▼▼▼▼▼ [JS 수정] 저장된 시작 시각 사용 ▼▼▼▼▼
+            updateSessionInfo(sessionType, startTime, endTime);
 
             runTimer();
         }
@@ -324,12 +336,14 @@
             timerInterval = null;
         }
         
+        // [JS 수정] 일시정지/재개 로직 전체 개선
         function pauseTimer() {
             if (!endTime || currentCycle > totalCycles) return;
 
             isPaused = !isPaused;
 
             if (isPaused) {
+                // 일시정지 로직
                 pauseButton.textContent = "재개";
                 document.title = '일시정지됨';
                 
@@ -344,17 +358,21 @@
                 }, 1000);
 
             } else {
+                // 재개 로직
                 pauseButton.textContent = "일시정지";
                 document.title = isWorking ? '작업 중! 🔥' : '휴식 시간 🧘';
                 
                 clearInterval(pauseInterval);
                 pauseDurationDisplay.textContent = '';
                 
-                endTime = new Date(new Date().getTime() + timeLeftOnPause * 1000);
+                const originalEndTime = endTime; // 원래 종료 시간 저장
+                const newEndTime = new Date(new Date().getTime() + timeLeftOnPause * 1000); // 새로운 종료 시간 계산
+                endTime = newEndTime; // 전역 변수 업데이트
                 
-                // ▼▼▼▼▼ [핵심 수정] 변경된 종료 시각을 화면에 다시 업데이트 ▼▼▼▼▼
+                // 화면에 원래 종료 시각과 변경된 종료 시각을 함께 표시
                 const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
-                updateSessionInfo(sessionType, sessionStartTime, endTime);
+                const sessionStartTime = new Date(originalEndTime.getTime() - totalTimeInSeconds * 1000);
+                updateSessionInfo(sessionType, sessionStartTime, originalEndTime, newEndTime);
 
                 runTimer();
             }
@@ -366,7 +384,6 @@
             pauseDurationDisplay.textContent = '';
             timerInterval = null;
             endTime = null;
-            sessionStartTime = null; // ▼▼▼▼▼ [JS 추가] 초기화 시 시작 시간도 비움 ▼▼▼▼▼
             isWorking = true;
             isPaused = false;
             currentCycle = 1;
