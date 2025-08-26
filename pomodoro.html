@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뽀모도로 타이머</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #1c1e21;
+        }
+
+        .real-time-clock {
+            font-size: 16px;
+            color: #606770;
+            margin-bottom: 20px;
+            background-color: #e7f3ff;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #606770;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #007bff;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 100%;
+            background-color: #007bff;
+            transition: width 0.5s linear;
+        }
+
+        .session-info {
+            margin: 15px 0;
+            color: #606770;
+        }
+
+        .controls button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.2s;
+            font-weight: bold;
+        }
+
+        #startButton { background-color: #28a745; color: white; }
+        #startButton:hover { background-color: #218838; }
+
+        #pauseButton { background-color: #ffc107; color: #333; }
+        #pauseButton:hover { background-color: #e0a800; }
+
+        #resetButton { background-color: #dc3545; color: white; }
+        #resetButton:hover { background-color: #c82333; }
+        
+        .back-link {
+            margin-top: 30px;
+        }
+
+        .back-link a {
+            color: #0073e6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>뽀모도로 타이머 🍅</h1>
+        <div class="real-time-clock" id="realTimeClock"></div>
+
+        <div class="settings">
+            <div class="input-group">
+                <label for="workMinutes">작업 시간 (분)</label>
+                <input type="number" id="workMinutes" value="25" min="0">
+            </div>
+            <div class="input-group">
+                <label for="restMinutes">휴식 시간 (분)</label>
+                <input type="number" id="restMinutes" value="5" min="0">
+            </div>
+            <div class="input-group">
+                <label for="cycles">반복 횟수</label>
+                <input type="number" id="cycles" value="4" min="1">
+            </div>
+        </div>
+
+        <div id="timerDisplay" class="timer-display">25:00</div>
+        
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <div id="sessionInfo" class="session-info">
+            <strong>현재 상태:</strong> 대기 중
+        </div>
+
+        <div class="controls">
+            <button id="startButton">시작</button>
+            <button id="pauseButton">일시정지</button>
+            <button id="resetButton">초기화</button>
+        </div>
+
+        <div class="back-link">
+            <a href="about.html">About Me 페이지로 돌아가기</a>
+        </div>
+    </div>
+
+    <script>
+        // HTML 요소 가져오기
+        const workMinutesInput = document.getElementById('workMinutes');
+        const restMinutesInput = document.getElementById('restMinutes');
+        const cyclesInput = document.getElementById('cycles');
+        const startButton = document.getElementById('startButton');
+        const pauseButton = document.getElementById('pauseButton');
+        const resetButton = document.getElementById('resetButton');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const progressBar = document.getElementById('progressBar');
+        const sessionInfo = document.getElementById('sessionInfo');
+        const realTimeClock = document.getElementById('realTimeClock');
+
+        // 타이머 상태 변수
+        let timerInterval;
+        let timeLeftInSeconds;
+        let totalTimeInSeconds;
+        let isWorking = true;
+        let isPaused = false;
+        let currentCycle = 1;
+        let totalCycles;
+
+        // KST 현재 시각 표시
+        function updateRealTimeClock() {
+            const now = new Date();
+            const options = { timeZone: 'Asia/Seoul', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            realTimeClock.textContent = `현재 시각 (KST): ${now.toLocaleTimeString('ko-KR', options)}`;
+        }
+        setInterval(updateRealTimeClock, 1000);
+        updateRealTimeClock();
+
+        // 타이머 디스플레이 업데이트
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeftInSeconds / 60);
+            const seconds = timeLeftInSeconds % 60;
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // 진행률 바 업데이트
+        function updateProgressBar() {
+            const percentage = (timeLeftInSeconds / totalTimeInSeconds) * 100;
+            progressBar.style.width = `${percentage}%`;
+        }
+        
+        // 세션 정보 업데이트
+        function updateSessionInfo(status, startTime, endTime) {
+            const formatTime = (date) => date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+            let infoText = `<strong>현재 상태:</strong> ${status}<br>`;
+            if(startTime && endTime) {
+                infoText += `<strong>시작:</strong> ${formatTime(startTime)} | <strong>종료:</strong> ${formatTime(endTime)}`;
+            }
+            sessionInfo.innerHTML = infoText;
+        }
+
+        // 타이머 시작 함수
+        function startTimer() {
+            if (timerInterval) return; // 이미 실행 중이면 무시
+
+            isPaused = false;
+            startButton.textContent = "시작";
+            totalCycles = parseInt(cyclesInput.value);
+            
+            startNextSession();
+        }
+
+        // 다음 세션 시작
+        function startNextSession() {
+            if (currentCycle > totalCycles) {
+                finishPomodoro();
+                return;
+            }
+
+            const workMinutes = parseInt(workMinutesInput.value);
+            const restMinutes = parseInt(restMinutesInput.value);
+
+            if (isWorking) {
+                timeLeftInSeconds = workMinutes * 60;
+                progressBar.style.backgroundColor = '#007bff';
+                document.title = '작업 중! 🔥';
+            } else {
+                timeLeftInSeconds = restMinutes * 60;
+                progressBar.style.backgroundColor = '#28a745';
+                document.title = '휴식 시간 🧘';
+            }
+
+            totalTimeInSeconds = timeLeftInSeconds;
+            
+            const now = new Date();
+            const endTime = new Date(now.getTime() + timeLeftInSeconds * 1000);
+            
+            const sessionType = isWorking ? `작업 (${currentCycle}/${totalCycles})` : `휴식 (${currentCycle}/${totalCycles})`;
+            updateSessionInfo(sessionType, now, endTime);
+
+            runTimer();
+        }
+
+        // 타이머 실행 (1초마다 반복)
+        function runTimer() {
+            timerInterval = setInterval(() => {
+                if (isPaused) return;
+
+                timeLeftInSeconds--;
+                updateTimerDisplay();
+                updateProgressBar();
+
+                if (timeLeftInSeconds < 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+
+                    // 세션 전환
+                    if (isWorking) {
+                        isWorking = false;
+                        // 휴식 세션 시작
+                        startNextSession();
+                    } else {
+                        isWorking = true;
+                        currentCycle++;
+                        // 다음 작업 세션 시작
+                        startNextSession();
+                    }
+                }
+            }, 1000);
+        }
+
+        // 뽀모도로 완료
+        function finishPomodoro() {
+            document.title = '뽀모도로 완료! 🎉';
+            timerDisplay.textContent = "완료!";
+            sessionInfo.innerHTML = "<strong>모든 세션을 완료했습니다! 수고하셨어요.</strong>";
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        // 일시정지/재개
+        function pauseTimer() {
+            if (!timerInterval) return;
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseButton.textContent = "재개";
+                document.title = '일시정지됨';
+            } else {
+                pauseButton.textContent = "일시정지";
+                document.title = isWorking ? '작업 중! 🔥' : '휴식 시간 🧘';
+            }
+        }
+        
+        // 초기화
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            isWorking = true;
+            isPaused = false;
+            currentCycle = 1;
+            timeLeftInSeconds = parseInt(workMinutesInput.value) * 60;
+            totalTimeInSeconds = timeLeftInSeconds;
+            
+            updateTimerDisplay();
+            updateProgressBar();
+            updateSessionInfo('대기 중');
+            document.title = '뽀모도로 타이머';
+            startButton.textContent = "시작";
+            pauseButton.textContent = "일시정지";
+        }
+
+        // 버튼 클릭 이벤트 리스너
+        startButton.addEventListener('click', startTimer);
+        pauseButton.addEventListener('click', pauseTimer);
+        resetButton.addEventListener('click', resetTimer);
+
+        // 페이지 로드 시 초기화
+        resetTimer();
+    </script>
+</body>
+</html>
