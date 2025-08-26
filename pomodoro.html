@@ -67,11 +67,22 @@
             font-size: 16px;
         }
 
+        .timer-display-wrapper {
+            margin: 20px 0;
+        }
+        
         .timer-display {
             font-size: 48px;
             font-weight: bold;
-            margin: 20px 0;
             color: #007bff;
+        }
+        
+        /* ▼▼▼▼▼ [CSS 추가] 일시정지 시간 스타일 ▼▼▼▼▼ */
+        #pauseDurationDisplay {
+            font-size: 18px;
+            color: #6c757d;
+            height: 24px;
+            margin-top: 4px;
         }
 
         .progress-bar-container {
@@ -150,7 +161,10 @@
             </div>
         </div>
 
-        <div id="timerDisplay" class="timer-display">25:00</div>
+        <div class="timer-display-wrapper">
+            <div id="timerDisplay" class="timer-display">25:00</div>
+            <div id="pauseDurationDisplay"></div>
+        </div>
         
         <div class="progress-bar-container">
             <div id="progressBar" class="progress-bar"></div>
@@ -183,6 +197,7 @@
         const progressBar = document.getElementById('progressBar');
         const sessionInfo = document.getElementById('sessionInfo');
         const realTimeClock = document.getElementById('realTimeClock');
+        const pauseDurationDisplay = document.getElementById('pauseDurationDisplay'); // [JS 추가] 일시정지 시간 표시 요소
 
         // 타이머 상태 변수
         let timerInterval;
@@ -192,7 +207,11 @@
         let currentCycle = 1;
         let totalCycles;
         let endTime;
-        let timeLeftOnPause; // ▼▼▼▼▼ [수정] 일시정지 시 남은 시간을 저장할 변수 ▼▼▼▼▼
+        let timeLeftOnPause;
+        
+        // [JS 추가] 일시정지 시간 카운터를 위한 변수
+        let pauseInterval;
+        let secondsPaused;
 
         // KST 현재 시각 표시
         function updateRealTimeClock() {
@@ -203,20 +222,17 @@
         setInterval(updateRealTimeClock, 1000);
         updateRealTimeClock();
 
-        // 타이머 디스플레이 업데이트
         function updateTimerDisplay(seconds) {
             const minutes = Math.floor(seconds / 60);
             const remainingSeconds = Math.round(seconds % 60);
             timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
         }
 
-        // 진행률 바 업데이트
         function updateProgressBar(timeLeft, totalTime) {
             const percentage = (timeLeft / totalTime) * 100;
             progressBar.style.width = `${percentage}%`;
         }
         
-        // 세션 정보 업데이트
         function updateSessionInfo(status, startTime, sessionEndTime) {
             const formatTime = (date) => date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
             let infoText = `<strong>현재 상태:</strong> ${status}<br>`;
@@ -226,7 +242,6 @@
             sessionInfo.innerHTML = infoText;
         }
 
-        // 타이머 시작 함수
         function startTimer() {
             if (timerInterval) return; 
 
@@ -237,7 +252,6 @@
             startNextSession();
         }
 
-        // 다음 세션 시작
         function startNextSession() {
             if (currentCycle > totalCycles) {
                 finishPomodoro();
@@ -271,7 +285,6 @@
             runTimer();
         }
 
-        // 타이머 실행 (1초마다 반복)
         function runTimer() {
             timerInterval = setInterval(() => {
                 const now = new Date();
@@ -293,7 +306,6 @@
             }, 1000);
         }
 
-        // 뽀모도로 완료
         function finishPomodoro() {
             document.title = '뽀모도로 완료! 🎉';
             timerDisplay.textContent = "완료!";
@@ -301,10 +313,9 @@
             clearInterval(timerInterval);
             timerInterval = null;
         }
-
-        // ▼▼▼▼▼ [핵심 수정] 일시정지/재개 로직 변경 ▼▼▼▼▼
+        
+        // ▼▼▼▼▼ [JS 수정] 일시정지/재개 로직에 시간 카운터 추가 ▼▼▼▼▼
         function pauseTimer() {
-            // 타이머가 시작되지 않았거나, 이미 완료된 상태면 아무것도 안 함
             if (!endTime || currentCycle > totalCycles) return;
 
             isPaused = !isPaused;
@@ -314,27 +325,38 @@
                 pauseButton.textContent = "재개";
                 document.title = '일시정지됨';
                 
-                // 남은 시간을 계산해서 저장
                 timeLeftOnPause = (endTime.getTime() - new Date().getTime()) / 1000;
                 clearInterval(timerInterval);
+
+                // 일시정지 시간 카운터 시작
+                secondsPaused = 0;
+                pauseDurationDisplay.textContent = `(+${secondsPaused}초)`;
+                pauseInterval = setInterval(() => {
+                    secondsPaused++;
+                    pauseDurationDisplay.textContent = `(+${secondsPaused}초)`;
+                }, 1000);
+
             } else {
                 // 재개 로직
                 pauseButton.textContent = "일시정지";
                 document.title = isWorking ? '작업 중! 🔥' : '휴식 시간 🧘';
                 
-                // 현재 시간에 아까 저장했던 남은 시간을 더해서 새로운 종료 시간 설정
+                // 일시정지 시간 카운터 중지 및 숨기기
+                clearInterval(pauseInterval);
+                pauseDurationDisplay.textContent = '';
+                
                 endTime = new Date(new Date().getTime() + timeLeftOnPause * 1000);
                 
-                // 타이머 다시 시작
                 runTimer();
             }
         }
         
-        // 초기화
         function resetTimer() {
             clearInterval(timerInterval);
+            clearInterval(pauseInterval); // 일시정지 카운터도 초기화
+            pauseDurationDisplay.textContent = ''; // 일시정지 시간 텍스트 제거
             timerInterval = null;
-            endTime = null; // 종료 시간 초기화
+            endTime = null;
             isWorking = true;
             isPaused = false;
             currentCycle = 1;
@@ -351,7 +373,7 @@
         // 버튼 클릭 이벤트 리스너
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
-        resetButton.addEventListener('click', resetTimer);
+        resetButton.addEventListener('click', resetButton);
 
         // 페이지 로드 시 초기화
         resetTimer();
