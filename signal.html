@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실시간 신호등 정보</title>
+    <title>최적 출발 시간 알리미</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -27,184 +27,142 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             margin-bottom: 1.5rem;
+            text-align: left;
         }
-        .signal-status {
-            font-size: 2rem;
+        .info-title {
             font-weight: bold;
-            margin-bottom: 0.5rem;
-            transition: color 0.3s;
-        }
-        .signal-remaining {
             font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        .info-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
             color: #555;
         }
-        .map-container iframe {
-            width: 100%;
-            height: 250px;
-            border: 0;
-            border-radius: 12px;
+        .info-content .highlight {
+            font-weight: bold;
+            color: #007bff;
         }
-        .home-button a {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 12px 24px;
-            font-size: 1rem;
-            background-color: #e9ecef;
-            color: #495057;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        .home-button a:hover {
-            background-color: #dee2e6;
+        .error-message {
+            color: #dc3545;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📍 실시간 신호등 정보</h1>
+        <h1>🚇 최적 출발 시간 알리미 🚌</h1>
 
-        <div class="box" id="signal-box">
-            <div class="signal-status" id="signal-status">정보 확인 중...</div>
-            <div class="signal-remaining" id="signal-remaining"></div>
+        <div class="box" id="result-box">
+            <div class="info-title">최적 경로 정보</div>
+            <div class="info-content" id="result-content">🔄 데이터를 불러오는 중입니다...</div>
         </div>
 
-        <div class="box map-container">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3165.655843810811!2d126.92660131557163!3d37.4849369798132!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c9df5b8719813%3A0x6b31522a440c95a3!2z7Iug66a87Jet!5e0!3m2!1sko!2skr!4v1661581234567!5m2!1sko!2skr"
-              allowfullscreen
-              loading="lazy">
-            </iframe>
-        </div>
-
-        <div class="home-button">
-            <a href="index.html">🏠 홈으로</a>
-        </div>
     </div>
 
     <script>
-        // 중요: 이 API키는 서울시에서 발급받은 본인의 키로 교체해야 합니다.
-        const apiKey = '본인의 API 키를 여기에 입력하세요'; 
-        
-        // 중요: 서울 열린데이터광장에서 제공하는 V2X 지원 교차로 ID 목록을 확인하고
-        // 본인과 가장 가까운 교차로 ID로 변경해야 합니다.
-        const intersectionId = '1042'; 
+        // =================================================================
+        //                        ⚠️ 설정 값 (사용자 직접 입력)
+        // =================================================================
 
-        const url = `https://t-data.seoul.go.kr/apig/apiman-gateway/tapi/v2xSignalPhaseTimingInformation/1.0?apikey=${apiKey}&intersectionId=${intersectionId}`;
+        // 1. 서울 열린데이터광장에서 발급받은 본인의 API 키를 입력하세요.
+        // 지하철과 버스 API 키가 동일할 수 있습니다.
+        const API_KEY = '여기에 본인의 API 키를 입력하세요';
 
-        const statusEl = document.getElementById('signal-status');
-        const remainingEl = document.getElementById('signal-remaining');
-        const boxEl = document.getElementById('signal-box');
+        // 2. 지하철 역/버스 정류소 ID (아래 'ID 찾는 법' 참고)
+        const SUBWAY_STATION_NAME = '신림'; // 2호선 신림역
+        const BUS_ARS_ID = '13145';      // 신촌역2호선중앙차로 정류장 ARS ID
 
-        let signalSchedule = []; // 신호 시간표를 저장할 배열
-        let countdownInterval;   // 자체 카운트다운을 위한 변수
+        // 3. 평균 소요 시간 (단위: 분) - 본인에게 맞게 조정하세요.
+        const TIME_HOME_TO_SUBWAY = 10;      // 집 -> 신림역까지 도보 시간
+        const TIME_SUBWAY_RIDE = 22;         // 신림역 -> 신촌역 지하철 소요 시간
+        const TIME_SUBWAY_TO_BUS = 5;        // 신촌역 하차 -> 버스 정류장까지 환승 시간
 
-        // API로부터 신호 '시간표'를 받아오는 함수 (최초 1회 및 주기적 호출)
-        async function fetchSignalSchedule() {
-            statusEl.textContent = '🔄 신호 시간표 수신 중...';
+        // =================================================================
+
+        const resultBox = document.getElementById('result-box');
+        const resultContent = document.getElementById('result-content');
+
+        // CORS 오류를 우회하기 위한 프록시 서버 URL
+        const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+
+        // 지하철 실시간 도착 정보 API URL (역 이름으로 조회)
+        const subwayUrl = `http://swopenAPI.seoul.go.kr/api/subway/${API_KEY}/json/realtimeStationArrival/0/10/${encodeURIComponent(SUBWAY_STATION_NAME)}`;
+
+        // 버스 실시간 도착 정보 API URL (정류소 ARS ID로 조회)
+        const busUrl = `http://ws.bus.go.kr/api/rest/stationinfo/getStationByUid?serviceKey=${API_KEY}&arsId=${BUS_ARS_ID}&resultType=json`;
+
+        async function fetchDepartureInfo() {
             try {
-                // CORS 문제를 우회하기 위한 프록시 URL (실제 서비스에서는 직접 구축 필요)
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-                const res = await fetch(proxyUrl + url);
+                // 1. API 병렬 호출 (지하철, 버스 정보 동시에 요청)
+                const [subwayRes, busRes] = await Promise.all([
+                    fetch(proxyUrl + subwayUrl),
+                    fetch(proxyUrl + busUrl)
+                ]);
 
-                if (!res.ok) {
-                    throw new Error(`API Error: ${res.status}`);
+                if (!subwayRes.ok || !busRes.ok) {
+                    throw new Error('API 호출에 실패했습니다. 키를 확인해주세요.');
                 }
-                
-                const json = await res.json();
-                signalSchedule = json.data; // 받아온 시간표를 저장
 
-                // 시간표를 성공적으로 받아오면, 자체 카운트다운 시작
-                startLocalCountdown();
+                const subwayJson = await subwayRes.json();
+                const busJson = await busRes.json();
+
+                // 2. 데이터 파싱 및 가공
+                const nextSubway = parseSubwayData(subwayJson);
+                const targetBuses = parseBusData(busJson);
+
+                if (!nextSubway) {
+                    throw new Error('현재 운행 중인 신촌 방면 지하철이 없습니다.');
+                }
+                if (targetBuses.length === 0) {
+                    throw new Error('운행 중인 서대문03/04 버스가 없습니다.');
+                }
+
+                // 3. 최적 출발 시간 계산
+                const result = calculateOptimalDeparture(nextSubway, targetBuses);
+                
+                // 4. 결과 출력
+                displayResult(result);
 
             } catch (err) {
-                console.error("API Fetch Error:", err);
-                statusEl.textContent = '🚫 데이터 요청 실패';
-                remainingEl.textContent = 'CORS 정책 또는 API 키를 확인하세요.';
+                console.error("Error:", err);
+                resultContent.innerHTML = `<div class="error-message">🚫 ${err.message}</div><p style="font-size:0.9rem; color:#666; margin-top:10px;">CORS 오류일 경우, <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank">여기</a>를 방문하여 임시 액세스를 활성화해야 할 수 있습니다.</p>`;
             }
         }
 
-        // 받아온 시간표를 바탕으로 1초마다 화면을 갱신하는 함수
-        function updateDisplay() {
-            const now = new Date();
+        function parseSubwayData(data) {
+            if (!data.realtimeArrivalList) return null;
+
+            // 2호선 내선순환(신촌 방향) 열차만 필터링
+            const upcomingTrain = data.realtimeArrivalList.find(train => 
+                train.subwayId === '1002' && train.updnLine.includes('내선')
+            );
             
-            // 현재 시간에 해당하는 신호 찾기
-            const currentPhase = signalSchedule.find(phase => {
-                const startTime = parseApiTime(phase.startTime);
-                const endTime = parseApiTime(phase.endTime);
-                return startTime <= now && endTime > now;
-            });
+            if (!upcomingTrain) return null;
 
-            if (currentPhase) {
-                const endTime = parseApiTime(currentPhase.endTime);
-                const remainingSeconds = Math.round((endTime - now) / 1000);
-
-                statusEl.textContent = getPhaseDescription(currentPhase.signalPhase);
-                remainingEl.textContent = `${remainingSeconds}초 후 변경`;
-
-                setBoxColor(currentPhase.signalPhase);
-            } else {
-                statusEl.textContent = '현재 신호 정보 없음';
-                remainingEl.textContent = '시간표를 다시 확인합니다.';
-                boxEl.style.backgroundColor = 'white';
-            }
-        }
-        
-        // 자체 카운트다운을 시작하는 함수
-        function startLocalCountdown() {
-            if (countdownInterval) {
-                clearInterval(countdownInterval); // 기존 인터벌이 있다면 중지
-            }
-            // 1초마다 화면 업데이트 실행
-            countdownInterval = setInterval(updateDisplay, 1000);
-            updateDisplay(); // 즉시 한 번 실행
+            return {
+                arrivalMsg: upcomingTrain.arvlMsg2, // "전역 도착", "3분 후" 등
+                remainingTime: parseInt(upcomingTrain.barvlDt) // 도착까지 남은 시간(초)
+            };
         }
 
-        // API가 제공하는 시간 문자열(YYYYMMDDHHMMSS)을 Date 객체로 변환
-        function parseApiTime(timeStr) {
-            const y = timeStr.substring(0, 4);
-            const m = timeStr.substring(4, 6) - 1; // 월은 0부터 시작
-            const d = timeStr.substring(6, 8);
-            const h = timeStr.substring(8, 10);
-            const min = timeStr.substring(10, 12);
-            const s = timeStr.substring(12, 14);
-            return new Date(y, m, d, h, min, s);
-        }
-        
-        // 신호 상태에 따라 문구 변환
-        function getPhaseDescription(phase) {
-            switch(phase) {
-                case 'GREEN': return '🟢 직진 가능';
-                case 'RED': return '🔴 정지 신호';
-                case 'YELLOW': return '🟡 주의 신호';
-                case 'LEFT_TURN': return '⬅️ 좌회전 가능';
-                default: return phase;
-            }
+        function parseBusData(data) {
+            if (!data.msgBody || !data.msgBody.itemList) return [];
+            
+            // 서대문03, 서대문04 버스만 필터링
+            return data.msgBody.itemList
+                .filter(bus => bus.rtNm === '서대문03' || bus.rtNm === '서대문04')
+                .map(bus => ({
+                    busName: bus.rtNm,
+                    remainingTime: parseInt(bus.traTime1) // 첫 번째 버스 도착까지 남은 시간(초)
+                }))
+                .sort((a, b) => a.remainingTime - b.remainingTime); // 가장 빨리 오는 순으로 정렬
         }
 
-        // 신호 상태에 따라 배경색 변경
-        function setBoxColor(phase) {
-            if (phase.includes('GREEN') || phase.includes('LEFT_TURN')) {
-                boxEl.style.backgroundColor = '#d4edda'; // Green
-                statusEl.style.color = '#155724';
-            } else if (phase.includes('RED')) {
-                boxEl.style.backgroundColor = '#f8d7da'; // Red
-                statusEl.style.color = '#721c24';
-            } else if (phase.includes('YELLOW')) {
-                boxEl.style.backgroundColor = '#fff3cd'; // Yellow
-                statusEl.style.color = '#856404';
-            } else {
-                boxEl.style.backgroundColor = 'white';
-                statusEl.style.color = '#333';
-            }
-        }
+        function calculateOptimalDeparture(subway, buses) {
+            const now = new Date();
 
-        // 최초 실행
-        fetchSignalSchedule();
-        // 5분에 한 번씩 새로운 시간표를 받아와서 업데이트
-        setInterval(fetchSignalSchedule, 300000); 
-
-    </script>
-</body>
-</html>
+            // 현재 탈 수 있는 가장 빠른 지하철이 신림역에 도착할 시간
+            const subwayArrivalTime = new Date(now.getTime() + subway.remainingTime * 1000);
