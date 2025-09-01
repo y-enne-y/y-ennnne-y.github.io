@@ -6,7 +6,6 @@
     <title>Class Schedule</title>
     
     <style>
-        /* CSS 코드를 여기에 모두 포함시켰습니다. */
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
         body {
@@ -43,9 +42,9 @@
         .schedule-grid {
             display: grid;
             grid-template-columns: 60px repeat(5, 1fr);
+            /* 헤더(1) + 9시부터 20시까지 12시간 슬롯(12) = 총 13개 행 정의 */
             grid-template-rows: 40px repeat(12, 60px);
-            gap: 5px;
-            position: relative;
+            gap: 2px; /* 간격을 살짝 줄여 더 촘촘하게 보이도록 수정 */
         }
 
         .header {
@@ -55,8 +54,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f1f3f5;
-            border-radius: 6px;
         }
 
         .time-slot {
@@ -65,22 +62,25 @@
             text-align: right;
             padding-right: 10px;
             grid-column: 1;
+            /* 각 시간대 라인에 시간이 걸치도록 위치 조정 */
             position: relative;
-            top: -10px;
+            top: -8px;
+        }
+        
+        /* 9시 시간은 헤더 바로 아래이므로 위치 조정 제외 */
+        .time-slot:first-of-type {
+            top: 0;
+            align-self: center;
         }
 
+        /* 배경에 시간대별 라인을 그려주는 역할 */
         .grid-cell {
+            grid-column: 2 / -1; /* 월요일부터 금요일까지 전체 확장 */
             border-top: 1px solid #e9ecef;
         }
 
-        .grid-cell:first-of-type {
-            border-top: none; 
-        }
-
         .class-item {
-            position: absolute;
-            width: calc(100% - 10px);
-            height: calc(100% - 5px);
+            /* position: absolute을 제거하여 Grid의 자식 요소로 자연스럽게 배치되도록 수정 */
             padding: 10px;
             border-radius: 8px;
             box-sizing: border-box;
@@ -90,6 +90,8 @@
             color: white;
             overflow: hidden;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin: 2px; /* 아이템 주변에 여백 추가 */
+            z-index: 1; /* 아이템이 위로 오도록 설정 */
         }
 
         .class-item:hover {
@@ -98,34 +100,16 @@
             z-index: 10;
         }
 
-        .class-item span {
-            display: block;
-        }
-
-        .class-title {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        .class-time, .class-location {
-            font-size: 0.75rem;
-            opacity: 0.9;
-        }
-
-        .class-location {
-            margin-top: auto;
-        }
+        .class-item span { display: block; }
+        .class-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+        .class-time, .class-location { font-size: 0.75rem; opacity: 0.9; }
+        .class-location { margin-top: auto; }
 
         /* Color Palette */
-        .color-1 { background-color: #e85959; }
-        .color-2 { background-color: #e6a048; }
-        .color-3 { background-color: #4caf50; }
-        .color-4 { background-color: #8e62c4; }
-        .color-5 { background-color: #30a9de; }
-        .color-6 { background-color: #f08c5c; }
-        .color-7 { background-color: #5d8ab5; }
-        .color-gray { background-color: #adb5bd; }
+        .color-1 { background-color: #e85959; } .color-2 { background-color: #e6a048; }
+        .color-3 { background-color: #4caf50; } .color-4 { background-color: #8e62c4; }
+        .color-5 { background-color: #30a9de; } .color-6 { background-color: #f08c5c; }
+        .color-7 { background-color: #5d8ab5; } .color-gray { background-color: #adb5bd; }
 
         .back-link {
             display: inline-block;
@@ -135,55 +119,50 @@
             text-decoration: none;
             font-weight: 500;
         }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
+        .back-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-
     <div class="schedule-container">
         <h1>My Class Schedule (2025-2)</h1>
         
         <div class="schedule-grid">
-            <div class="header">Time</div>
-            <div class="header">Mon</div>
-            <div class="header">Tue</div>
-            <div class="header">Wed</div>
-            <div class="header">Thu</div>
-            <div class="header">Fri</div>
+            <div class="header">Time</div><div class="header">Mon</div><div class="header">Tue</div>
+            <div class="header">Wed</div><div class="header">Thu</div><div class="header">Fri</div>
 
-            <div class="time-slot">09:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">10:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">11:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">12:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">13:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">14:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">15:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">16:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">17:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">18:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">19:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
-            <div class="time-slot">20:00</div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div> <div class="grid-cell"></div>
+            <div class="time-slot">09:00</div> <div class="grid-cell" style="grid-row: 2;"></div>
+            <div class="time-slot">10:00</div> <div class="grid-cell" style="grid-row: 3;"></div>
+            <div class="time-slot">11:00</div> <div class="grid-cell" style="grid-row: 4;"></div>
+            <div class="time-slot">12:00</div> <div class="grid-cell" style="grid-row: 5;"></div>
+            <div class="time-slot">13:00</div> <div class="grid-cell" style="grid-row: 6;"></div>
+            <div class="time-slot">14:00</div> <div class="grid-cell" style="grid-row: 7;"></div>
+            <div class="time-slot">15:00</div> <div class="grid-cell" style="grid-row: 8;"></div>
+            <div class="time-slot">16:00</div> <div class="grid-cell" style="grid-row: 9;"></div>
+            <div class="time-slot">17:00</div> <div class="grid-cell" style="grid-row: 10;"></div>
+            <div class="time-slot">18:00</div> <div class="grid-cell" style="grid-row: 11;"></div>
+            <div class="time-slot">19:00</div> <div class="grid-cell" style="grid-row: 12;"></div>
+            <div class="time-slot">20:00</div> <div class="grid-cell" style="grid-row: 13;"></div>
 
-            <div class="class-item color-1" style="grid-column: 2; grid-row: 1 / 3;"><span class="class-title">공업분석화학</span><span class="class-time">09:00 - 11:00</span><span class="class-location">석산홀세미나실</span></div>
-            <div class="class-item color-2" style="grid-column: 2; grid-row: 4 / 6;"><span class="class-title">생애주기영양학</span><span class="class-time">12:00 - 14:00</span><span class="class-location">심508</span></div>
-            <div class="class-item color-3" style="grid-column: 2; grid-row: 7 / 9;"><span class="class-title">영양교육및상담</span><span class="class-time">15:00 - 17:00</span><span class="class-location">심508</span></div>
-            <div class="class-item color-gray" style="grid-column: 2; grid-row: 10 / 12;"><span class="class-title">학회</span><span class="class-time">18:00 - 20:00</span></div>
-            <div class="class-item color-1" style="grid-column: 3; grid-row: 1 / 3;"><span class="class-title">공업분석화학</span><span class="class-time">09:00 - 11:00</span><span class="class-location">석산홀세미나실</span></div>
-            <div class="class-item color-2" style="grid-column: 3; grid-row: 4 / 6;"><span class="class-title">생애주기영양학</span><span class="class-time">12:00 - 14:00</span><span class="class-location">심508</span></div>
-            <div class="class-item color-6" style="grid-column: 3; grid-row: 7 / 9;"><span class="class-title">공업물리화학(2)</span><span class="class-time">15:00 - 17:00</span><span class="class-location">석산홀세미나실</span></div>
-            <div class="class-item color-3" style="grid-column: 4; grid-row: 3 / 5;"><span class="class-title">영양교육및상담</span><span class="class-time">11:00 - 13:00</span><span class="class-location">심508</span></div>
-            <div class="class-item color-4" style="grid-column: 4; grid-row: 6 / 7;"><span class="class-title">촉매공학</span><span class="class-time">14:00 - 15:00</span><span class="class-location">성D507</span></div>
-            <div class="class-item color-gray" style="grid-column: 4; grid-row: 9 / 10;"><span class="class-title">주짓수</span><span class="class-time">17:00 - 18:00</span></div>
-            <div class="class-item color-7" style="grid-column: 5; grid-row: 5 / 7;"><span class="class-title">영양생리학</span><span class="class-time">13:00 - 15:00</span><span class="class-location">심508</span></div>
-            <div class="class-item color-5" style="grid-column: 5; grid-row: 7 / 10;"><span class="class-title">실험조리및식품개발</span><span class="class-time">15:00 - 18:00</span><span class="class-location">심508 / 심612</span></div>
-            <div class="class-item color-4" style="grid-column: 6; grid-row: 2 / 4;"><span class="class-title">촉매공학</span><span class="class-time">10:00 - 12:00</span><span class="class-location">성D507</span></div>
-            <div class="class-item color-5" style="grid-column: 6; grid-row: 7 / 10;"><span class="class-title">실험조리및식품개발</span><span class="class-time">15:00 - 18:00</span><span class="class-location">심508 / 심612</span></div>
+            <div class="class-item color-1" style="grid-column: 2; grid-row: 2 / 4;"><span class="class-title">공업분석화학</span><span class="class-time">09:00-11:00</span><span class="class-location">석산홀세미나실</span></div>
+            <div class="class-item color-2" style="grid-column: 2; grid-row: 5 / 7;"><span class="class-title">생애주기영양학</span><span class="class-time">12:00-14:00</span><span class="class-location">심508</span></div>
+            <div class="class-item color-3" style="grid-column: 2; grid-row: 8 / 10;"><span class="class-title">영양교육및상담</span><span class="class-time">15:00-17:00</span><span class="class-location">심508</span></div>
+            <div class="class-item color-gray" style="grid-column: 2; grid-row: 11 / 13;"><span class="class-title">학회</span><span class="class-time">18:00-20:00</span></div>
+
+            <div class="class-item color-1" style="grid-column: 3; grid-row: 2 / 4;"><span class="class-title">공업분석화학</span><span class="class-time">09:00-11:00</span><span class="class-location">석산홀세미나실</span></div>
+            <div class="class-item color-2" style="grid-column: 3; grid-row: 5 / 7;"><span class="class-title">생애주기영양학</span><span class="class-time">12:00-14:00</span><span class="class-location">심508</span></div>
+            <div class="class-item color-6" style="grid-column: 3; grid-row: 8 / 10;"><span class="class-title">공업물리화학(2)</span><span class="class-time">15:00-17:00</span><span class="class-location">석산홀세미나실</span></div>
+
+            <div class="class-item color-3" style="grid-column: 4; grid-row: 4 / 6;"><span class="class-title">영양교육및상담</span><span class="class-time">11:00-13:00</span><span class="class-location">심508</span></div>
+            <div class="class-item color-4" style="grid-column: 4; grid-row: 7 / 8;"><span class="class-title">촉매공학</span><span class="class-time">14:00-15:00</span><span class="class-location">성D507</span></div>
+            <div class="class-item color-gray" style="grid-column: 4; grid-row: 10 / 11;"><span class="class-title">주짓수</span><span class="class-time">17:00-18:00</span></div>
+
+            <div class="class-item color-7" style="grid-column: 5; grid-row: 6 / 8;"><span class="class-title">영양생리학</span><span class="class-time">13:00-15:00</span><span class="class-location">심508</span></div>
+            <div class="class-item color-5" style="grid-column: 5; grid-row: 8 / 11;"><span class="class-title">실험조리및식품개발</span><span class="class-time">15:00-18:00</span><span class="class-location">심508/심612</span></div>
+
+            <div class="class-item color-4" style="grid-column: 6; grid-row: 3 / 5;"><span class="class-title">촉매공학</span><span class="class-time">10:00-12:00</span><span class="class-location">성D507</span></div>
+            <div class="class-item color-5" style="grid-column: 6; grid-row: 8 / 11;"><span class="class-title">실험조리및식품개발</span><span class="class-time">15:00-18:00</span><span class="class-location">심508/심612</span></div>
         </div>
         <a href="about.html" class="back-link">← Back to About Me</a>
     </div>
-
 </body>
 </html>
