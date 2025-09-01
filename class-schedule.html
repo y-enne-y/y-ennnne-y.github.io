@@ -36,7 +36,11 @@
             font-weight: 700;
             color: #212529;
         }
-        h1 { font-size: 2rem; margin-bottom: 20px; }
+        h1 { 
+            font-size: 2rem; 
+            margin-bottom: 20px; 
+            line-height: 1.2; /* 줄간격 조절 */
+        }
         h2 { font-size: 1.5rem; margin-top: 40px; margin-bottom: 10px; }
 
         .schedule-grid {
@@ -179,7 +183,7 @@
 <body>
 
     <div class="schedule-container">
-        <h1>My Class Schedule (2025-2)</h1>
+        <h1>My Class Schedule<br><span style="font-size: 1.2rem; font-weight: 400;">(2025-2)</span></h1>
         
         <div class="schedule-grid">
             <div class="header">Time</div><div class="header">Mon</div><div class="header">Tue</div>
