@@ -259,7 +259,6 @@
                 const currentDay = now.getDay();
                 const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
-                // 현재 날짜 및 시각 표시 업데이트
                 const dateString = `${now.getFullYear()}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getDate().toString().padStart(2, '0')}`;
                 const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
                 currentTimeElement.textContent = `${dateString} ${dayNames[currentDay]}요일 ${timeString} KST`;
@@ -273,34 +272,30 @@
                     
                     let isBusy = false;
                     let currentSchedule = null;
-                    let nextSchedule = null;
+                    let nextScheduleToday = null;
 
-                    // 시간순으로 일정 정렬
-                    friend.schedule.sort((a, b) => {
-                        if (a.day !== b.day) return a.day - b.day;
-                        return a.start.localeCompare(b.start);
-                    });
+                    // 시간순으로 일정 정렬 (요일 상관없이 시간으로만)
+                    friend.schedule.sort((a, b) => a.start.localeCompare(b.start));
 
-                    // 현재 일정과 다음 일정 찾기
+                    // 현재 일정과 '오늘의' 다음 일정 찾기
                     for (const event of friend.schedule) {
+                        // 오늘 일정이 아니면 건너뛰기
+                        if (event.day !== currentDay) continue;
+
                         // 현재 진행중인 일정 찾기
-                        if (event.day === currentDay && currentTime >= event.start && currentTime < event.end) {
+                        if (currentTime >= event.start && currentTime < event.end) {
                             isBusy = true;
                             currentSchedule = event;
                             break; // 현재 일정을 찾으면 더 이상 찾을 필요 없음
                         }
-                        // 아직 시작하지 않은 다음 일정 찾기
-                        if ((event.day === currentDay && event.start > currentTime) || event.day > currentDay) {
-                             if (!nextSchedule) {
-                                 nextSchedule = event;
+                        
+                        // 아직 시작하지 않은 '오늘의' 다음 일정 찾기
+                        if (event.start > currentTime) {
+                             if (!nextScheduleToday) {
+                                 nextScheduleToday = event;
                              }
                         }
                     }
-                     // 만약 오늘 이후의 일정이 없으면, 다음주 첫 일정으로 설정
-                    if (!isBusy && !nextSchedule && friend.schedule.length > 0) {
-                        nextSchedule = friend.schedule[0];
-                    }
-
 
                     statusIcon.classList.remove('occupied', 'available');
 
@@ -309,11 +304,12 @@
                         scheduleDetails.textContent = `(현재: ${currentSchedule.start}-${currentSchedule.end} ${currentSchedule.subject})`;
                     } else {
                         statusIcon.classList.add('available');
-                        if (nextSchedule) {
-                            const nextDayName = dayNames[nextSchedule.day];
-                            scheduleDetails.textContent = `(next: ${nextDayName} ${nextSchedule.start}-${nextSchedule.end} ${nextSchedule.subject})`;
+                        if (nextScheduleToday) {
+                            // 다음 일정이 '오늘' 있는 경우
+                            scheduleDetails.textContent = `(next: ${nextScheduleToday.start}-${nextScheduleToday.end} ${nextScheduleToday.subject})`;
                         } else {
-                            scheduleDetails.textContent = '(일정 없음)';
+                            // '오늘' 더 이상 일정이 없는 경우
+                            scheduleDetails.textContent = '(오늘 일정 완료)';
                         }
                     }
                 });
