@@ -8,12 +8,14 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
             text-align: center;
-            margin: 20px;
+            margin: 0; /* body의 기본 마진 제거 */
             background-color: #f4f4f9;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 90vh;
+            min-height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
+            padding: 20px; /* 화면 가장자리에 여백 추가 */
+            box-sizing: border-box;
         }
         .container {
             background-color: white;
@@ -21,7 +23,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             max-width: 450px;
-            width: 90%;
+            width: 100%; /* 너비를 100%로 설정하여 유연하게 조절 */
             box-sizing: border-box;
         }
         .youtube-icon img {
@@ -32,6 +34,7 @@
             margin-top: 0;
             margin-bottom: 25px;
             color: #333;
+            font-size: 1.6em; /* 기본 글자 크기 살짝 조정 */
         }
         label {
             display: block;
@@ -88,6 +91,28 @@
             word-break: break-all;
             margin-bottom: 10px;
         }
+
+        /* ★★★★★ 모바일 화면을 위한 반응형 코드 추가 ★★★★★ */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px; /* 모바일에서는 화면 가장자리 여백 줄임 */
+                display: block; /* 수직 중앙 정렬 해제하여 위쪽에 붙도록 함 */
+            }
+            .container {
+                padding: 25px 20px; /* 내부 여백 줄임 */
+            }
+            h2 {
+                font-size: 1.4em; /* 제목 글자 크기 줄임 */
+                margin-bottom: 20px;
+            }
+            textarea, input[type="number"], button {
+                padding: 10px; /* 입력창과 버튼 크기 살짝 줄임 */
+                font-size: 15px;
+            }
+            .youtube-icon img {
+                width: 100px; /* 로고 크기 줄임 */
+            }
+        }
     </style>
 </head>
 <body>
@@ -124,9 +149,9 @@
     </div>
 
 <script>
+    // 자바스크립트 코드는 변경사항 없습니다.
     function generateLink() {
         const urlInput = document.getElementById('videoUrl').value.trim();
-        // 입력이 없으면 0으로 처리
         const hours = parseInt(document.getElementById('hours').value) || 0;
         const minutes = parseInt(document.getElementById('minutes').value) || 0;
         const seconds = parseInt(document.getElementById('seconds').value) || 0;
@@ -144,13 +169,11 @@
 
         const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
         
-        // watch.html을 가리키는 링크 생성
         const newUrl = `watch.html?v=${videoId}&t=${totalSeconds}`;
         
         const outputContainer = document.getElementById('output-container');
         const outputField = document.getElementById('generated-link');
         
-        // 상대 경로를 서버에서 실행될 절대 경로로 변환
         outputField.value = new URL(newUrl, window.location.href).href;
         outputContainer.style.display = 'block';
     }
