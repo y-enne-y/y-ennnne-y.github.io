@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to YouTube</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; background-color: #f4f4f4; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background-color: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; }
+        p { color: #555; }
+        .thumbnail { max-width: 100%; border-radius: 8px; margin-bottom: 20px; }
+        .button-container { display: none; flex-direction: column; gap: 15px; }
+        .button { display: block; padding: 15px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; color: white; transition: transform 0.2s; }
+        .button:hover { transform: scale(1.05); }
+        .button-browser { background-color: #007bff; }
+        .button-app { background-color: #c4302b; }
+        .button-note { font-size: 0.8em; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+        <h1>YouTube 영상으로 이동 중...</h1>
+        <p id="message">잠시만 기다려주세요.</p>
+        <img id="thumbnail" class="thumbnail" style="display: none;" alt="YouTube Thumbnail">
+        <div class="button-container" id="mobile-choices">
+            <div>
+                <a id="browser-link" class="button button-browser" href="#">👍 브라우저에서 보기 (권장)</a>
+                <p class="button-note">정확한 시간부터 재생됩니다.</p>
+            </div>
+            <div>
+                <a id="app-link" class="button button-app" href="#"> 앱으로 열기</a>
+                <p class="button-note">시작 시간이 적용되지 않을 수 있습니다.</p>
+            </div>
+        </div>
+    </div>
+
+<script>
+    window.onload = function() {
+        // 1. URL에서 동영상 ID(v)와 시간(t) 파라미터를 가져옵니다.
+        const params = new URLSearchParams(window.location.search);
+        const videoId = params.get('v');
+        const time = params.get('t');
+
+        if (!videoId || !time) {
+            document.getElementById('message').textContent = '오류: 동영상 정보가 올바르지 않습니다.';
+            return;
+        }
+
+        const fullYoutubeUrl = `https://www.youtube.com/watch?v=${videoId}&t=${time}s`;
+        const shortYoutubeUrl = `https://youtu.be/${videoId}?t=${time}`;
+        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+
+        // 썸네일 이미지를 표시합니다.
+        const thumbnailElement = document.getElementById('thumbnail');
+        thumbnailElement.src = thumbnailUrl;
+        thumbnailElement.style.display = 'block';
+
+        // 2. 접속 기기가 모바일인지 확인합니다.
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            // 3. 모바일일 경우: 사용자에게 선택권을 줍니다.
+            document.getElementById('message').textContent = '어떻게 영상을 여시겠어요?';
+            document.getElementById('browser-link').href = fullYoutubeUrl;
+            document.getElementById('app-link').href = shortYoutubeUrl;
+            document.getElementById('mobile-choices').style.display = 'flex';
+
+        } else {
+            // 4. 데스크톱일 경우: 바로 유튜브 링크로 이동시킵니다.
+            window.location.href = fullYoutubeUrl;
+        }
+    };
+</script>
+
+</body>
+</html>
