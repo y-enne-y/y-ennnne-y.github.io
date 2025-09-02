@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>뽀모도로 타이머</title>
+
+    <meta property="og:title" content="뽀모도로 타이머 🍅">
+    <meta property="og:description" content="집중력 향상을 위한 뽀모도로 타이머입니다.">
+    <meta property="og:image" content="https://yenney.kr/logo.png">
+    <meta property="og:url" content="https://yenney.kr/pomodoro.html">
+    <meta property="og:type" content="website">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+    </style>
+
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -222,7 +232,6 @@
                 pauseUnitSecond: "s",
                 pauseUnitMinute: "m"
             },
-            // ▼▼▼▼▼ [JS 추가] 스페인어 번역 ▼▼▼▼▼
             es: {
                 pageTitle: "Temporizador Pomodoro 🍅",
                 currentTimePrefix: "Hora actual:",
@@ -255,12 +264,11 @@
             }
         };
 
-        // ▼▼▼▼▼ [JS 수정] 언어 감지 로직 확장 ▼▼▼▼▼
         function getUserLanguage() {
             const userLang = navigator.language || navigator.userLanguage; 
             if (userLang.startsWith('ko')) return 'ko';
             if (userLang.startsWith('es')) return 'es';
-            return 'en'; // 그 외 모든 언어는 영어로
+            return 'en';
         }
         const lang = getUserLanguage();
         const t = translations[lang];
