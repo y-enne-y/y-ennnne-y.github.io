@@ -46,7 +46,7 @@
         textarea, input[type="number"] {
             width: 100%;
             padding: 12px;
-            font-size: 16px; /* 기본 폰트 크기를 16px로 유지 */
+            font-size: 16px;
             border-radius: 8px;
             border: 1px solid #ddd;
             box-sizing: border-box;
@@ -67,13 +67,29 @@
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
+            font-weight: bold;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .primary {
             background-color: #ff0000;
             color: white;
-            font-weight: bold;
-            transition: background-color 0.2s;
+            border: 2px solid #ff0000;
         }
-        button:hover {
+        .primary:hover {
             background-color: #cc0000;
+            border-color: #cc0000;
+        }
+        .secondary {
+            background-color: white;
+            color: #ff0000;
+            border: 2px solid #ff0000;
+        }
+        .secondary:hover {
+            background-color: #fff0f0;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
         }
         .output-container {
             margin-top: 25px;
@@ -91,7 +107,6 @@
             font-size: 1em;
             color: #007bff;
         }
-        /* ★★★ 추가된 부분 1: 돌아가기 링크 스타일 ★★★ */
         .footer-link {
             display: block;
             margin-top: 30px;
@@ -107,10 +122,9 @@
             body { padding: 15px; display: block; }
             .container { padding: 25px 20px; }
             h2 { font-size: 1.4em; margin-bottom: 20px; }
-            /* ★★★ 수정된 부분: 폰트 크기를 16px로 변경하여 확대 방지 ★★★ */
             textarea, input[type="number"], button {
-                padding: 12px; /* 패딩은 충분히 크게 유지 */
-                font-size: 16px; /* 15px -> 16px */
+                padding: 12px;
+                font-size: 16px;
             }
             .youtube-icon img { width: 100px; }
         }
@@ -139,7 +153,7 @@
             </div>
         </div>
         
-        <button onclick="generateLink()">🚀 링크 생성</button>
+        <button class="primary" onclick="generateLink()">🚀 링크 생성</button>
 
         <div class="output-container" id="output-container">
             <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
@@ -147,14 +161,16 @@
             <div id="link-display-area">
                 <a id="generated-link" href="#" target="_blank"></a>
             </div>
-            <button onclick="copyLink()">📋 링크 복사</button>
+            <div class="button-group">
+                <button class="secondary" onclick="copyLink()">📋 링크 복사</button>
+                <button id="share-button" class="secondary" onclick="shareLink()" style="display: none;">📲 공유하기</button>
+            </div>
         </div>
         
         <a href="about.html" class="footer-link">← Back to about me</a>
     </div>
 
 <script>
-    // 자바스크립트 코드는 변경사항 없습니다.
     function generateLink() {
         const urlInput = document.getElementById('videoUrl').value.trim();
         const hours = parseInt(document.getElementById('hours').value) || 0;
@@ -173,7 +189,7 @@
         }
 
         const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
-        const newUrl = `watch.html?v=${videoId}&t=${totalSeconds}`;
+        const newUrl = `watch.php?v=${videoId}&t=${totalSeconds}`;
         const fullUrl = new URL(newUrl, window.location.href).href;
 
         const outputContainer = document.getElementById('output-container');
@@ -182,6 +198,45 @@
         linkElement.textContent = fullUrl;
         
         outputContainer.style.display = 'block';
+
+        const shareButton = document.getElementById('share-button');
+        if (navigator.share) {
+            shareButton.style.display = 'block';
+        }
+    }
+
+    async function shareLink() {
+        // 1. 사용자가 입력한 시간 값을 다시 가져옵니다.
+        const hours = parseInt(document.getElementById('hours').value) || 0;
+        const minutes = parseInt(document.getElementById('minutes').value) || 0;
+        const seconds = parseInt(document.getElementById('seconds').value) || 0;
+
+        // 2. 'xx:xx' 형식의 타임스탬프 문자열을 만듭니다.
+        const paddedMinutes = String(minutes).padStart(2, '0');
+        const paddedSeconds = String(seconds).padStart(2, '0');
+        
+        let timestamp = `${paddedMinutes}:${paddedSeconds}`;
+        if (hours > 0) {
+            timestamp = `${hours}:${timestamp}`;
+        }
+
+        // 3. 동적 안내 문구를 포함한 최종 공유 메시지를 생성합니다.
+        const originalText = '친구가 공유한 유튜브 영상을 확인해보세요!';
+        const guideText = `\n\n(혹시 영상이 처음부터 재생된다면 ${timestamp} 부터 시청하세요!)`;
+        const combinedText = originalText + guideText;
+        
+        const linkElement = document.getElementById('generated-link');
+        const shareData = {
+            title: '지정한 시간부터 재생되는 유튜브 영상',
+            text: combinedText, // 새로 만든 메시지를 사용합니다.
+            url: linkElement.href
+        };
+
+        try {
+            await navigator.share(shareData);
+        } catch (err) {
+            console.log("Share Canceled or Error:", err);
+        }
     }
 
     function getVideoId(url) {
@@ -193,12 +248,9 @@
     function copyLink() {
         const linkElement = document.getElementById('generated-link');
         const linkToCopy = linkElement.href;
-
         if (linkToCopy && linkToCopy !== '#') {
             navigator.clipboard.writeText(linkToCopy).then(() => {
                 alert('링크가 클립보드에 복사되었습니다!');
-            }).catch(err => {
-                alert('복사에 실패했습니다.');
             });
         }
     }
