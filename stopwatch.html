@@ -3,89 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi Stopwatch</title>
+    <title>YouTube Timestamp Link Generator</title>
     <style>
-        .stopwatch {
-            margin: 10px;
-            padding: 20px;
-            border: 1px solid #333;
-            display: inline-block;
-        }
-        .time-display {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
+        body { font-family: sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .section { background-color: #f7f7f7; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        h2 { margin-top: 0; }
+        input[type="url"], input[type="text"] { width: 95%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc; }
+        button { padding: 10px 15px; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; margin-right: 5px; }
+        button:hover { background-color: #0056b3; }
+        .stopwatch { margin: 10px 0; padding: 15px; border: 1px solid #ccc; border-radius: 4px; background-color: white; }
+        .time-display { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
+        #stopwatches-container { max-height: 300px; overflow-y: auto; }
     </style>
 </head>
 <body>
 
-    <div id="stopwatches-container">
-        <!-- 스톱워치들이 여기에 추가될 것입니다 -->
+<div class="container">
+    <div class="section">
+        <h2>1. Generate YouTube Timestamp Link</h2>
+        <input type="url" id="youtube-url" placeholder="Paste YouTube URL here (e.g., https://www.youtube.com/watch?v=...)">
+        <div>
+            <input type="text" id="minutes" placeholder="Minutes" style="width: 100px;">
+            <input type="text" id="seconds" placeholder="Seconds" style="width: 100px;">
+        </div>
+        <button onclick="generateTimestampLink()">Generate Link</button>
+        <hr>
+        <input type="text" id="generated-link" placeholder="Your timestamped link will appear here" readonly>
+        <button id="copy-button" onclick="copyLink()">Copy</button>
     </div>
-    <button onclick="addStopwatch()">Add Stopwatch</button>
 
-    <script>
-        function formatTime(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-            const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-            const seconds = String(totalSeconds % 60).padStart(2, '0');
-            const milliseconds = String(ms % 1000).padStart(3, '0');
-            return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+    <div class="section">
+        <h2>2. Use Stopwatch to Find Time</h2>
+        <button onclick="addStopwatch()">Add Stopwatch</button>
+        <div id="stopwatches-container">
+            </div>
+    </div>
+</div>
+
+<script>
+    // ### 유튜브 링크 생성 관련 함수들 ###
+
+    function generateTimestampLink() {
+        const urlInput = document.getElementById('youtube-url').value;
+        const minutes = parseInt(document.getElementById('minutes').value) || 0;
+        const seconds = parseInt(document.getElementById('seconds').value) || 0;
+        const outputField = document.getElementById('generated-link');
+        const copyButton = document.getElementById('copy-button');
+
+        if (!urlInput) {
+            alert('Please enter a YouTube URL.');
+            return;
         }
 
-        function addStopwatch() {
-            const container = document.getElementById("stopwatches-container");
-
-            const stopwatchDiv = document.createElement("div");
-            stopwatchDiv.className = "stopwatch";
-
-            const timeDisplay = document.createElement("div");
-            timeDisplay.className = "time-display";
-            timeDisplay.textContent = "00:00:00.000";
-
-            const startButton = document.createElement("button");
-            startButton.textContent = "Start";
-            const stopButton = document.createElement("button");
-            stopButton.textContent = "Stop";
-            const resetButton = document.createElement("button");
-            resetButton.textContent = "Reset";
-
-            let startTime, intervalId;
-            let elapsedTime = 0;
-            let running = false;
-
-            startButton.onclick = () => {
-                if (!running) {
-                    startTime = Date.now() - elapsedTime;
-                    intervalId = setInterval(() => {
-                        elapsedTime = Date.now() - startTime;
-                        timeDisplay.textContent = formatTime(elapsedTime);
-                    }, 10);
-                    running = true;
-                }
-            };
-
-            stopButton.onclick = () => {
-                clearInterval(intervalId);
-                running = false;
-            };
-
-            resetButton.onclick = () => {
-                clearInterval(intervalId);
-                elapsedTime = 0;
-                timeDisplay.textContent = "00:00:00.000";
-                running = false;
-            };
-
-            stopwatchDiv.appendChild(timeDisplay);
-            stopwatchDiv.appendChild(startButton);
-            stopwatchDiv.appendChild(stopButton);
-            stopwatchDiv.appendChild(resetButton);
-
-            container.appendChild(stopwatchDiv);
+        const videoId = getVideoId(urlInput);
+        if (!videoId) {
+            alert('Invalid YouTube URL. Could not find Video ID.');
+            return;
         }
-    </script>
+
+        const totalSeconds = (minutes * 60) + seconds;
+        const newUrl = `https://youtu.be/${videoId}?t=${totalSeconds}`;
+        
+        outputField.value = newUrl;
+        copyButton.textContent = 'Copy';
+    }
+
+    function getVideoId(url) {
+        // 정규식을 사용하여 다양한 유튜브 URL 형식에서 동영상 ID를 추출합니다.
+        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const match = url.match(regex);
+        return match ? match[1] : null;
+    }
+
+    function copyLink() {
+        const linkField = document.getElementById('generated-link');
+        if (linkField.value) {
+            navigator.clipboard.writeText(linkField.value).then(() => {
+                const copyButton = document.getElementById('copy-button');
+                copyButton.textContent = 'Copied!';
+            }).catch(err => {
+                alert('Failed to copy link.');
+            });
+        }
+    }
+
+    // ### 기존 스톱워치 관련 함수들 (수정됨) ###
+
+    function formatTime(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const seconds = String(totalSeconds % 60).padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+    }
+    
+    // addStopwatch 함수는 스톱워치 UI를 동적으로 생성합니다.
+    function addStopwatch() {
+        const container = document.getElementById("stopwatches-container");
+
+        const stopwatchDiv = document.createElement("div");
+        stopwatchDiv.className = "stopwatch";
+
+        const timeDisplay = document.createElement("div");
+        timeDisplay.className = "time-display";
+        timeDisplay.textContent = "00:00:00";
+
+        const startButton = document.createElement("button");
+        startButton.textContent = "Start";
+        const stopButton = document.createElement("button");
+        stopButton.textContent = "Stop";
+        const resetButton = document.createElement("button");
+        resetButton.textContent = "Reset";
+        
+        // ★★★ 새로 추가된 버튼 ★★★
+        const useTimeButton = document.createElement("button");
+        useTimeButton.textContent = "Use this time";
+        useTimeButton.style.backgroundColor = "#28a745"; // 초록색 배경
+
+        let startTime, intervalId;
+        let elapsedTime = 0;
+        let running = false;
+
+        startButton.onclick = () => {
+            if (!running) {
+                startTime = Date.now() - elapsedTime;
+                intervalId = setInterval(() => {
+                    elapsedTime = Date.now() - startTime;
+                    timeDisplay.textContent = formatTime(elapsedTime).split('.')[0]; // 밀리초 제외
+                }, 100); // 0.1초마다 업데이트
+                running = true;
+            }
+        };
+
+        stopButton.onclick = () => {
+            clearInterval(intervalId);
+            running = false;
+        };
+
+        resetButton.onclick = () => {
+            clearInterval(intervalId);
+            elapsedTime = 0;
+            timeDisplay.textContent = "00:00:00";
+            running = false;
+        };
+        
+        // ★★★ 'Use this time' 버튼 클릭 시 동작 ★★★
+        useTimeButton.onclick = () => {
+            const totalSeconds = Math.floor(elapsedTime / 1000);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            document.getElementById('minutes').value = minutes;
+            document.getElementById('seconds').value = seconds;
+        };
+
+        stopwatchDiv.appendChild(timeDisplay);
+        stopwatchDiv.appendChild(startButton);
+        stopwatchDiv.appendChild(stopButton);
+        stopwatchDiv.appendChild(resetButton);
+        stopwatchDiv.appendChild(useTimeButton); // 버튼 추가
+
+        container.appendChild(stopwatchDiv);
+    }
+</script>
 
 </body>
 </html>
