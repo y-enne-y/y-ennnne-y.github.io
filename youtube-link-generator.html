@@ -8,13 +8,13 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
             text-align: center;
-            margin: 0; /* body의 기본 마진 제거 */
+            margin: 0;
             background-color: #f4f4f9;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
-            padding: 20px; /* 화면 가장자리에 여백 추가 */
+            min-height: 100vh;
+            padding: 20px;
             box-sizing: border-box;
         }
         .container {
@@ -23,7 +23,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             max-width: 450px;
-            width: 100%; /* 너비를 100%로 설정하여 유연하게 조절 */
+            width: 100%;
             box-sizing: border-box;
         }
         .youtube-icon img {
@@ -34,7 +34,7 @@
             margin-top: 0;
             margin-bottom: 25px;
             color: #333;
-            font-size: 1.6em; /* 기본 글자 크기 살짝 조정 */
+            font-size: 1.6em;
         }
         label {
             display: block;
@@ -77,41 +77,28 @@
         }
         .output-container {
             margin-top: 25px;
-            display: none; /* 기본적으로 숨김 */
+            display: none;
         }
-        #generated-link {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
+        /* ★★★ 변경된 부분 1: 링크 표시 영역 스타일 ★★★ */
+        #link-display-area {
+            padding: 15px;
+            border: 1px solid #eee;
             border-radius: 8px;
             background-color: #f9f9f9;
-            color: #333;
-            font-size: 14px;
-            text-align: left;
+            margin-bottom: 15px;
             word-break: break-all;
-            margin-bottom: 10px;
         }
-
-        /* ★★★★★ 모바일 화면을 위한 반응형 코드 추가 ★★★★★ */
+        #generated-link {
+            font-size: 1em;
+            color: #007bff;
+        }
+        
         @media (max-width: 600px) {
-            body {
-                padding: 15px; /* 모바일에서는 화면 가장자리 여백 줄임 */
-                display: block; /* 수직 중앙 정렬 해제하여 위쪽에 붙도록 함 */
-            }
-            .container {
-                padding: 25px 20px; /* 내부 여백 줄임 */
-            }
-            h2 {
-                font-size: 1.4em; /* 제목 글자 크기 줄임 */
-                margin-bottom: 20px;
-            }
-            textarea, input[type="number"], button {
-                padding: 10px; /* 입력창과 버튼 크기 살짝 줄임 */
-                font-size: 15px;
-            }
-            .youtube-icon img {
-                width: 100px; /* 로고 크기 줄임 */
-            }
+            body { padding: 15px; display: block; }
+            .container { padding: 25px 20px; }
+            h2 { font-size: 1.4em; margin-bottom: 20px; }
+            textarea, input[type="number"], button { padding: 10px; font-size: 15px; }
+            .youtube-icon img { width: 100px; }
         }
     </style>
 </head>
@@ -142,14 +129,15 @@
 
         <div class="output-container" id="output-container">
             <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-            <label>생성된 링크:</label>
-            <input type="text" id="generated-link" readonly>
+            <label>생성된 링크 (클릭하여 확인):</label>
+            <div id="link-display-area">
+                <a id="generated-link" href="#" target="_blank"></a>
+            </div>
             <button onclick="copyLink()">📋 링크 복사</button>
         </div>
     </div>
 
 <script>
-    // 자바스크립트 코드는 변경사항 없습니다.
     function generateLink() {
         const urlInput = document.getElementById('videoUrl').value.trim();
         const hours = parseInt(document.getElementById('hours').value) || 0;
@@ -168,13 +156,15 @@
         }
 
         const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
-        
         const newUrl = `watch.html?v=${videoId}&t=${totalSeconds}`;
-        
+        const fullUrl = new URL(newUrl, window.location.href).href;
+
         const outputContainer = document.getElementById('output-container');
-        const outputField = document.getElementById('generated-link');
+        // ★★★ 변경된 부분 3: a 태그의 속성과 텍스트를 설정 ★★★
+        const linkElement = document.getElementById('generated-link');
+        linkElement.href = fullUrl; // a 태그의 href (실제 이동할 주소) 설정
+        linkElement.textContent = fullUrl; // a 태그의 눈에 보이는 텍스트 설정
         
-        outputField.value = new URL(newUrl, window.location.href).href;
         outputContainer.style.display = 'block';
     }
 
@@ -185,9 +175,12 @@
     }
 
     function copyLink() {
-        const linkField = document.getElementById('generated-link');
-        if (linkField.value) {
-            navigator.clipboard.writeText(linkField.value).then(() => {
+        // ★★★ 변경된 부분 4: a 태그에서 직접 링크를 읽어와 복사 ★★★
+        const linkElement = document.getElementById('generated-link');
+        const linkToCopy = linkElement.href;
+
+        if (linkToCopy && linkToCopy !== '#') {
+            navigator.clipboard.writeText(linkToCopy).then(() => {
                 alert('링크가 클립보드에 복사되었습니다!');
             }).catch(err => {
                 alert('복사에 실패했습니다.');
