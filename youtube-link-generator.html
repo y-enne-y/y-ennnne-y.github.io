@@ -5,70 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Timestamp Link Generator</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        .section { background-color: #f7f7f7; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-        h2 { margin-top: 0; }
-        input[type="url"], input[type="text"] { width: 95%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc; }
-        button { padding: 10px 15px; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; margin-right: 5px; }
-        button:hover { background-color: #0056b3; }
-        .stopwatch { margin: 10px 0; padding: 15px; border: 1px solid #ccc; border-radius: 4px; background-color: white; }
-        .time-display { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
-        #stopwatches-container { max-height: 300px; overflow-y: auto; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+        }
+        .container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+        .youtube-icon img {
+            width: 120px;
+            margin-bottom: 15px;
+        }
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        textarea, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        .time-inputs > div {
+            flex: 1;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            background-color: #ff0000;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #cc0000;
+        }
+        .output-container {
+            margin-top: 25px;
+            display: none; /* 기본적으로 숨김 */
+        }
+        #generated-link {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            color: #333;
+            font-size: 14px;
+            text-align: left;
+            word-break: break-all;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="section">
-        <h2>1. Generate YouTube Timestamp Link</h2>
-        <input type="url" id="youtube-url" placeholder="Paste YouTube URL here (e.g., https://www.youtube.com/watch?v=...)">
-        <div>
-            <input type="text" id="minutes" placeholder="Minutes" style="width: 100px;">
-            <input type="text" id="seconds" placeholder="Seconds" style="width: 100px;">
+    <div class="container">
+        <div class="youtube-icon">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo">
         </div>
-        <button onclick="generateTimestampLink()">Generate Link</button>
-        <hr>
-        <input type="text" id="generated-link" placeholder="Your timestamped link will appear here" readonly>
-        <button id="copy-button" onclick="copyLink()">Copy</button>
-    </div>
-
-    <div class="section">
-        <h2>2. Use Stopwatch to Find Time</h2>
-        <button onclick="addStopwatch()">Add Stopwatch</button>
-        <div id="stopwatches-container">
+        <h2>Timestamp Link Generator</h2>
+        
+        <label for="videoUrl">유튜브 링크:</label>
+        <textarea id="videoUrl" rows="3" placeholder="https://youtu.be/... 또는 https://www.youtube.com/watch?v=..."></textarea>
+        
+        <label>시작 시간:</label>
+        <div class="time-inputs">
+            <div>
+                <input type="number" id="hours" min="0" placeholder="시 (Hours)">
             </div>
+            <div>
+                <input type="number" id="minutes" min="0" placeholder="분 (Mins)">
+            </div>
+            <div>
+                <input type="number" id="seconds" min="0" placeholder="초 (Secs)">
+            </div>
+        </div>
+        
+        <button onclick="generateLink()">🚀 링크 생성</button>
+
+        <div class="output-container" id="output-container">
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+            <label>생성된 링크:</label>
+            <input type="text" id="generated-link" readonly>
+            <button onclick="copyLink()">📋 링크 복사</button>
+        </div>
     </div>
-</div>
 
 <script>
-    function generateTimestampLink() {
-        const urlInput = document.getElementById('youtube-url').value;
+    function generateLink() {
+        const urlInput = document.getElementById('videoUrl').value.trim();
+        // 입력이 없으면 0으로 처리
+        const hours = parseInt(document.getElementById('hours').value) || 0;
         const minutes = parseInt(document.getElementById('minutes').value) || 0;
         const seconds = parseInt(document.getElementById('seconds').value) || 0;
-        const outputField = document.getElementById('generated-link');
-        const copyButton = document.getElementById('copy-button');
-
+        
         if (!urlInput) {
-            alert('Please enter a YouTube URL.');
+            alert('유튜브 링크를 입력해주세요.');
             return;
         }
 
         const videoId = getVideoId(urlInput);
         if (!videoId) {
-            alert('Invalid YouTube URL. Could not find Video ID.');
+            alert('올바른 유튜브 링크가 아닙니다. 동영상 ID를 찾을 수 없습니다.');
             return;
         }
 
-        const totalSeconds = (minutes * 60) + seconds;
-
-        // ★★★ 변경된 부분 ★★★
-        // 직접적인 YouTube 링크 대신, 우리 랜딩 페이지(watch.html) 링크를 생성합니다.
-        // 동영상 ID와 시간을 파라미터로 넘겨줍니다.
+        const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+        
+        // watch.html을 가리키는 링크 생성
         const newUrl = `watch.html?v=${videoId}&t=${totalSeconds}`;
         
-        outputField.value = newUrl;
-        copyButton.textContent = 'Copy';
+        const outputContainer = document.getElementById('output-container');
+        const outputField = document.getElementById('generated-link');
+        
+        // 상대 경로를 서버에서 실행될 절대 경로로 변환
+        outputField.value = new URL(newUrl, window.location.href).href;
+        outputContainer.style.display = 'block';
     }
 
     function getVideoId(url) {
@@ -80,55 +164,13 @@
     function copyLink() {
         const linkField = document.getElementById('generated-link');
         if (linkField.value) {
-            // 상대 경로를 절대 경로로 변경하여 복사합니다.
-            const fullUrl = new URL(linkField.value, window.location.href).href;
-            navigator.clipboard.writeText(fullUrl).then(() => {
-                const copyButton = document.getElementById('copy-button');
-                copyButton.textContent = 'Copied!';
+            navigator.clipboard.writeText(linkField.value).then(() => {
+                alert('링크가 클립보드에 복사되었습니다!');
             }).catch(err => {
-                alert('Failed to copy link.');
+                alert('복사에 실패했습니다.');
             });
         }
     }
-    
-    // 스톱워치 관련 함수들은 변경 없이 그대로 사용합니다.
-    function formatTime(ms) {
-        const totalSeconds = Math.floor(ms / 1000);
-        const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-        const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-        const seconds = String(totalSeconds % 60).padStart(2, '0');
-        return `${hours}:${minutes}:${seconds}`;
-    }
-    
-    function addStopwatch() {
-        const container = document.getElementById("stopwatches-container");
-        const stopwatchDiv = document.createElement("div");
-        stopwatchDiv.className = "stopwatch";
-        const timeDisplay = document.createElement("div");
-        timeDisplay.className = "time-display";
-        timeDisplay.textContent = "00:00:00";
-        const startButton = document.createElement("button");
-        startButton.textContent = "Start";
-        const stopButton = document.createElement("button");
-        stopButton.textContent = "Stop";
-        const resetButton = document.createElement("button");
-        resetButton.textContent = "Reset";
-        const useTimeButton = document.createElement("button");
-        useTimeButton.textContent = "Use this time";
-        useTimeButton.style.backgroundColor = "#28a745";
-        let startTime, intervalId, elapsedTime = 0, running = false;
-        startButton.onclick = () => { if (!running) { startTime = Date.now() - elapsedTime; intervalId = setInterval(() => { elapsedTime = Date.now() - startTime; timeDisplay.textContent = formatTime(elapsedTime).split('.')[0]; }, 100); running = true; } };
-        stopButton.onclick = () => { clearInterval(intervalId); running = false; };
-        resetButton.onclick = () => { clearInterval(intervalId); elapsedTime = 0; timeDisplay.textContent = "00:00:00"; running = false; };
-        useTimeButton.onclick = () => { const totalSeconds = Math.floor(elapsedTime / 1000); const minutes = Math.floor((totalSeconds % 3600) / 60); const seconds = totalSeconds % 60; document.getElementById('minutes').value = minutes; document.getElementById('seconds').value = seconds; };
-        stopwatchDiv.appendChild(timeDisplay);
-        stopwatchDiv.appendChild(startButton);
-        stopwatchDiv.appendChild(stopButton);
-        stopwatchDiv.appendChild(resetButton);
-        stopwatchDiv.appendChild(useTimeButton);
-        container.appendChild(stopwatchDiv);
-    }
 </script>
-
 </body>
 </html>
