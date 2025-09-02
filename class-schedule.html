@@ -241,7 +241,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const friendsData = [
-                // ✨ PAWAN의 데이터가 맨 위로 이동
                 {
                     name: 'PAWAN',
                     schedule: [
@@ -279,16 +278,31 @@
 
             function updateFriendStatuses() {
                 const now = new Date();
-                const currentDay = now.getDay();
-                const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                const kstDay = now.getDay();
+                const kstTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
                 const dateString = `${now.getFullYear()}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getDate().toString().padStart(2, '0')}`;
                 const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-                currentTimeElement.textContent = `${dateString} ${dayNames[currentDay]}요일 ${timeString} KST`;
+                currentTimeElement.textContent = `${dateString} ${dayNames[kstDay]}요일 ${timeString} KST`;
 
                 friendsData.forEach(friend => {
                     const friendElement = document.querySelector(`li[data-name="${friend.name}"]`);
                     if (!friendElement) return;
+
+                    let comparisonDay;
+                    let comparisonTime;
+
+                    // ✨ PAWAN일 경우 IST 기준으로 시간과 요일 재계산
+                    if (friend.name === 'PAWAN') {
+                        // KST는 UTC+9, IST는 UTC+5:30. KST = IST + 3.5시간
+                        // IST = KST - 3.5시간
+                        const istNow = new Date(now.getTime() - (3.5 * 60 * 60 * 1000));
+                        comparisonDay = istNow.getDay();
+                        comparisonTime = istNow.getHours().toString().padStart(2, '0') + ':' + istNow.getMinutes().toString().padStart(2, '0');
+                    } else {
+                        comparisonDay = kstDay;
+                        comparisonTime = kstTime;
+                    }
 
                     const statusIcon = friendElement.querySelector('.status-icon');
                     const scheduleDetails = friendElement.querySelector('.schedule-details');
@@ -300,13 +314,16 @@
                     friend.schedule.sort((a, b) => a.start.localeCompare(b.start));
 
                     for (const event of friend.schedule) {
-                        if (event.day !== currentDay) continue;
-                        if (currentTime >= event.start && currentTime < event.end) {
+                        // 각 친구의 기준 요일(comparisonDay)과 비교
+                        if (event.day !== comparisonDay) continue;
+
+                        // 각 친구의 기준 시간(comparisonTime)과 비교
+                        if (comparisonTime >= event.start && comparisonTime < event.end) {
                             isBusy = true;
                             currentSchedule = event;
                             break;
                         }
-                        if (event.start > currentTime) {
+                        if (event.start > comparisonTime) {
                              if (!nextScheduleToday) {
                                  nextScheduleToday = event;
                              }
