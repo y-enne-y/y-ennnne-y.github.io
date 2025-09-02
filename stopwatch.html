@@ -61,11 +61,7 @@
         }
 
         const totalSeconds = (minutes * 60) + seconds;
-
-        // ★★★ 변경된 부분 ★★★
-        // 직접적인 YouTube 링크 대신, 우리 랜딩 페이지(watch.html) 링크를 생성합니다.
-        // 동영상 ID와 시간을 파라미터로 넘겨줍니다.
-        const newUrl = `watch.html?v=${videoId}&t=${totalSeconds}`;
+        const newUrl = `https://youtu.be/${videoId}?t=${totalSeconds}`;
         
         outputField.value = newUrl;
         copyButton.textContent = 'Copy';
@@ -80,9 +76,7 @@
     function copyLink() {
         const linkField = document.getElementById('generated-link');
         if (linkField.value) {
-            // 상대 경로를 절대 경로로 변경하여 복사합니다.
-            const fullUrl = new URL(linkField.value, window.location.href).href;
-            navigator.clipboard.writeText(fullUrl).then(() => {
+            navigator.clipboard.writeText(linkField.value).then(() => {
                 const copyButton = document.getElementById('copy-button');
                 copyButton.textContent = 'Copied!';
             }).catch(err => {
@@ -90,8 +84,7 @@
             });
         }
     }
-    
-    // 스톱워치 관련 함수들은 변경 없이 그대로 사용합니다.
+
     function formatTime(ms) {
         const totalSeconds = Math.floor(ms / 1000);
         const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
