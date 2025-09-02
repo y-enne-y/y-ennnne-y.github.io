@@ -46,7 +46,7 @@
         textarea, input[type="number"] {
             width: 100%;
             padding: 12px;
-            font-size: 16px;
+            font-size: 16px; /* 기본 폰트 크기를 16px로 유지 */
             border-radius: 8px;
             border: 1px solid #ddd;
             box-sizing: border-box;
@@ -79,7 +79,6 @@
             margin-top: 25px;
             display: none;
         }
-        /* ★★★ 변경된 부분 1: 링크 표시 영역 스타일 ★★★ */
         #link-display-area {
             padding: 15px;
             border: 1px solid #eee;
@@ -92,12 +91,27 @@
             font-size: 1em;
             color: #007bff;
         }
-        
+        /* ★★★ 추가된 부분 1: 돌아가기 링크 스타일 ★★★ */
+        .footer-link {
+            display: block;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+            text-decoration: none;
+        }
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 600px) {
             body { padding: 15px; display: block; }
             .container { padding: 25px 20px; }
             h2 { font-size: 1.4em; margin-bottom: 20px; }
-            textarea, input[type="number"], button { padding: 10px; font-size: 15px; }
+            /* ★★★ 수정된 부분: 폰트 크기를 16px로 변경하여 확대 방지 ★★★ */
+            textarea, input[type="number"], button {
+                padding: 12px; /* 패딩은 충분히 크게 유지 */
+                font-size: 16px; /* 15px -> 16px */
+            }
             .youtube-icon img { width: 100px; }
         }
     </style>
@@ -135,9 +149,12 @@
             </div>
             <button onclick="copyLink()">📋 링크 복사</button>
         </div>
+        
+        <a href="about.html" class="footer-link">← Back to about me</a>
     </div>
 
 <script>
+    // 자바스크립트 코드는 변경사항 없습니다.
     function generateLink() {
         const urlInput = document.getElementById('videoUrl').value.trim();
         const hours = parseInt(document.getElementById('hours').value) || 0;
@@ -160,10 +177,9 @@
         const fullUrl = new URL(newUrl, window.location.href).href;
 
         const outputContainer = document.getElementById('output-container');
-        // ★★★ 변경된 부분 3: a 태그의 속성과 텍스트를 설정 ★★★
         const linkElement = document.getElementById('generated-link');
-        linkElement.href = fullUrl; // a 태그의 href (실제 이동할 주소) 설정
-        linkElement.textContent = fullUrl; // a 태그의 눈에 보이는 텍스트 설정
+        linkElement.href = fullUrl;
+        linkElement.textContent = fullUrl;
         
         outputContainer.style.display = 'block';
     }
@@ -175,7 +191,6 @@
     }
 
     function copyLink() {
-        // ★★★ 변경된 부분 4: a 태그에서 직접 링크를 읽어와 복사 ★★★
         const linkElement = document.getElementById('generated-link');
         const linkToCopy = linkElement.href;
 
