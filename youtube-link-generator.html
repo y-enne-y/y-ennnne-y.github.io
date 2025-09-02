@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Timestamp Link Generator</title>
+
+    <meta property="og:title" content="YouTube Timestamp Link Generator">
+    <meta property="og:description" content="유튜브 영상의 특정 시간부터 재생되는 링크를 쉽게 만드세요!">
+    <meta property="og:image" content="logo.png">
+    <meta property="og:url" content="https://yenney.kr/youtube-link-generator.html">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ko_KR">
+    
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -206,12 +214,10 @@
     }
 
     async function shareLink() {
-        // 1. 사용자가 입력한 시간 값을 다시 가져옵니다.
         const hours = parseInt(document.getElementById('hours').value) || 0;
         const minutes = parseInt(document.getElementById('minutes').value) || 0;
         const seconds = parseInt(document.getElementById('seconds').value) || 0;
 
-        // 2. 'xx:xx' 형식의 타임스탬프 문자열을 만듭니다.
         const paddedMinutes = String(minutes).padStart(2, '0');
         const paddedSeconds = String(seconds).padStart(2, '0');
         
@@ -220,7 +226,6 @@
             timestamp = `${hours}:${timestamp}`;
         }
 
-        // 3. 동적 안내 문구를 포함한 최종 공유 메시지를 생성합니다.
         const originalText = '친구가 공유한 유튜브 영상을 확인해보세요!';
         const guideText = `\n\n(혹시 영상이 처음부터 재생된다면 ${timestamp} 부터 시청하세요!)`;
         const combinedText = originalText + guideText;
@@ -228,7 +233,7 @@
         const linkElement = document.getElementById('generated-link');
         const shareData = {
             title: '지정한 시간부터 재생되는 유튜브 영상',
-            text: combinedText, // 새로 만든 메시지를 사용합니다.
+            text: combinedText,
             url: linkElement.href
         };
 
