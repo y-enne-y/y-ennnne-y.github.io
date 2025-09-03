@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>뽀모도로 타이머</title>
-
     <meta property="og:title" content="뽀모도로 타이머 🍅">
     <meta property="og:description" content="집중력 향상을 위한 뽀모도로 타이머입니다.">
     <meta property="og:image" content="https://yenney.kr/logo.png">
@@ -126,6 +125,69 @@
             text-decoration: none;
             font-weight: 500;
         }
+        /* New Memo Styles */
+        .memo-container {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            text-align: left;
+        }
+        .memo-container h3 {
+            text-align: center;
+            color: #1c1e21;
+            margin-bottom: 15px;
+        }
+        .memo-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .memo-input-group textarea {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 40px;
+            font-family: inherit;
+        }
+        .memo-input-group button {
+            padding: 10px 15px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        #memoList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #memoList li {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            word-break: break-all;
+        }
+        #memoList .delete-btn {
+            background-color: transparent;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 0 5px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -165,6 +227,15 @@
             <button id="resetButton" data-i18n-key="resetButton"></button>
         </div>
 
+        <div class="memo-container">
+            <h3 data-i18n-key="memoTitle"></h3>
+            <div class="memo-input-group">
+                <textarea id="memoInput" data-i18n-placeholder-key="memoPlaceholder"></textarea>
+                <button id="addMemoButton" data-i18n-key="memoAddButton"></button>
+            </div>
+            <ul id="memoList"></ul>
+        </div>
+
         <div class="back-link">
             <a href="about.html" data-i18n-key="backLink"></a>
         </div>
@@ -173,94 +244,16 @@
     <script>
         const translations = {
             ko: {
-                pageTitle: "뽀모도로 타이머 🍅",
-                currentTimePrefix: "현재 시각:",
-                workLabel: "작업 시간 (분)",
-                restLabel: "휴식 시간 (분)",
-                cyclesLabel: "반복 횟수",
-                startButton: "시작",
-                pauseButton: "일시정지",
-                resetButton: "초기화",
-                resumeButton: "재개",
-                backLink: "About Me 페이지로 돌아가기",
-                statusWaiting: "대기 중",
-                statusWork: "작업",
-                statusRest: "휴식",
-                statusComplete: "모든 세션 완료!",
-                infoStatus: "현재 상태:",
-                infoStart: "시작:",
-                infoEnd: "종료:",
-                infoUpdatedEnd: "변경된 종료:",
-                docTitleWork: "작업 중! 🔥",
-                docTitleRest: "휴식 시간 🧘",
-                docTitlePaused: "일시정지됨",
-                docTitleComplete: "뽀모도로 완료! 🎉",
-                docTitleDefault: "뽀모도로 타이머",
-                finishMessage: "모든 세션을 완료했습니다!",
-                finishMessageSub: "수고하셨어요.",
-                pausePrefix: "+",
-                pauseUnitSecond: "초",
-                pauseUnitMinute: "분"
+                pageTitle: "뽀모도로 타이머 🍅", currentTimePrefix: "현재 시각:", workLabel: "작업 시간 (분)", restLabel: "휴식 시간 (분)", cyclesLabel: "반복 횟수", startButton: "시작", pauseButton: "일시정지", resetButton: "초기화", resumeButton: "재개", backLink: "About Me 페이지로 돌아가기", statusWaiting: "대기 중", statusWork: "작업", statusRest: "휴식", statusComplete: "모든 세션 완료!", infoStatus: "현재 상태:", infoStart: "시작:", infoEnd: "종료:", infoUpdatedEnd: "변경된 종료:", docTitleWork: "작업 중! 🔥", docTitleRest: "휴식 시간 🧘", docTitlePaused: "일시정지됨", docTitleComplete: "뽀모도로 완료! 🎉", docTitleDefault: "뽀모도로 타이머", finishMessage: "모든 세션을 완료했습니다!", finishMessageSub: "수고하셨어요.", pausePrefix: "+", pauseUnitSecond: "초", pauseUnitMinute: "분",
+                memoTitle: "방해 요소 메모", memoPlaceholder: "떠오른 생각이나 할 일을 여기에 적어두세요...", memoAddButton: "추가", memoDeleteButton: "삭제"
             },
             en: {
-                pageTitle: "Pomodoro Timer 🍅",
-                currentTimePrefix: "Current Time:",
-                workLabel: "Work Time (min)",
-                restLabel: "Rest Time (min)",
-                cyclesLabel: "Cycles",
-                startButton: "Start",
-                pauseButton: "Pause",
-                resetButton: "Reset",
-                resumeButton: "Resume",
-                backLink: "Back to About Me",
-                statusWaiting: "Waiting",
-                statusWork: "Work",
-                statusRest: "Rest",
-                statusComplete: "All Sessions Complete!",
-                infoStatus: "Status:",
-                infoStart: "Start:",
-                infoEnd: "End:",
-                infoUpdatedEnd: "Updated End:",
-                docTitleWork: "Working! 🔥",
-                docTitleRest: "Resting 🧘",
-                docTitlePaused: "Paused",
-                docTitleComplete: "Pomodoro Complete! 🎉",
-                docTitleDefault: "Pomodoro Timer",
-                finishMessage: "All sessions have been completed!",
-                finishMessageSub: "Good work.",
-                pausePrefix: "+",
-                pauseUnitSecond: "s",
-                pauseUnitMinute: "m"
+                pageTitle: "Pomodoro Timer 🍅", currentTimePrefix: "Current Time:", workLabel: "Work Time (min)", restLabel: "Rest Time (min)", cyclesLabel: "Cycles", startButton: "Start", pauseButton: "Pause", resetButton: "Reset", resumeButton: "Resume", backLink: "Back to About Me", statusWaiting: "Waiting", statusWork: "Work", statusRest: "Rest", statusComplete: "All Sessions Complete!", infoStatus: "Status:", infoStart: "Start:", infoEnd: "End:", infoUpdatedEnd: "Updated End:", docTitleWork: "Working! 🔥", docTitleRest: "Resting 🧘", docTitlePaused: "Paused", docTitleComplete: "Pomodoro Complete! 🎉", docTitleDefault: "Pomodoro Timer", finishMessage: "All sessions have been completed!", finishMessageSub: "Good work.", pausePrefix: "+", pauseUnitSecond: "s", pauseUnitMinute: "m",
+                memoTitle: "Distraction Pad", memoPlaceholder: "Jot down distracting thoughts or tasks here...", memoAddButton: "Add", memoDeleteButton: "Delete"
             },
             es: {
-                pageTitle: "Temporizador Pomodoro 🍅",
-                currentTimePrefix: "Hora actual:",
-                workLabel: "Tiempo de trabajo (min)",
-                restLabel: "Tiempo de descanso (min)",
-                cyclesLabel: "Ciclos",
-                startButton: "Iniciar",
-                pauseButton: "Pausa",
-                resetButton: "Reiniciar",
-                resumeButton: "Reanudar",
-                backLink: "Volver a Sobre Mí",
-                statusWaiting: "Esperando",
-                statusWork: "Trabajo",
-                statusRest: "Descanso",
-                statusComplete: "¡Todas las sesiones completadas!",
-                infoStatus: "Estado:",
-                infoStart: "Inicio:",
-                infoEnd: "Fin:",
-                infoUpdatedEnd: "Fin actualizado:",
-                docTitleWork: "¡Trabajando! 🔥",
-                docTitleRest: "Descansando 🧘",
-                docTitlePaused: "En pausa",
-                docTitleComplete: "¡Pomodoro completado! 🎉",
-                docTitleDefault: "Temporizador Pomodoro",
-                finishMessage: "¡Todas las sesiones han sido completadas!",
-                finishMessageSub: "Buen trabajo.",
-                pausePrefix: "+",
-                pauseUnitSecond: "s",
-                pauseUnitMinute: "m"
+                pageTitle: "Temporizador Pomodoro 🍅", currentTimePrefix: "Hora actual:", workLabel: "Tiempo de trabajo (min)", restLabel: "Tiempo de descanso (min)", cyclesLabel: "Ciclos", startButton: "Iniciar", pauseButton: "Pausa", resetButton: "Reiniciar", resumeButton: "Reanudar", backLink: "Volver a Sobre Mí", statusWaiting: "Esperando", statusWork: "Trabajo", statusRest: "Descanso", statusComplete: "¡Todas las sesiones completadas!", infoStatus: "Estado:", infoStart: "Inicio:", infoEnd: "Fin:", infoUpdatedEnd: "Fin actualizado:", docTitleWork: "¡Trabajando! 🔥", docTitleRest: "Descansando 🧘", docTitlePaused: "En pausa", docTitleComplete: "¡Pomodoro completado! 🎉", docTitleDefault: "Temporizador Pomodoro", finishMessage: "¡Todas las sesiones han sido completadas!", finishMessageSub: "Buen trabajo.", pausePrefix: "+", pauseUnitSecond: "s", pauseUnitMinute: "m",
+                memoTitle: "Bloc de Distracciones", memoPlaceholder: "Anota aquí los pensamientos o tareas que te distraigan...", memoAddButton: "Añadir", memoDeleteButton: "Eliminar"
             }
         };
 
@@ -294,6 +287,12 @@
                 const key = el.dataset.i18nKey;
                 if (t[key]) {
                     el.textContent = t[key];
+                }
+            });
+            document.querySelectorAll('[data-i18n-placeholder-key]').forEach(el => {
+                const key = el.dataset.i18nPlaceholderKey;
+                if (t[key]) {
+                    el.placeholder = t[key];
                 }
             });
         }
@@ -456,6 +455,47 @@
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
         resetButton.addEventListener('click', resetTimer);
+
+        // --- New Memo Logic ---
+        const memoInput = document.getElementById('memoInput');
+        const addMemoButton = document.getElementById('addMemoButton');
+        const memoList = document.getElementById('memoList');
+
+        function addMemo() {
+            const memoText = memoInput.value.trim();
+            if (memoText === '') {
+                return;
+            }
+
+            const li = document.createElement('li');
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = memoText;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = '×';
+            deleteButton.className = 'delete-btn';
+            deleteButton.title = t.memoDeleteButton;
+            deleteButton.onclick = function() {
+                memoList.removeChild(li);
+            };
+
+            li.appendChild(textSpan);
+            li.appendChild(deleteButton);
+            memoList.appendChild(li);
+
+            memoInput.value = '';
+            memoInput.focus();
+        }
+
+        addMemoButton.addEventListener('click', addMemo);
+
+        memoInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                addMemo();
+            }
+        });
     </script>
 </body>
 </html>
