@@ -491,8 +491,13 @@
         addMemoButton.addEventListener('click', addMemo);
 
         memoInput.addEventListener('keydown', (event) => {
+            // IME로 글자를 조합하는 중(isComposing)이라면 Enter 키 이벤트를 무시합니다.
+            if (event.isComposing) {
+                return;
+            }
+            
             if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
+                event.preventDefault(); // 기본 동작(줄바꿈) 방지
                 addMemo();
             }
         });
