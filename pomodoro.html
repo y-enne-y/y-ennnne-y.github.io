@@ -4,15 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>뽀모도로 타이머</title>
-    <meta property="og:title" content="뽀모도로 타이머 🍅">
-    <meta property="og:description" content="집중력 향상을 위한 뽀모도로 타이머입니다.">
-    <meta property="og:image" content="https://yenney.kr/logo.png">
-    <meta property="og:url" content="https://yenney.kr/pomodoro.html">
-    <meta property="og:type" content="website">
-    <style>
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-    </style>
-
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -106,26 +97,25 @@
             color: #28a745;
             margin-top: 8px;
         }
+        .controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
         .controls button {
-            padding: 12px 24px;
+            padding: 12px 20px;
             font-size: 16px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            margin: 5px;
             transition: background-color 0.2s;
             font-weight: bold;
         }
         #startButton { background-color: #28a745; color: white; }
         #pauseButton { background-color: #ffc107; color: #333; }
         #resetButton { background-color: #dc3545; color: white; }
-        .back-link { margin-top: 30px; }
-        .back-link a {
-            color: #0073e6;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        /* New Memo Styles */
+        #skipButton { background-color: #0d6efd; color: white; }
         .memo-container {
             margin-top: 25px;
             padding-top: 20px;
@@ -188,6 +178,12 @@
             padding: 0 5px;
             margin-left: 10px;
         }
+        .back-link { margin-top: 30px; text-align: center; }
+        .back-link a {
+            color: #0073e6;
+            text-decoration: none;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -224,9 +220,10 @@
         <div class="controls">
             <button id="startButton" data-i18n-key="startButton"></button>
             <button id="pauseButton" data-i18n-key="pauseButton"></button>
+            <button id="skipButton" data-i18n-key="skipButton"></button>
             <button id="resetButton" data-i18n-key="resetButton"></button>
         </div>
-
+        
         <div class="memo-container">
             <h3 data-i18n-key="memoTitle"></h3>
             <div class="memo-input-group">
@@ -235,7 +232,6 @@
             </div>
             <ul id="memoList"></ul>
         </div>
-
         <div class="back-link">
             <a href="about.html" data-i18n-key="backLink"></a>
         </div>
@@ -244,16 +240,13 @@
     <script>
         const translations = {
             ko: {
-                pageTitle: "뽀모도로 타이머 🍅", currentTimePrefix: "현재 시각:", workLabel: "작업 시간 (분)", restLabel: "휴식 시간 (분)", cyclesLabel: "반복 횟수", startButton: "시작", pauseButton: "일시정지", resetButton: "초기화", resumeButton: "재개", backLink: "About Me 페이지로 돌아가기", statusWaiting: "대기 중", statusWork: "작업", statusRest: "휴식", statusComplete: "모든 세션 완료!", infoStatus: "현재 상태:", infoStart: "시작:", infoEnd: "종료:", infoUpdatedEnd: "변경된 종료:", docTitleWork: "작업 중! 🔥", docTitleRest: "휴식 시간 🧘", docTitlePaused: "일시정지됨", docTitleComplete: "뽀모도로 완료! 🎉", docTitleDefault: "뽀모도로 타이머", finishMessage: "모든 세션을 완료했습니다!", finishMessageSub: "수고하셨어요.", pausePrefix: "+", pauseUnitSecond: "초", pauseUnitMinute: "분",
-                memoTitle: "방해 요소 메모", memoPlaceholder: "떠오른 생각이나 할 일을 여기에 적어두세요...", memoAddButton: "추가", memoDeleteButton: "삭제"
+                pageTitle: "뽀모도로 타이머 🍅", currentTimePrefix: "현재 시각:", workLabel: "작업 시간 (분)", restLabel: "휴식 시간 (분)", cyclesLabel: "반복 횟수", startButton: "시작", pauseButton: "일시정지", resetButton: "초기화", resumeButton: "재개", skipButton: "건너뛰기", backLink: "About Me 페이지로 돌아가기", statusWaiting: "대기 중", statusWork: "작업", statusRest: "휴식", statusComplete: "모든 세션 완료!", infoStatus: "현재 상태:", infoStart: "시작:", infoEnd: "종료:", infoUpdatedEnd: "변경된 종료:", docTitleWork: "작업 중! 🔥", docTitleRest: "휴식 시간 🧘", docTitlePaused: "일시정지됨", docTitleComplete: "뽀모도로 완료! 🎉", docTitleDefault: "뽀모도로 타이머", finishMessage: "모든 세션을 완료했습니다!", finishMessageSub: "수고하셨어요.", pausePrefix: "+", pauseUnitSecond: "초", pauseUnitMinute: "분", memoTitle: "방해 요소 메모", memoPlaceholder: "떠오른 생각이나 할 일을 여기에 적어두세요...", memoAddButton: "추가", memoDeleteButton: "삭제"
             },
             en: {
-                pageTitle: "Pomodoro Timer 🍅", currentTimePrefix: "Current Time:", workLabel: "Work Time (min)", restLabel: "Rest Time (min)", cyclesLabel: "Cycles", startButton: "Start", pauseButton: "Pause", resetButton: "Reset", resumeButton: "Resume", backLink: "Back to About Me", statusWaiting: "Waiting", statusWork: "Work", statusRest: "Rest", statusComplete: "All Sessions Complete!", infoStatus: "Status:", infoStart: "Start:", infoEnd: "End:", infoUpdatedEnd: "Updated End:", docTitleWork: "Working! 🔥", docTitleRest: "Resting 🧘", docTitlePaused: "Paused", docTitleComplete: "Pomodoro Complete! 🎉", docTitleDefault: "Pomodoro Timer", finishMessage: "All sessions have been completed!", finishMessageSub: "Good work.", pausePrefix: "+", pauseUnitSecond: "s", pauseUnitMinute: "m",
-                memoTitle: "Distraction Pad", memoPlaceholder: "Jot down distracting thoughts or tasks here...", memoAddButton: "Add", memoDeleteButton: "Delete"
+                pageTitle: "Pomodoro Timer 🍅", currentTimePrefix: "Current Time:", workLabel: "Work Time (min)", restLabel: "Rest Time (min)", cyclesLabel: "Cycles", startButton: "Start", pauseButton: "Pause", resetButton: "Reset", resumeButton: "Resume", skipButton: "Skip", backLink: "Back to About Me", statusWaiting: "Waiting", statusWork: "Work", statusRest: "Rest", statusComplete: "All Sessions Complete!", infoStatus: "Status:", infoStart: "Start:", infoEnd: "End:", infoUpdatedEnd: "Updated End:", docTitleWork: "Working! 🔥", docTitleRest: "Resting 🧘", docTitlePaused: "Paused", docTitleComplete: "Pomodoro Complete! 🎉", docTitleDefault: "Pomodoro Timer", finishMessage: "All sessions have been completed!", finishMessageSub: "Good work.", pausePrefix: "+", pauseUnitSecond: "s", pauseUnitMinute: "m", memoTitle: "Distraction Pad", memoPlaceholder: "Jot down distracting thoughts or tasks here...", memoAddButton: "Add", memoDeleteButton: "Delete"
             },
             es: {
-                pageTitle: "Temporizador Pomodoro 🍅", currentTimePrefix: "Hora actual:", workLabel: "Tiempo de trabajo (min)", restLabel: "Tiempo de descanso (min)", cyclesLabel: "Ciclos", startButton: "Iniciar", pauseButton: "Pausa", resetButton: "Reiniciar", resumeButton: "Reanudar", backLink: "Volver a Sobre Mí", statusWaiting: "Esperando", statusWork: "Trabajo", statusRest: "Descanso", statusComplete: "¡Todas las sesiones completadas!", infoStatus: "Estado:", infoStart: "Inicio:", infoEnd: "Fin:", infoUpdatedEnd: "Fin actualizado:", docTitleWork: "¡Trabajando! 🔥", docTitleRest: "Descansando 🧘", docTitlePaused: "En pausa", docTitleComplete: "¡Pomodoro completado! 🎉", docTitleDefault: "Temporizador Pomodoro", finishMessage: "¡Todas las sesiones han sido completadas!", finishMessageSub: "Buen trabajo.", pausePrefix: "+", pauseUnitSecond: "s", pauseUnitMinute: "m",
-                memoTitle: "Bloc de Distracciones", memoPlaceholder: "Anota aquí los pensamientos o tareas que te distraigan...", memoAddButton: "Añadir", memoDeleteButton: "Eliminar"
+                pageTitle: "Temporizador Pomodoro 🍅", currentTimePrefix: "Hora actual:", workLabel: "Tiempo de trabajo (min)", restLabel: "Tiempo de descanso (min)", cyclesLabel: "Ciclos", startButton: "Iniciar", pauseButton: "Pausa", resetButton: "Reiniciar", resumeButton: "Reanudar", skipButton: "Saltar", backLink: "Volver a Sobre Mí", statusWaiting: "Esperando", statusWork: "Trabajo", statusRest: "Descanso", statusComplete: "¡Todas las sesiones completadas!", infoStatus: "Estado:", infoStart: "Inicio:", infoEnd: "Fin:", infoUpdatedEnd: "Fin actualizado:", docTitleWork: "¡Trabajando! 🔥", docTitleRest: "Descansando 🧘", docTitlePaused: "En pausa", docTitleComplete: "¡Pomodoro completado! 🎉", docTitleDefault: "Temporizador Pomodoro", finishMessage: "¡Todas las sesiones han sido completadas!", finishMessageSub: "Buen trabajo.", pausePrefix: "+", pauseUnitSecond: "s", pauseUnitMinute: "m", memoTitle: "Bloc de Distracciones", memoPlaceholder: "Anota aquí los pensamientos o tareas que te distraigan...", memoAddButton: "Añadir", memoDeleteButton: "Eliminar"
             }
         };
 
@@ -272,11 +265,15 @@
         const startButton = document.getElementById('startButton');
         const pauseButton = document.getElementById('pauseButton');
         const resetButton = document.getElementById('resetButton');
+        const skipButton = document.getElementById('skipButton');
         const timerDisplay = document.getElementById('timerDisplay');
         const progressBar = document.getElementById('progressBar');
         const sessionInfo = document.getElementById('sessionInfo');
         const realTimeClock = document.getElementById('realTimeClock');
         const pauseDurationDisplay = document.getElementById('pauseDurationDisplay');
+        const memoInput = document.getElementById('memoInput');
+        const addMemoButton = document.getElementById('addMemoButton');
+        const memoList = document.getElementById('memoList');
 
         let timerInterval, totalTimeInSeconds, isWorking = true, isPaused = false, currentCycle = 1, totalCycles, endTime, timeLeftOnPause, pauseInterval, secondsPaused;
         let lastSessionInfo = {};
@@ -285,15 +282,11 @@
             document.documentElement.lang = lang;
             document.querySelectorAll('[data-i18n-key]').forEach(el => {
                 const key = el.dataset.i18nKey;
-                if (t[key]) {
-                    el.textContent = t[key];
-                }
+                if (t[key]) el.textContent = t[key];
             });
             document.querySelectorAll('[data-i18n-placeholder-key]').forEach(el => {
                 const key = el.dataset.i18nPlaceholderKey;
-                if (t[key]) {
-                    el.placeholder = t[key];
-                }
+                if (t[key]) el.placeholder = t[key];
             });
         }
 
@@ -329,13 +322,10 @@
         }
 
         function formatPauseTime(totalSeconds) {
-            if (totalSeconds < 60) {
-                return `(${t.pausePrefix}${totalSeconds}${t.pauseUnitSecond})`;
-            } else {
-                const minutes = Math.floor(totalSeconds / 60);
-                const seconds = totalSeconds % 60;
-                return `(${t.pausePrefix}${minutes}${t.pauseUnitMinute} ${seconds}${t.pauseUnitSecond})`;
-            }
+            if (totalSeconds < 60) return `(${t.pausePrefix}${totalSeconds}${t.pauseUnitSecond})`;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `(${t.pausePrefix}${minutes}${t.pauseUnitMinute} ${seconds}${t.pauseUnitSecond})`;
         }
 
         function startTimer() {
@@ -383,9 +373,7 @@
                     updateProgressBar(timeLeftInSeconds, totalTimeInSeconds);
                 } else {
                     isWorking = !isWorking;
-                    if (isWorking) {
-                        currentCycle++;
-                    }
+                    if (isWorking) currentCycle++;
                     startNextSession();
                 }
             }, 1000);
@@ -431,6 +419,13 @@
             }
         }
         
+        function skipSession() {
+            if (!endTime || currentCycle > totalCycles) return;
+            isWorking = !isWorking;
+            if (isWorking) currentCycle++;
+            startNextSession();
+        }
+        
         function resetTimer() {
             clearInterval(timerInterval);
             clearInterval(pauseInterval);
@@ -440,12 +435,35 @@
             lastSessionInfo = {};
             isWorking = true;
             isPaused = false;
+            if (pauseButton.textContent !== t.pauseButton) {
+                pauseButton.textContent = t.pauseButton;
+            }
             currentCycle = 1;
             const initialTime = parseInt(workMinutesInput.value) * 60;
             updateTimerDisplay(initialTime);
             updateProgressBar(initialTime, initialTime);
             updateSessionInfo(t.statusWaiting);
             document.title = t.docTitleDefault;
+        }
+
+        function addMemo() {
+            const memoText = memoInput.value.trim();
+            if (memoText === '') return;
+            const li = document.createElement('li');
+            const textSpan = document.createElement('span');
+            textSpan.textContent = memoText;
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = '×';
+            deleteButton.className = 'delete-btn';
+            deleteButton.title = t.memoDeleteButton;
+            deleteButton.onclick = function() {
+                memoList.removeChild(li);
+            };
+            li.appendChild(textSpan);
+            li.appendChild(deleteButton);
+            memoList.appendChild(li);
+            memoInput.value = '';
+            memoInput.focus();
         }
 
         applyTranslations();
@@ -455,49 +473,12 @@
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
         resetButton.addEventListener('click', resetTimer);
-
-        // --- New Memo Logic ---
-        const memoInput = document.getElementById('memoInput');
-        const addMemoButton = document.getElementById('addMemoButton');
-        const memoList = document.getElementById('memoList');
-
-        function addMemo() {
-            const memoText = memoInput.value.trim();
-            if (memoText === '') {
-                return;
-            }
-
-            const li = document.createElement('li');
-            
-            const textSpan = document.createElement('span');
-            textSpan.textContent = memoText;
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = '×';
-            deleteButton.className = 'delete-btn';
-            deleteButton.title = t.memoDeleteButton;
-            deleteButton.onclick = function() {
-                memoList.removeChild(li);
-            };
-
-            li.appendChild(textSpan);
-            li.appendChild(deleteButton);
-            memoList.appendChild(li);
-
-            memoInput.value = '';
-            memoInput.focus();
-        }
-
+        skipButton.addEventListener('click', skipSession);
         addMemoButton.addEventListener('click', addMemo);
-
         memoInput.addEventListener('keydown', (event) => {
-            // IME로 글자를 조합하는 중(isComposing)이라면 Enter 키 이벤트를 무시합니다.
-            if (event.isComposing) {
-                return;
-            }
-            
+            if (event.isComposing) return;
             if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault(); // 기본 동작(줄바꿈) 방지
+                event.preventDefault();
                 addMemo();
             }
         });
