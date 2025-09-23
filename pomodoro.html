@@ -167,14 +167,13 @@
             align-items: center;
             word-break: break-all;
         }
-        /* ▼▼▼▼▼ [CSS 수정] 체크박스 관련 스타일 추가 ▼▼▼▼▼ */
         #memoList input[type="checkbox"] {
             margin-right: 12px;
             flex-shrink: 0;
         }
         #memoList .memo-text {
             flex-grow: 1;
-            transition: color 0.3s;
+            transition: color 0.3s, font-style 0.3s;
         }
         #memoList .memo-text.completed {
             color: #adb5bd;
@@ -461,7 +460,7 @@
             document.title = t.docTitleDefault;
         }
         
-        // ▼▼▼▼▼ [JS 수정] 메모 추가 로직 변경 ▼▼▼▼▼
+        // ▼▼▼▼▼ [JS 수정] 메모 추가 로직 전체 변경 ▼▼▼▼▼
         function addMemo() {
             const memoText = memoInput.value.trim();
             if (memoText === '') return;
@@ -470,13 +469,25 @@
             
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-            checkbox.onchange = function() {
-                textSpan.classList.toggle('completed', checkbox.checked);
-            };
-
+            
             const textSpan = document.createElement('span');
             textSpan.className = 'memo-text';
             textSpan.textContent = memoText;
+
+            // 체크박스 클릭 이벤트 핸들러
+            checkbox.onchange = function() {
+                // 스타일 변경
+                textSpan.classList.toggle('completed', checkbox.checked);
+                
+                // 위치 변경
+                if (checkbox.checked) {
+                    // 체크되면 리스트의 맨 아래로 이동
+                    memoList.appendChild(li);
+                } else {
+                    // 체크 해제되면 리스트의 맨 위로 이동
+                    memoList.prepend(li);
+                }
+            };
 
             const deleteButton = document.createElement('button');
             deleteButton.textContent = '×';
@@ -489,7 +500,9 @@
             li.appendChild(checkbox);
             li.appendChild(textSpan);
             li.appendChild(deleteButton);
-            memoList.appendChild(li);
+            
+            // 새 메모는 항상 리스트의 맨 위에 추가
+            memoList.prepend(li);
 
             memoInput.value = '';
             memoInput.focus();
