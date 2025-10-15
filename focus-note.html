@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방해 요소 노트</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+        :root {
+            --primary-color: #007aff;
+            --background-color: #f0f2f5;
+            --container-bg: #ffffff;
+            --text-color: #1c1c1e;
+            --subtle-text: #6c757d;
+            --border-color: #e5e5ea;
+            --green: #34c759;
+            --orange: #ff9500;
+            --red: #ff3b30;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            color: var(--text-color);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        #live-clock {
+            font-size: 1rem;
+            color: var(--subtle-text);
+        }
+
+        .card {
+            background: var(--container-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .focus-timer .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .focus-timer .input-group label {
+            font-weight: 500;
+        }
+
+        .focus-timer .input-group input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .focus-timer .display-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .focus-timer .display-item h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--subtle-text);
+            font-weight: 500;
+        }
+
+        .focus-timer .display-item p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .stopwatch-display {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        #pause-duration {
+            text-align: center;
+            color: var(--orange);
+            font-weight: 600;
+            height: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .controls button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .controls button:active {
+            transform: scale(0.98);
+        }
+
+        #startBtn { background-color: var(--green); color: white; }
+        #pauseBtn { background-color: var(--orange); color: white; }
+        #stopBtn { background-color: var(--red); color: white; }
+        .controls button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .notes-section .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .notes-section h2 {
+            margin: 0; font-size: 1.2rem;
+        }
+        .notes-section #notes-start-time {
+            font-size: 0.9rem; color: var(--subtle-text);
+        }
+
+        .notes-section .note-input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        .notes-section input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .notes-section button {
+            padding: 10px 15px;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        #notes-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #notes-list li {
+            display: flex;
+            align-items: center;
+            padding: 12px 5px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1rem;
+        }
+        #notes-list li:last-child {
+            border-bottom: none;
+        }
+        #notes-list input[type="checkbox"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+        }
+        #notes-list label {
+            flex-grow: 1;
+            transition: color 0.2s;
+        }
+        #notes-list input[type="checkbox"]:checked + label {
+            text-decoration: line-through;
+            color: var(--subtle-text);
+        }
+        #notes-list .delete-btn {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>📝 방해 요소 노트</h1>
+        <div id="live-clock"></div>
+    </header>
+
+    <div class="card focus-timer">
+        <div class="input-group">
+            <label for="focus-duration">목표 집중 시간 (분):</label>
+            <input type="number" id="focus-duration" value="25" min="1">
+        </div>
+        <div class="display-group">
+            <div class="display-item">
+                <h3>시작 시각</h3>
+                <p id="start-time-display">--:--:--</p>
+            </div>
+            <div class="display-item">
+                <h3>목표 시각</h3>
+                <p id="end-time-display">--:--:--</p>
+            </div>
+        </div>
+        <div class="stopwatch-display" id="stopwatch">00:00:00</div>
+        <div id="pause-duration"></div>
+        <div class="controls">
+            <button id="startBtn">집중 시작</button>
+            <button id="pauseBtn" disabled>일시정지</button>
+            <button id="stopBtn" disabled>초기화</button>
+        </div>
+    </div>
+
+    <div class="card notes-section">
+        <div class="notes-header">
+            <h2>노트</h2>
+            <span id="notes-start-time"></span>
+        </div>
+        <div class="note-input-area">
+            <input type="text" id="note-input" placeholder="집중 중 떠오른 생각을 기록하세요...">
+            <button id="add-note-btn">추가</button>
+        </div>
+        <ul id="notes-list"></ul>
+    </div>
+</div>
+
+<script>
+    // DOM Elements
+    const liveClockEl = document.getElementById('live-clock');
+    const durationInput = document.getElementById('focus-duration');
+    const startTimeDisplay = document.getElementById('start-time-display');
+    const endTimeDisplay = document.getElementById('end-time-display');
+    const stopwatchDisplay = document.getElementById('stopwatch');
+    const pauseDurationDisplay = document.getElementById('pause-duration');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const notesStartTimeEl = document.getElementById('notes-start-time');
+    const noteInput = document.getElementById('note-input');
+    const addNoteBtn = document.getElementById('add-note-btn');
+    const notesList = document.getElementById('notes-list');
+
+    // Timer State
+    let focusInterval, pauseInterval;
+    let startTime, targetEndTime, pauseStartTime;
+    let totalPausedTime = 0;
+    let isRunning = false;
+    let isPaused = false;
+
+    // --- Helper Functions ---
+    const formatTwoDigits = (num) => String(num).padStart(2, '0');
+    
+    const formatTime = (date) => {
+        if (!date) return '--:--:--';
+        return `${formatTwoDigits(date.getHours())}:${formatTwoDigits(date.getMinutes())}:${formatTwoDigits(date.getSeconds())}`;
+    };
+
+    const formatDuration = (ms) => {
+        const totalSeconds = Math.floor(ms / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        return `${formatTwoDigits(hours)}:${formatTwoDigits(minutes)}:${formatTwoDigits(seconds)}`;
+    };
+
+    // --- Clock ---
+    function updateLiveClock() {
+        const now = new Date();
+        const dateString = now.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+        const timeString = formatTime(now);
+        liveClockEl.textContent = `${dateString} ${timeString}`;
+    }
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+
+    // --- Timer Controls ---
+    function startFocus() {
+        if (isRunning) return;
+
+        const durationMinutes = parseInt(durationInput.value);
+        if (isNaN(durationMinutes) || durationMinutes <= 0) {
+            alert('올바른 목표 시간을 입력해주세요.');
+            return;
+        }
+
+        isRunning = true;
+        isPaused = false;
+        startTime = new Date();
+        targetEndTime = new Date(startTime.getTime() + durationMinutes * 60 * 1000);
+        totalPausedTime = 0;
+
+        updateTimerUI();
+        updateDisplay();
+        
+        focusInterval = setInterval(updateDisplay, 1000);
+    }
+
+    function pauseFocus() {
+        if (!isRunning) return;
+
+        isPaused = !isPaused;
+
+        if (isPaused) {
+            // Pausing
+            clearInterval(focusInterval);
+            pauseStartTime = new Date();
+            pauseBtn.textContent = '계속하기';
+            pauseInterval = setInterval(() => {
+                const pausedElapsed = new Date() - pauseStartTime;
+                pauseDurationDisplay.textContent = `(멈춘 시간: ${formatDuration(pausedElapsed)})`;
+            }, 1000);
+        } else {
+            // Resuming
+            clearInterval(pauseInterval);
+            const pausedDuration = new Date() - pauseStartTime;
+            totalPausedTime += pausedDuration;
+            targetEndTime = new Date(targetEndTime.getTime() + pausedDuration);
+            
+            pauseDurationDisplay.textContent = '';
+            pauseBtn.textContent = '일시정지';
+            
+            updateDisplay(); // Update once immediately
+            focusInterval = setInterval(updateDisplay, 1000);
+        }
+    }
+
+    function stopFocus() {
+        isRunning = false;
+        isPaused = false;
+        clearInterval(focusInterval);
+        clearInterval(pauseInterval);
+
+        startTime = null;
+        targetEndTime = null;
+        totalPausedTime = 0;
+        
+        stopwatchDisplay.textContent = '00:00:00';
+        pauseDurationDisplay.textContent = '';
+        startTimeDisplay.textContent = '--:--:--';
+        endTimeDisplay.textContent = '--:--:--';
+        pauseBtn.textContent = '일시정지';
+        
+        updateTimerUI();
+    }
+
+    // --- UI Update Functions ---
+    function updateDisplay() {
+        if (!isRunning || isPaused) return;
+
+        const elapsed = new Date() - startTime - totalPausedTime;
+        stopwatchDisplay.textContent = formatDuration(elapsed);
+        startTimeDisplay.textContent = formatTime(startTime);
+        endTimeDisplay.textContent = formatTime(targetEndTime);
+    }
+    
+    function updateTimerUI() {
+        startBtn.disabled = isRunning;
+        durationInput.disabled = isRunning;
+        pauseBtn.disabled = !isRunning;
+        stopBtn.disabled = !isRunning;
+    }
+
+    // --- Notes Logic ---
+    let notesCreated = false;
+
+    function addNote() {
+        const text = noteInput.value.trim();
+        if (text === '') return;
+
+        if (!notesCreated) {
+            notesStartTimeEl.textContent = `(작성 시작: ${formatTime(new Date())})`;
+            notesCreated = true;
+        }
+
+        const li = document.createElement('li');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        const label = document.createElement('label');
+        label.textContent = text;
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '×';
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.onclick = () => li.remove();
+
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        li.appendChild(deleteBtn);
+        notesList.appendChild(li);
+
+        noteInput.value = '';
+        noteInput.focus();
+    }
+
+    // --- Event Listeners ---
+    startBtn.addEventListener('click', startFocus);
+    pauseBtn.addEventListener('click', pauseFocus);
+    stopBtn.addEventListener('click', stopFocus);
+
+    addNoteBtn.addEventListener('click', addNote);
+
+    // 👇 [BUG FIX] This is the corrected part.
+    noteInput.addEventListener('keydown', (event) => {
+        // IME composition check
+        if (event.isComposing) {
+            return;
+        }
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default action
+            addNote();
+        }
+    });
+
+</script>
+</body>
+</html>
