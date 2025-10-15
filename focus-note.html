@@ -196,12 +196,20 @@
             margin-right: 12px;
             width: 18px;
             height: 18px;
+            flex-shrink: 0;
         }
-        #notes-list label {
+        #notes-list .note-content {
             flex-grow: 1;
-            transition: color 0.2s;
         }
-        #notes-list input[type="checkbox"]:checked + label {
+        #notes-list .note-text {
+            /* Main text for the note */
+        }
+        #notes-list .note-timestamp {
+            font-size: 0.8rem;
+            color: var(--subtle-text);
+            margin-left: 8px;
+        }
+        #notes-list input[type="checkbox"]:checked + .note-content .note-text {
             text-decoration: line-through;
             color: var(--subtle-text);
         }
@@ -213,6 +221,7 @@
             font-size: 1.2rem;
             font-weight: bold;
             padding: 5px;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -287,9 +296,15 @@
     // --- Helper Functions ---
     const formatTwoDigits = (num) => String(num).padStart(2, '0');
     
-    const formatTime = (date) => {
+    const formatTime = (date, includeSeconds = true) => {
         if (!date) return '--:--:--';
-        return `${formatTwoDigits(date.getHours())}:${formatTwoDigits(date.getMinutes())}:${formatTwoDigits(date.getSeconds())}`;
+        const hours = formatTwoDigits(date.getHours());
+        const minutes = formatTwoDigits(date.getMinutes());
+        if (includeSeconds) {
+            const seconds = formatTwoDigits(date.getSeconds());
+            return `${hours}:${minutes}:${seconds}`;
+        }
+        return `${hours}:${minutes}`;
     };
 
     const formatDuration = (ms) => {
@@ -409,18 +424,33 @@
             notesCreated = true;
         }
 
+        const now = new Date();
+
         const li = document.createElement('li');
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        const label = document.createElement('label');
-        label.textContent = text;
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'note-content';
+
+        const textSpan = document.createElement('span');
+        textSpan.className = 'note-text';
+        textSpan.textContent = text;
+        
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'note-timestamp';
+        timeSpan.textContent = `(${formatTime(now, false)})`; // 초는 제외
+
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '×';
         deleteBtn.className = 'delete-btn';
         deleteBtn.onclick = () => li.remove();
 
+        contentDiv.appendChild(textSpan);
+        contentDiv.appendChild(timeSpan);
         li.appendChild(checkbox);
-        li.appendChild(label);
+        li.appendChild(contentDiv);
         li.appendChild(deleteBtn);
         notesList.appendChild(li);
 
@@ -434,15 +464,12 @@
     stopBtn.addEventListener('click', stopFocus);
 
     addNoteBtn.addEventListener('click', addNote);
-
-    // 👇 [BUG FIX] This is the corrected part.
     noteInput.addEventListener('keydown', (event) => {
-        // IME composition check
         if (event.isComposing) {
             return;
         }
         if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent default action
+            event.preventDefault();
             addNote();
         }
     });
