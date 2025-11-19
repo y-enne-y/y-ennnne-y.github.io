@@ -71,6 +71,9 @@
             border: 1px solid #eee;
             background-color: #fff;
             height: 880px; /* 40 + 84*10 = 880px 높이 고정 */
+            /* 모바일 대응: 화면 너비에 맞춰 자동 축소 */
+            width: 100%; 
+            box-sizing: border-box;
         }
 
         .header {
@@ -106,7 +109,6 @@
             grid-column: 2 / -1;
             border-bottom: 1px solid #e9ecef;
         }
-        /* 30분 단위 보조선 (선택사항, 여기선 생략하거나 연하게) */
         
         /* 세로 구분선 (요일별) */
         .day-column-line {
@@ -231,14 +233,47 @@
         .modal-time { font-size: 1rem; color: #007bff; font-weight: 500; }
 
         @media (max-width: 768px) {
-            h1 { font-size: 1.6rem; }
+            h1 { font-size: 1.5rem; }
+            .schedule-container { padding: 10px; }
+            
+            /* 모바일 전용 그리드 스타일 수정 */
             .schedule-grid {
-                grid-template-columns: 40px repeat(5, 1fr);
-                /* 모바일에서도 비율 유지하거나 높이 조정 가능 */
+                /* 시간 열 폭 줄이고 나머지 등분 */
+                grid-template-columns: 30px repeat(5, 1fr); 
+                height: 600px; /* 전체 높이 줄임 */
+                grid-template-rows: 30px repeat(84, 1fr); /* 헤더 높이도 줄임 */
             }
-            .class-item { padding: 2px; font-size: 0.7rem; }
-            .class-title { font-size: 0.7rem; }
-            .class-time, .class-location { display: none; } /* 공간 부족시 숨김 */
+            
+            .header { font-size: 0.65rem; padding: 0; }
+            
+            .time-slot { 
+                font-size: 0.6rem; 
+                padding-right: 2px; 
+                align-items: center; /* 시간 텍스트 중앙 정렬 */
+            }
+
+            .class-item { 
+                padding: 1px; 
+                font-size: 0.6rem; /* 폰트 크기 대폭 축소 */
+                line-height: 1.1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .class-title { 
+                font-size: 0.65rem; 
+                margin-bottom: 0;
+                font-weight: 600;
+                /* 긴 제목은 말줄임표 처리 */
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+            }
+            
+            /* 모바일에서는 시간과 장소 정보 숨김 (공간 부족) */
+            .class-time, .class-location { display: none; } 
         }
     </style>
 </head>
@@ -417,10 +452,6 @@
                     div.className = `class-item ${colorClass}`;
                     // 요일: 월=1 -> grid column 2 (Time이 1)
                     // item.day가 월=1, 화=2... 형식이면 +1
-                    // data에서 월=1, 화=2... 로 되어있음 (Date.getDay()와 일치시킴)
-                    // 단, Date.getDay()에서 일=0, 월=1... 이므로 데이터의 day값과 grid column 매핑 주의
-                    // 여기 데이터는 월=1 ~ 금=5 로 가정하고 +1 해줌. 
-                    // (일요일(0) 수업은 평일 시간표에 안 보임, 필요시 조건 추가)
                     if (item.day >= 1 && item.day <= 5) {
                         div.style.gridColumn = item.day + 1; 
                         div.style.gridRow = `${gridStartRow} / ${gridEndRow}`;
@@ -433,8 +464,6 @@
                     }
                 });
             }
-
-            // ... (나머지 updateStatus, updateAllStatuses, Modal 로직은 동일) ...
 
             const currentTimeElement = document.getElementById('current-time');
             const myScheduleGrid = document.getElementById('my-schedule-grid');
