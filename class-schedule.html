@@ -44,10 +44,18 @@
         }
         h1 { 
             font-size: 2rem; 
-            margin-bottom: 10px; 
+            margin-bottom: 5px; 
             line-height: 1.2;
         }
         h2 { font-size: 1.5rem; margin-top: 40px; margin-bottom: 10px; }
+
+        #top-clock {
+            text-align: center;
+            font-size: 1rem;
+            color: #007bff;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
 
         #my-status-container {
             text-align: center;
@@ -58,22 +66,23 @@
             align-items: center;
         }
 
-        /* Schedule Grid Styles - 정밀한 시간 표현을 위한 10분 단위 그리드 */
+        .grid-scroll-wrapper {
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch; 
+            border: 1px solid #eee; 
+            border-radius: 8px;
+        }
+
+        /* Schedule Grid Styles */
         .schedule-grid {
             display: grid;
-            grid-template-columns: 60px repeat(5, 1fr); /* 시간 + 월~금 */
-            /* Rows: Header (40px) + Time Slots (08:00 ~ 22:00 = 14시간)
-               1시간 = 60px (10분당 10px) -> 총 14 * 6 = 84칸
-               grid-template-rows: 40px repeat(84, 10px); 
-            */
-            grid-template-rows: 40px repeat(84, 1fr); /* 10분 단위 */
-            gap: 0; /* 갭을 없애고 border로 구분 */
-            border: 1px solid #eee;
+            min-width: 600px; 
+            grid-template-columns: 60px repeat(5, 1fr); 
+            grid-template-rows: 40px repeat(84, 1fr); 
+            gap: 0; 
             background-color: #fff;
-            height: 880px; /* 40 + 84*10 = 880px 높이 고정 */
-            /* 모바일 대응: 화면 너비에 맞춰 자동 축소 */
-            width: 100%; 
-            box-sizing: border-box;
+            height: 880px; 
+            border: none; 
         }
 
         .header {
@@ -86,7 +95,10 @@
             background-color: #f8f9fa;
             border-bottom: 1px solid #e9ecef;
             border-right: 1px solid #e9ecef;
-            grid-row: 1 / 2; /* 헤더는 첫 번째 줄 고정 */
+            grid-row: 1 / 2; 
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         .header:last-child { border-right: none; }
 
@@ -97,24 +109,26 @@
             padding-right: 8px;
             grid-column: 1;
             border-right: 1px solid #e9ecef;
-            border-bottom: 1px solid #f1f3f5; /* 1시간마다 구분선 */
+            border-bottom: 1px solid #f1f3f5; 
             display: flex;
-            align-items: flex-start; /* 시간 텍스트를 위쪽 정렬 */
+            align-items: flex-start; 
             justify-content: flex-end;
             padding-top: 2px;
+            background-color: #fff; 
+            position: sticky; 
+            left: 0;
+            z-index: 9;
         }
         
-        /* 1시간 단위 구분선 (가로) */
         .grid-line-hour {
             grid-column: 2 / -1;
             border-bottom: 1px solid #e9ecef;
         }
         
-        /* 세로 구분선 (요일별) */
         .day-column-line {
             grid-row: 2 / -1;
             border-right: 1px solid #f1f3f5;
-            pointer-events: none; /* 클릭 방해 안 되게 */
+            pointer-events: none; 
         }
 
         .class-item {
@@ -126,8 +140,8 @@
             justify-content: center;
             color: white;
             overflow: hidden;
-            margin: 1px; /* 약간의 여백 */
-            z-index: 2; /* 구분선 위에 표시 */
+            margin: 1px; 
+            z-index: 2; 
             white-space: normal;
             line-height: 1.2;
             text-align: center;
@@ -151,11 +165,9 @@
             padding-top: 20px;
             border-top: 1px solid #dee2e6;
         }
+        
         #current-time {
-            text-align: center;
-            color: #868e96;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
+            display: none; 
         }
         #friend-list {
             list-style: none;
@@ -227,53 +239,19 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: #868e96;
+            z-index: 20;
         }
         .modal-header { text-align: center; margin-bottom: 20px; }
         .modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; }
         .modal-time { font-size: 1rem; color: #007bff; font-weight: 500; }
 
         @media (max-width: 768px) {
-            h1 { font-size: 1.5rem; }
-            .schedule-container { padding: 10px; }
-            
-            /* 모바일 전용 그리드 스타일 수정 */
-            .schedule-grid {
-                /* 시간 열 폭 줄이고 나머지 등분 */
-                grid-template-columns: 30px repeat(5, 1fr); 
-                height: 600px; /* 전체 높이 줄임 */
-                grid-template-rows: 30px repeat(84, 1fr); /* 헤더 높이도 줄임 */
+            h1 { font-size: 1.6rem; }
+            .grid-scroll-wrapper {
+                box-shadow: inset -10px 0 10px -10px rgba(0,0,0,0.1);
             }
-            
-            .header { font-size: 0.65rem; padding: 0; }
-            
-            .time-slot { 
-                font-size: 0.6rem; 
-                padding-right: 2px; 
-                align-items: center; /* 시간 텍스트 중앙 정렬 */
-            }
-
-            .class-item { 
-                padding: 1px; 
-                font-size: 0.6rem; /* 폰트 크기 대폭 축소 */
-                line-height: 1.1;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            
-            .class-title { 
-                font-size: 0.65rem; 
-                margin-bottom: 0;
-                font-weight: 600;
-                /* 긴 제목은 말줄임표 처리 */
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
-            }
-            
-            /* 모바일에서는 시간과 장소 정보 숨김 (공간 부족) */
-            .class-time, .class-location { display: none; } 
+            .class-title { font-size: 0.75rem; }
+            .class-time, .class-location { font-size: 0.65rem; }
         }
     </style>
 </head>
@@ -282,6 +260,9 @@
     <div class="schedule-container">
         <h1>My Class Schedule<br><span style="font-size: 1.2rem; font-weight: 400;">(2025-2)</span></h1>
         
+        <!-- ▼▼▼ [수정] 상단 시계 위치 ▼▼▼ -->
+        <div id="top-clock"></div>
+
         <div id="my-status-container">
             <span class="status-icon" id="my-status-icon"></span>
             <span class="friend-name">Yenney</span>
@@ -289,11 +270,14 @@
         </div>
 
         <!-- Main Schedule (Yenney) -->
-        <div class="schedule-grid" id="my-schedule-grid"></div>
+        <div class="grid-scroll-wrapper">
+            <div class="schedule-grid" id="my-schedule-grid"></div>
+        </div>
 
         <div id="friend-status-container">
             <h2>Friends Status</h2>
-            <div id="current-time"></div>
+            <!-- 기존 하단 시계는 제거 또는 숨김 -->
+            <!-- <div id="current-time"></div> -->
             <p style="text-align: center; font-size: 0.8rem; color: #adb5bd; margin-bottom: 15px;">(친구 이름을 클릭하면 시간표를 볼 수 있어요)</p>
             <ul id="friend-list"></ul>
         </div>
@@ -309,7 +293,9 @@
                 <div class="modal-title" id="modal-friend-name"></div>
                 <div class="modal-time" id="modal-friend-time"></div>
             </div>
-            <div class="schedule-grid" id="modal-schedule-grid"></div>
+            <div class="grid-scroll-wrapper">
+                <div class="schedule-grid" id="modal-schedule-grid"></div>
+            </div>
         </div>
     </div>
 
@@ -396,9 +382,17 @@
                 }
             ];
 
+            const topClockElement = document.getElementById('top-clock');
+            const myScheduleGrid = document.getElementById('my-schedule-grid');
+            const friendList = document.getElementById('friend-list');
+            const modal = document.getElementById('schedule-modal');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalScheduleGrid = document.getElementById('modal-schedule-grid');
+            const modalFriendName = document.getElementById('modal-friend-name');
+            const modalFriendTime = document.getElementById('modal-friend-time');
+            
             // --- Helper Functions ---
             
-            // 10분 단위 그리드 생성
             function createGridHTML() {
                 let html = `
                     <div class="header">Time</div>
@@ -406,25 +400,18 @@
                     <div class="header">Thu</div><div class="header">Fri</div>
                 `;
                 
-                // 08:00 부터 22:00 까지 (14시간)
                 const startHour = 8;
                 const endHour = 22;
                 
                 for (let h = startHour; h < endHour; h++) {
-                    // 시간 표시 (정각)
-                    const timeLabel = h.toString().padStart(2, '0') + ":00";
+                    // ▼▼▼ [수정] 12시간제 (AM/PM) 형식으로 변경 ▼▼▼
+                    const date = new Date();
+                    date.setHours(h, 0, 0);
+                    const timeLabel = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
                     
-                    // 각 시간의 시작점 (row index)
-                    // Header(1행) + (h - 8) * 6(10분단위) + 1(현재 줄)
                     const rowIndex = 1 + (h - startHour) * 6 + 1;
-                    
-                    // 시간 라벨 (6칸 통합)
                     html += `<div class="time-slot" style="grid-row: ${rowIndex} / span 6;">${timeLabel}</div>`;
-                    
-                    // 가로 구분선 (1시간 단위)
                     html += `<div class="grid-line-hour" style="grid-row: ${rowIndex};"></div>`;
-                    
-                    // 요일별 세로 구분선 (5개 요일)
                     for(let d=1; d<=5; d++) {
                         html += `<div class="day-column-line" style="grid-column: ${d+1}; grid-row: 2 / -1;"></div>`;
                     }
@@ -439,19 +426,13 @@
                     const [startH, startM] = item.start.split(':').map(Number);
                     const [endH, endM] = item.end.split(':').map(Number);
 
-                    // 10분 단위 그리드 계산
-                    // 시작 시간: 08:00 = 2번째 줄 (1번째 줄은 헤더)
-                    // 공식: 2 + (시 - 8)*6 + (분 / 10)
                     const gridStartRow = 2 + (startH - 8) * 6 + Math.round(startM / 10);
                     const gridEndRow = 2 + (endH - 8) * 6 + Math.round(endM / 10);
 
-                    // 색상
                     const colorClass = `color-${(index % 8) + 1}`;
 
                     const div = document.createElement('div');
                     div.className = `class-item ${colorClass}`;
-                    // 요일: 월=1 -> grid column 2 (Time이 1)
-                    // item.day가 월=1, 화=2... 형식이면 +1
                     if (item.day >= 1 && item.day <= 5) {
                         div.style.gridColumn = item.day + 1; 
                         div.style.gridRow = `${gridStartRow} / ${gridEndRow}`;
@@ -464,15 +445,6 @@
                     }
                 });
             }
-
-            const currentTimeElement = document.getElementById('current-time');
-            const myScheduleGrid = document.getElementById('my-schedule-grid');
-            const friendList = document.getElementById('friend-list');
-            const modal = document.getElementById('schedule-modal');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
-            const modalScheduleGrid = document.getElementById('modal-schedule-grid');
-            const modalFriendName = document.getElementById('modal-friend-name');
-            const modalFriendTime = document.getElementById('modal-friend-time');
 
             function updateStatus(personData, comparisonDate, statusIcon, scheduleDetails) {
                 const comparisonDay = comparisonDate.getDay();
@@ -519,7 +491,24 @@
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
                 const kstNow = new Date(utc + (9 * 60 * 60 * 1000));
 
-                currentTimeElement.textContent = kstNow.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', dateStyle: 'full', timeStyle: 'medium' });
+                // ▼▼▼ [수정] 상단 시계 형식 변경 (KST : YYYY.MM.DD. AM/PM H:MM:SS) ▼▼▼
+                // 1. 날짜 부분 (2025. 11. 20.) - 한국어 로케일
+                const datePart = kstNow.toLocaleDateString('ko-KR', { 
+                    year: 'numeric', 
+                    month: '2-digit', 
+                    day: '2-digit' 
+                }).replace(/-/g, '.').replace(/\. /g, '.'); // "2025. 11. 20." 형식
+
+                // 2. 시간 부분 (AM 1:23:45) - 영어 로케일 (en-US)
+                const timePart = kstNow.toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    minute: '2-digit', 
+                    second: '2-digit',
+                    hour12: true 
+                });
+
+                // 3. 최종 조합
+                topClockElement.textContent = `KST : ${datePart} ${timePart}`;
                 
                 updateStatus(myScheduleData, kstNow, document.getElementById('my-status-icon'), document.getElementById('my-schedule-details'));
 
@@ -531,7 +520,10 @@
                     updateStatus(friend, friendTime, friendElement.querySelector('.status-icon'), friendElement.querySelector('.schedule-details'));
                     
                     if (modal.style.display === 'flex' && modalFriendName.textContent === friend.name) {
-                        modalFriendTime.textContent = `Local Time: ${friendTime.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}`;
+                        // ▼▼▼ [수정] 모달 시계 형식 변경 (동일한 로직) ▼▼▼
+                        const fDatePart = friendTime.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.').replace(/\. /g, '.');
+                        const fTimePart = friendTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+                        modalFriendTime.textContent = `Local Time: ${fDatePart} ${fTimePart}`;
                     }
                 });
             }
@@ -543,7 +535,11 @@
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
                 const friendTime = new Date(utc + (friendData.timezone * 60 * 60 * 1000));
-                modalFriendTime.textContent = `Local Time: ${friendTime.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}`;
+                
+                // ▼▼▼ [수정] 모달 오픈 시 시계 형식 변경 ▼▼▼
+                const fDatePart = friendTime.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.').replace(/\. /g, '.');
+                const fTimePart = friendTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+                modalFriendTime.textContent = `Local Time: ${fDatePart} ${fTimePart}`;
 
                 modal.classList.add('active');
             }
