@@ -66,23 +66,22 @@
             align-items: center;
         }
 
-        .grid-scroll-wrapper {
-            overflow-x: auto; 
-            -webkit-overflow-scrolling: touch; 
-            border: 1px solid #eee; 
-            border-radius: 8px;
-        }
+        /* ▼▼▼ [수정] 모바일 가독성을 위한 스크롤 래퍼 제거 (한 페이지 보기) ▼▼▼ */
+        /* .grid-scroll-wrapper 스타일 삭제 */
 
         /* Schedule Grid Styles */
         .schedule-grid {
             display: grid;
-            min-width: 600px; 
-            grid-template-columns: 60px repeat(5, 1fr); 
+            /* ▼▼▼ [수정] min-width 제거, width 100% 설정 ▼▼▼ */
+            width: 100%; 
+            /* 시간 열 너비 축소, 나머지 균등 분할 */
+            grid-template-columns: 40px repeat(5, 1fr); 
             grid-template-rows: 40px repeat(84, 1fr); 
             gap: 0; 
             background-color: #fff;
             height: 880px; 
-            border: none; 
+            border: 1px solid #eee; 
+            box-sizing: border-box;
         }
 
         .header {
@@ -106,7 +105,7 @@
             font-size: 0.75rem;
             color: #868e96;
             text-align: right;
-            padding-right: 8px;
+            padding-right: 4px; /* 패딩 축소 */
             grid-column: 1;
             border-right: 1px solid #e9ecef;
             border-bottom: 1px solid #f1f3f5; 
@@ -132,7 +131,7 @@
         }
 
         .class-item {
-            padding: 4px;
+            padding: 2px; /* 패딩 축소 */
             border-radius: 4px;
             box-sizing: border-box;
             display: flex;
@@ -143,14 +142,14 @@
             margin: 1px; 
             z-index: 2; 
             white-space: normal;
-            line-height: 1.2;
+            line-height: 1.1; /* 줄 간격 축소 */
             text-align: center;
             font-size: 0.75rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .class-item span { display: block; }
-        .class-title { font-weight: 700; margin-bottom: 2px; font-size: 0.8rem; }
+        .class-title { font-weight: 700; margin-bottom: 1px; font-size: 0.8rem; }
         .class-time, .class-location { font-size: 0.7rem; opacity: 0.95; }
 
         /* Colors */
@@ -245,13 +244,53 @@
         .modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; }
         .modal-time { font-size: 1rem; color: #007bff; font-weight: 500; }
 
+        /* ▼▼▼ [수정] 모바일 반응형 스타일 개선 ▼▼▼ */
         @media (max-width: 768px) {
             h1 { font-size: 1.6rem; }
-            .grid-scroll-wrapper {
-                box-shadow: inset -10px 0 10px -10px rgba(0,0,0,0.1);
+            .schedule-container { padding: 10px; }
+            
+            .schedule-grid {
+                /* 시간 열 폭을 더 줄이고 나머지 공간 활용 */
+                grid-template-columns: 35px repeat(5, 1fr); 
+                height: auto; /* 높이 자동 조정 (필요시 고정값 사용) */
+                min-height: 600px; /* 최소 높이 확보 */
             }
-            .class-title { font-size: 0.75rem; }
-            .class-time, .class-location { font-size: 0.65rem; }
+            
+            .header { font-size: 0.7rem; padding: 0; }
+            
+            .time-slot { 
+                font-size: 0.65rem; 
+                padding-right: 2px; 
+                /* 시간 텍스트 줄바꿈 방지 및 축소 */
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: clip; 
+            }
+
+            .class-item { 
+                padding: 1px; 
+                font-size: 0.65rem; /* 폰트 크기 축소 */
+                line-height: 1;
+                /* 내용이 많을 경우 말줄임표 처리보다 내용 표시 우선 */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            
+            .class-title { 
+                font-size: 0.7rem; 
+                margin-bottom: 0;
+                font-weight: 600;
+                /* 긴 제목 처리: 2줄까지 허용하거나 잘라내기 */
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+            
+            /* 모바일에서는 시간과 장소 정보 숨김 (공간 확보) */
+            .class-time, .class-location { display: none; } 
         }
     </style>
 </head>
@@ -260,7 +299,6 @@
     <div class="schedule-container">
         <h1>My Class Schedule<br><span style="font-size: 1.2rem; font-weight: 400;">(2025-2)</span></h1>
         
-        <!-- ▼▼▼ [수정] 상단 시계 위치 ▼▼▼ -->
         <div id="top-clock"></div>
 
         <div id="my-status-container">
@@ -270,14 +308,11 @@
         </div>
 
         <!-- Main Schedule (Yenney) -->
-        <div class="grid-scroll-wrapper">
-            <div class="schedule-grid" id="my-schedule-grid"></div>
-        </div>
+        <!-- ▼▼▼ [수정] 스크롤 래퍼 제거 ▼▼▼ -->
+        <div class="schedule-grid" id="my-schedule-grid"></div>
 
         <div id="friend-status-container">
             <h2>Friends Status</h2>
-            <!-- 기존 하단 시계는 제거 또는 숨김 -->
-            <!-- <div id="current-time"></div> -->
             <p style="text-align: center; font-size: 0.8rem; color: #adb5bd; margin-bottom: 15px;">(친구 이름을 클릭하면 시간표를 볼 수 있어요)</p>
             <ul id="friend-list"></ul>
         </div>
@@ -293,9 +328,8 @@
                 <div class="modal-title" id="modal-friend-name"></div>
                 <div class="modal-time" id="modal-friend-time"></div>
             </div>
-            <div class="grid-scroll-wrapper">
-                <div class="schedule-grid" id="modal-schedule-grid"></div>
-            </div>
+            <!-- ▼▼▼ [수정] 모달 내부 스크롤 래퍼 제거 ▼▼▼ -->
+            <div class="schedule-grid" id="modal-schedule-grid"></div>
         </div>
     </div>
 
@@ -404,7 +438,7 @@
                 const endHour = 22;
                 
                 for (let h = startHour; h < endHour; h++) {
-                    // ▼▼▼ [수정] 12시간제 (AM/PM) 형식으로 변경 ▼▼▼
+                    // ▼▼▼ [유지] 12시간제 (AM/PM) 형식 ▼▼▼
                     const date = new Date();
                     date.setHours(h, 0, 0);
                     const timeLabel = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
@@ -491,15 +525,13 @@
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
                 const kstNow = new Date(utc + (9 * 60 * 60 * 1000));
 
-                // ▼▼▼ [수정] 상단 시계 형식 변경 (KST : YYYY.MM.DD. AM/PM H:MM:SS) ▼▼▼
-                // 1. 날짜 부분 (2025. 11. 20.) - 한국어 로케일
+                // ▼▼▼ [유지] 상단 시계 형식 (KST : YYYY.MM.DD. AM/PM H:MM:SS) ▼▼▼
                 const datePart = kstNow.toLocaleDateString('ko-KR', { 
                     year: 'numeric', 
                     month: '2-digit', 
                     day: '2-digit' 
-                }).replace(/-/g, '.').replace(/\. /g, '.'); // "2025. 11. 20." 형식
+                }).replace(/-/g, '.').replace(/\. /g, '.');
 
-                // 2. 시간 부분 (AM 1:23:45) - 영어 로케일 (en-US)
                 const timePart = kstNow.toLocaleTimeString('en-US', { 
                     hour: 'numeric', 
                     minute: '2-digit', 
@@ -507,7 +539,6 @@
                     hour12: true 
                 });
 
-                // 3. 최종 조합
                 topClockElement.textContent = `KST : ${datePart} ${timePart}`;
                 
                 updateStatus(myScheduleData, kstNow, document.getElementById('my-status-icon'), document.getElementById('my-schedule-details'));
@@ -520,7 +551,7 @@
                     updateStatus(friend, friendTime, friendElement.querySelector('.status-icon'), friendElement.querySelector('.schedule-details'));
                     
                     if (modal.style.display === 'flex' && modalFriendName.textContent === friend.name) {
-                        // ▼▼▼ [수정] 모달 시계 형식 변경 (동일한 로직) ▼▼▼
+                        // ▼▼▼ [유지] 모달 시계 형식 ▼▼▼
                         const fDatePart = friendTime.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.').replace(/\. /g, '.');
                         const fTimePart = friendTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
                         modalFriendTime.textContent = `Local Time: ${fDatePart} ${fTimePart}`;
@@ -536,7 +567,7 @@
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
                 const friendTime = new Date(utc + (friendData.timezone * 60 * 60 * 1000));
                 
-                // ▼▼▼ [수정] 모달 오픈 시 시계 형식 변경 ▼▼▼
+                // ▼▼▼ [유지] 모달 오픈 시 시계 형식 ▼▼▼
                 const fDatePart = friendTime.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.').replace(/\. /g, '.');
                 const fTimePart = friendTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
                 modalFriendTime.textContent = `Local Time: ${fDatePart} ${fTimePart}`;
