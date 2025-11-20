@@ -6,7 +6,7 @@
     <title>Y-FANS | Yonsei Food And Nutrition Society</title>
     <meta name="description" content="Y-FANS는 식품과 영양에 대한 학술적 탐구를 통해 심화 지식을 대중에게 전달하는 것을 목표로 하는 연세대학교 식품영양학과 전공 학회입니다.">
     
-    <!-- Open Graph / Facebook / KakaoTalk -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Y-FANS | Yonsei Food And Nutrition Society">
     <meta property="og:description" content="Y-FANS는 식품과 영양에 대한 학술적 탐구를 통해 심화 지식을 대중에게 전달하는 것을 목표로 하는 전공 학회입니다.">
@@ -24,7 +24,6 @@
     <style>
         /* --- 내장 CSS 스타일 (외부 의존성 없음) --- */
         
-        /* ★★★ 핵심 수정: 모든 요소의 크기 계산을 '테두리 포함'으로 변경 ★★★ */
         * {
             box-sizing: border-box;
         }
@@ -34,21 +33,21 @@
             margin: 0;
             padding: 0;
             font-family: 'Inter', 'Noto Sans KR', sans-serif;
-            background-color: #ffffff; /* 흰색 배경 */
-            color: #1f2937; /* gray-800 */
+            background-color: #ffffff;
+            color: #1f2937;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* 내비게이션 바 (상단 배너) */
+        /* 내비게이션 바 */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem 2rem;
             background-color: #ffffff;
-            border-bottom: 1px solid #e5e7eb; /* Light gray border */
+            border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            position: fixed; /* 상단 고정 */
+            position: fixed;
             width: 100%;
             top: 0;
             left: 0;
@@ -62,92 +61,142 @@
             font-weight: 700;
         }
         .navbar-left img {
-            height: 1.5rem; /* 아이콘 크기 조절 */
+            height: 1.5rem;
             margin-right: 0.5rem;
         }
         .navbar-right {
             display: flex;
-            gap: 1.5rem; /* 메뉴 항목 간 간격 */
+            align-items: center; /* 수직 중앙 정렬 */
+            gap: 1.5rem;
         }
         .navbar-right a {
-            color: #4b5563; /* gray-600 */
+            color: #4b5563;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s ease;
-            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            white-space: nowrap;
         }
         .navbar-right a:hover {
-            color: #2563eb; /* blue-600 */
+            color: #2563eb;
         }
+
+        /* --- 언어 선택 드롭다운 스타일 --- */
+        .lang-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            display: flex;
+            align-items: center;
+            color: #4b5563;
+            transition: color 0.2s;
+        }
+        .lang-btn:hover {
+            color: #2563eb;
+        }
+        .lang-icon {
+            width: 24px;
+            height: 24px;
+        }
+        /* 드롭다운 메뉴 내용 */
+        .dropdown-content {
+            display: none; /* 기본적으로 숨김 */
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #ffffff;
+            min-width: 100px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            z-index: 1;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .dropdown-content button {
+            color: #374151;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .dropdown-content button:hover {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+        /* 호버 시 드롭다운 표시 */
+        .lang-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
         
         /* 메인 콘텐츠 영역 */
         .main-content {
-            padding-top: 6rem; /* Navbar 높이만큼 여백 */
-            max-width: 768px; /* max-w-3xl */
+            padding-top: 6rem;
+            max-width: 768px;
             margin: 0 auto;
             padding-left: 1rem;
             padding-right: 1rem;
             text-align: center;
         }
 
-        /* 로고 및 헤더 */
         h1 {
-            font-size: 3rem; /* text-5xl */
+            font-size: 3rem;
             font-weight: 900;
-            color: #2563eb; /* blue-600 */
+            color: #2563eb;
             margin: 0;
             letter-spacing: -0.05em;
             line-height: 1.2;
         }
         .subtitle {
-            color: #6b7280; /* gray-500 */
+            color: #6b7280;
             font-size: 0.875rem;
             margin-top: 0.5rem;
             font-weight: 400;
         }
 
-        /* 본문 텍스트 */
-        .description-kr {
+        /* 본문 텍스트 스타일 */
+        .description-kr, .description-en {
             margin-top: 2rem;
             font-size: 1rem;
             line-height: 1.625;
-            color: #374151; /* gray-700 */
-            word-break: keep-all; /* break-keep */
+            color: #374151;
+            word-break: keep-all;
+            transition: opacity 0.3s ease; /* 부드러운 전환 효과 */
         }
         .description-en {
             margin-top: 1rem;
             font-size: 0.875rem;
-            line-height: 1.625;
-            color: #6b7280; /* gray-500 */
-        }
-        
-        /* --- 반응형 (모바일 최적화) --- */
-        @media (max-width: 767px) { /* 모바일 화면 */
-            .navbar {
-                padding: 1rem; /* 모바일에서는 패딩 줄임 */
-                flex-wrap: wrap; /* 공간 부족하면 줄바꿈 허용 */
-            }
-            .navbar-left {
-                margin-bottom: 0.5rem; /* 줄바꿈 시 간격 */
-            }
-            .navbar-right {
-                width: 100%;
-                justify-content: center; /* 모바일에서 메뉴 중앙 정렬 */
-                gap: 1rem;
-                font-size: 0.875rem;
-            }
-            .main-content {
-                padding-top: 8rem; /* Navbar 높이 증가 고려 */
-            }
-            h1 { font-size: 2.5rem; }
-            .subtitle { font-size: 0.75rem; }
-            .description-kr { font-size: 0.9rem; }
-            .description-en { font-size: 0.8rem; }
+            color: #6b7280;
         }
 
-        @media (min-width: 768px) { /* 태블릿 이상 */
+        /* 숨김 클래스 (자바스크립트로 제어) */
+        .hidden {
+            display: none;
+        }
+        
+        /* --- 반응형 --- */
+        @media (max-width: 767px) {
+            .navbar { padding: 1rem; flex-wrap: wrap; }
+            .navbar-left { margin-bottom: 0.5rem; }
+            .navbar-right { width: 100%; justify-content: center; gap: 1rem; font-size: 0.875rem; }
+            .main-content { padding-top: 8rem; }
+            h1 { font-size: 2.5rem; }
+        }
+
+        @media (min-width: 768px) {
             h1 { font-size: 4.5rem; }
-            .subtitle { font-size: 1rem; }
             .description-kr { font-size: 1.125rem; }
             .description-en { font-size: 1rem; }
         }
@@ -155,11 +204,10 @@
 </head>
 <body>
 
-    <!-- 상단 내비게이션 바 (배너) -->
+    <!-- 상단 내비게이션 바 -->
     <nav class="navbar">
         <div class="navbar-left">
             <a href="/">
-                <!-- 왼쪽 상단 로고 이미지 (경로를 실제 파일명으로 변경하세요) -->
                 <img src="logo-icon.png" alt="Y-FANS 로고">
                 <span>Y-FANS</span>
             </a>
@@ -168,32 +216,64 @@
             <a href="/learn-more/">자세히 알아보기</a>
             <a href="https://bevel-cannon-e38.notion.site/Y-FANS-9d53df8aea0a49d9814b453423b38f52?pvs=74" target="_blank" rel="noopener noreferrer">활동 보러 가기</a>
             <a href="https://www.instagram.com/yonsei_yfans/" target="_blank" rel="noopener noreferrer">소통하기</a>
+            
+            <!-- 언어 선택 드롭다운 -->
+            <div class="lang-dropdown">
+                <button class="lang-btn" aria-label="언어 선택">
+                    <!-- 지구본 아이콘 (SVG) -->
+                    <svg class="lang-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
+                    <button onclick="setLanguage('ko')">한국어</button>
+                    <button onclick="setLanguage('en')">English</button>
+                    <button onclick="setLanguage('all')">All</button>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <!-- 메인 콘텐츠 영역 -->
+    <!-- 메인 콘텐츠 -->
     <div class="main-content">
         
-        <!-- Y-FANS 메인 로고 및 학회 이름 -->
         <header>
             <h1>Y-FANS</h1>
             <p class="subtitle">(Yonsei-Food And Nutrition Society)</p>
         </header>
 
         <!-- 학회 소개글 (한국어) -->
-        <p class="description-kr">
+        <p id="desc-kr" class="description-kr">
             Y-FANS는 식품과 영양에 대한 학술적 탐구를 통해 심화 지식을 대중에게 전달하는 것을 목표로 하는 전공 학회입니다. 정기적인 논문 연구와 학술발표회, 그리고 선후배 간의 진로 멘토링 등 다양한 활동을 진행하고 있습니다.
         </p>
 
         <!-- 학회 소개글 (영어) -->
-        <p class="description-en">
+        <p id="desc-en" class="description-en">
             Y-FANS (Yonsei-Food And Nutrition Society) is an academic society dedicated to conveying advanced knowledge in food and nutrition to the public through scholarly research. Our activities include regular paper studies, academic presentations, and career mentoring between senior and junior members.
         </p>
         
-        <!-- 바닥 여백을 위한 더미 div -->
         <div style="height: 100px;"></div>
 
     </div>
+
+    <!-- 언어 변경 스크립트 -->
+    <script>
+        function setLanguage(lang) {
+            const krText = document.getElementById('desc-kr');
+            const enText = document.getElementById('desc-en');
+
+            if (lang === 'ko') {
+                krText.classList.remove('hidden');
+                enText.classList.add('hidden');
+            } else if (lang === 'en') {
+                krText.classList.add('hidden');
+                enText.classList.remove('hidden');
+            } else { // 'all' 선택 시
+                krText.classList.remove('hidden');
+                enText.classList.remove('hidden');
+            }
+        }
+    </script>
 
 </body>
 </html>
