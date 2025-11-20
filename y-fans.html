@@ -21,14 +21,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <style>
-        /* --- 내장 CSS 스타일 (외부 의존성 없음) --- */
-        
-        * {
-            box-sizing: border-box;
-        }
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-        /* 기본 설정 */
+    <style>
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             padding: 0;
@@ -36,6 +40,9 @@
             background-color: #ffffff;
             color: #1f2937;
             -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* 내비게이션 바 */
@@ -46,12 +53,11 @@
             padding: 1rem 2rem;
             background-color: #ffffff;
             border-bottom: 1px solid #e5e7eb;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             position: fixed;
             width: 100%;
             top: 0;
             left: 0;
-            z-index: 1000; /* 내비게이션 바 최상단 */
+            z-index: 1000;
         }
         .navbar-left a {
             display: flex;
@@ -66,7 +72,7 @@
         }
         .navbar-right {
             display: flex;
-            align-items: center; /* 수직 중앙 정렬 */
+            align-items: center;
             gap: 1.5rem;
         }
         .navbar-right a {
@@ -76,11 +82,9 @@
             transition: color 0.2s ease;
             white-space: nowrap;
         }
-        .navbar-right a:hover {
-            color: #2563eb;
-        }
+        .navbar-right a:hover { color: #2563eb; }
 
-        /* --- 언어 선택 드롭다운 스타일 --- */
+        /* 언어 선택 드롭다운 */
         .lang-dropdown {
             position: relative;
             display: inline-block;
@@ -97,16 +101,10 @@
             color: #4b5563;
             transition: color 0.2s;
         }
-        .lang-btn:hover {
-            color: #2563eb;
-        }
-        .lang-icon {
-            width: 24px;
-            height: 24px;
-        }
-        /* 드롭다운 메뉴 내용 */
+        .lang-btn:hover { color: #2563eb; }
+        .lang-icon { width: 24px; height: 24px; }
         .dropdown-content {
-            display: none; /* 기본적으로 숨김 */
+            display: none;
             position: absolute;
             right: 0;
             top: 100%;
@@ -137,15 +135,19 @@
             background-color: #f3f4f6;
             color: #2563eb;
         }
-        /* 호버 시 드롭다운 표시 */
-        .lang-dropdown:hover .dropdown-content {
-            display: block;
-        }
+        .lang-dropdown:hover .dropdown-content { display: block; }
 
         /* 메인 콘텐츠 영역 */
         .main-content {
-            padding-top: 6rem;
-            max-width: 768px;
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+            padding-top: 6rem; 
+            padding-bottom: 4rem;
+            width: 100%;
+            max-width: 800px;
             margin: 0 auto;
             padding-left: 1rem;
             padding-right: 1rem;
@@ -167,7 +169,6 @@
             font-weight: 400;
         }
 
-        /* 본문 텍스트 스타일 */
         .description-kr {
             margin-top: 2rem;
             font-size: 1rem;
@@ -179,15 +180,55 @@
             margin-top: 1rem;
             font-size: 0.875rem;
             line-height: 1.625;
-            color: #6b7280; /* 영어는 회색 처리 */
+            color: #6b7280;
         }
 
-        /* 숨김 클래스 */
-        .hidden {
-            display: none !important;
+        /* 하단 푸터 (Contacts) */
+        footer {
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 3rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
         }
+        .footer-content {
+            max-width: 768px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .footer-title {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        @media (min-width: 640px) {
+            .footer-info {
+                flex-direction: row;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+            .footer-info span::after {
+                content: "|";
+                margin-left: 1.5rem;
+                color: #d1d5db;
+            }
+            .footer-info span:last-child::after {
+                content: "";
+                margin: 0;
+            }
+        }
+
+        .hidden { display: none !important; }
         
-        /* --- 반응형 --- */
         @media (max-width: 767px) {
             .navbar { padding: 1rem; flex-wrap: wrap; }
             .navbar-left { margin-bottom: 0.5rem; }
@@ -197,7 +238,8 @@
         }
 
         @media (min-width: 768px) {
-            h1 { font-size: 4.5rem; }
+            /* ▼▼▼ [수정] Y-FANS 로고 크기 유지 (더 크게) ▼▼▼ */
+            h1 { font-size: 4.5rem; } 
             .description-kr { font-size: 1.125rem; }
             .description-en { font-size: 1rem; }
         }
@@ -205,7 +247,6 @@
 </head>
 <body>
 
-    <!-- 상단 내비게이션 바 -->
     <nav class="navbar">
         <div class="navbar-left">
             <a href="/">
@@ -214,10 +255,6 @@
             </a>
         </div>
         <div class="navbar-right">
-            <!-- 
-              다국어 메뉴 링크: 
-              배너 메뉴만 언어 선택에 따라 변경됩니다.
-            -->
             <a href="/learn-more/">
                 <span class="nav-kr">자세히 알아보기</span>
                 <span class="nav-en hidden">Learn More</span>
@@ -231,7 +268,6 @@
                 <span class="nav-en hidden">Contact</span>
             </a>
             
-            <!-- 언어 선택 드롭다운 -->
             <div class="lang-dropdown">
                 <button class="lang-btn" aria-label="언어 선택">
                     <svg class="lang-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -246,15 +282,15 @@
         </div>
     </nav>
 
-    <!-- 메인 콘텐츠 -->
     <div class="main-content">
-        
         <header>
-            <h1>Y-FANS</h1>
+            <!-- ▼▼▼ [수정] Tailwind 클래스로 큰 폰트 유지 ▼▼▼ -->
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-blue-600 tracking-tighter" style="font-family: 'Inter', sans-serif;">
+                Y-FANS
+            </h1>
             <p class="subtitle">(Yonsei-Food And Nutrition Society)</p>
         </header>
 
-        <!-- 학회 소개글 (항상 모두 표시됨) -->
         <p class="description-kr">
             Y-FANS는 식품과 영양에 대한 학술적 탐구를 통해 심화 지식을 대중에게 전달하는 것을 목표로 하는 전공 학회입니다. 정기적인 논문 연구와 학술발표회, 그리고 선후배 간의 진로 멘토링 등 다양한 활동을 진행하고 있습니다.
         </p>
@@ -262,25 +298,30 @@
         <p class="description-en">
             Y-FANS (Yonsei-Food And Nutrition Society) is an academic society dedicated to conveying advanced knowledge in food and nutrition to the public through scholarly research. Our activities include regular paper studies, academic presentations, and career mentoring between senior and junior members.
         </p>
-        
-        <div style="height: 100px;"></div>
-
     </div>
 
-    <!-- 언어 변경 스크립트 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-title">Contacts</div>
+            <div class="footer-info">
+                <span>서울특별시 서대문구 연세로 50 삼성관</span>
+                <span>yonseiyfans@gmail.com</span>
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: #9ca3af;">
+                &copy; Y-FANS. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
     <script>
         function setLanguage(lang) {
-            // 내비게이션 메뉴 요소만 선택
             const navKr = document.querySelectorAll('.nav-kr');
             const navEn = document.querySelectorAll('.nav-en');
 
             if (lang === 'ko') {
-                // 배너 메뉴: 한국어 보이기, 영어 숨기기
                 navKr.forEach(el => el.classList.remove('hidden'));
                 navEn.forEach(el => el.classList.add('hidden'));
-
             } else if (lang === 'en') {
-                // 배너 메뉴: 한국어 숨기기, 영어 보이기
                 navKr.forEach(el => el.classList.add('hidden'));
                 navEn.forEach(el => el.classList.remove('hidden'));
             }
