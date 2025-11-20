@@ -6,21 +6,29 @@
     <title>Y-FANS | Yonsei Food And Nutrition Society</title>
     <meta name="description" content="Y-FANS는 식품과 영양에 대한 학술적 탐구를 통해 심화 지식을 대중에게 전달하는 것을 목표로 하는 연세대학교 식품영양학과 전공 학회입니다.">
     
-    <!-- Open Graph / Facebook / KakaoTalk --><meta property="og:type" content="website">
+    <!-- Open Graph / Facebook / KakaoTalk -->
+    <meta property="og:type" content="website">
     <meta property="og:title" content="Y-FANS | Yonsei Food And Nutrition Society">
     <meta property="og:description" content="Y-FANS는 식품과 영양에 대한 학술적 탐구를 통해 심화 지식을 대중에게 전달하는 것을 목표로 하는 전공 학회입니다.">
     <meta property="og:image" content="https://y-fans.yonsei.ac.kr/logo.png">
     <meta property="og:url" content="https://y-fans.yonsei.ac.kr">
     
-    <!-- Favicon --><link rel="icon" href="logo-icon.png" type="image/png">
+    <!-- Favicon -->
+    <link rel="icon" href="logo-icon.png" type="image/png">
     
-    <!-- Google Fonts --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
         /* --- 내장 CSS 스타일 (외부 의존성 없음) --- */
         
+        /* ★★★ 핵심 수정: 모든 요소의 크기 계산을 '테두리 포함'으로 변경 ★★★ */
+        * {
+            box-sizing: border-box;
+        }
+
         /* 기본 설정 */
         body {
             margin: 0;
@@ -66,6 +74,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s ease;
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
         }
         .navbar-right a:hover {
             color: #2563eb; /* blue-600 */
@@ -115,18 +124,17 @@
         /* --- 반응형 (모바일 최적화) --- */
         @media (max-width: 767px) { /* 모바일 화면 */
             .navbar {
-                padding: 1rem;
+                padding: 1rem; /* 모바일에서는 패딩 줄임 */
+                flex-wrap: wrap; /* 공간 부족하면 줄바꿈 허용 */
+            }
+            .navbar-left {
+                margin-bottom: 0.5rem; /* 줄바꿈 시 간격 */
             }
             .navbar-right {
-                /* 모바일에서는 메뉴 숨기거나 다른 방식으로 처리할 수 있습니다. */
-                /* 일단은 flex-wrap으로 줄바꿈 되도록 설정 */
-                flex-wrap: wrap;
-                justify-content: flex-end;
-                gap: 0.8rem;
-                font-size: 0.875rem; /* 폰트 약간 작게 */
-            }
-            .navbar-right a {
-                padding: 0.25rem 0.5rem;
+                width: 100%;
+                justify-content: center; /* 모바일에서 메뉴 중앙 정렬 */
+                gap: 1rem;
+                font-size: 0.875rem;
             }
             .main-content {
                 padding-top: 8rem; /* Navbar 높이 증가 고려 */
@@ -147,10 +155,12 @@
 </head>
 <body>
 
-    <!-- 상단 내비게이션 바 (배너) --><nav class="navbar">
+    <!-- 상단 내비게이션 바 (배너) -->
+    <nav class="navbar">
         <div class="navbar-left">
             <a href="/">
-                <!-- 왼쪽 상단 로고 이미지 (경로를 실제 파일명으로 변경하세요) --><img src="logo-icon.png" alt="Y-FANS 로고">
+                <!-- 왼쪽 상단 로고 이미지 (경로를 실제 파일명으로 변경하세요) -->
+                <img src="logo-icon.png" alt="Y-FANS 로고">
                 <span>Y-FANS</span>
             </a>
         </div>
@@ -158,25 +168,30 @@
             <a href="/learn-more/">자세히 알아보기</a>
             <a href="https://bevel-cannon-e38.notion.site/Y-FANS-9d53df8aea0a49d9814b453423b38f52?pvs=74" target="_blank" rel="noopener noreferrer">활동 보러 가기</a>
             <a href="https://www.instagram.com/yonsei_yfans/" target="_blank" rel="noopener noreferrer">소통하기</a>
-            <!-- '소통하기'는 일단 인스타그램으로 연결했습니다. 필요시 여러 소셜 미디어 링크를 묶은 페이지로 연결할 수도 있습니다. --></div>
+        </div>
     </nav>
 
-    <!-- 메인 콘텐츠 영역 --><div class="main-content">
+    <!-- 메인 콘텐츠 영역 -->
+    <div class="main-content">
         
-        <!-- Y-FANS 메인 로고 및 학회 이름 --><header>
+        <!-- Y-FANS 메인 로고 및 학회 이름 -->
+        <header>
             <h1>Y-FANS</h1>
             <p class="subtitle">(Yonsei-Food And Nutrition Society)</p>
         </header>
 
-        <!-- 학회 소개글 (한국어) --><p class="description-kr">
+        <!-- 학회 소개글 (한국어) -->
+        <p class="description-kr">
             Y-FANS는 식품과 영양에 대한 학술적 탐구를 통해 심화 지식을 대중에게 전달하는 것을 목표로 하는 전공 학회입니다. 정기적인 논문 연구와 학술발표회, 그리고 선후배 간의 진로 멘토링 등 다양한 활동을 진행하고 있습니다.
         </p>
 
-        <!-- 학회 소개글 (영어) --><p class="description-en">
+        <!-- 학회 소개글 (영어) -->
+        <p class="description-en">
             Y-FANS (Yonsei-Food And Nutrition Society) is an academic society dedicated to conveying advanced knowledge in food and nutrition to the public through scholarly research. Our activities include regular paper studies, academic presentations, and career mentoring between senior and junior members.
         </p>
         
-        <!-- 바닥 여백을 위한 더미 div. 필요에 따라 삭제 가능 --><div style="height: 100px;"></div>
+        <!-- 바닥 여백을 위한 더미 div -->
+        <div style="height: 100px;"></div>
 
     </div>
 
