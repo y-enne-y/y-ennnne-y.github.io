@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 공통 CSS 스타일 (Learn More와 동일) --- */
+        /* --- 공통 CSS 스타일 --- */
         * { box-sizing: border-box; }
 
         body {
@@ -98,7 +98,8 @@
 
         /* --- View Activities 전용 스타일 --- */
         .main-content {
-            padding-top: 8rem; 
+            /* [수정됨] 상단 여백을 8rem에서 6rem으로 조정하여 배너와의 간격을 줄임 */
+            padding-top: 6rem; 
             padding-bottom: 6rem;
             max-width: 800px; 
             margin: 0 auto;
@@ -150,7 +151,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(to right, #eff6ff, #dbeafe); /* 조금 더 진한 파란색 그라데이션 */
+            background: linear-gradient(to right, #eff6ff, #dbeafe);
             border: 1px solid #bfdbfe;
             border-radius: 1rem;
             padding: 1.5rem;
@@ -234,15 +235,15 @@
     <!-- 네비게이션 바 -->
     <nav class="navbar">
         <div class="navbar-left">
-            <!-- 로고 클릭 시 메인으로 이동 -->
-            <a href="index.html">
+            <!-- 로고 클릭 시 상위 폴더의 index.html로 이동 -->
+            <a href="../index.html">
                 <img src="logo-icon.png" onerror="this.style.display='none'" alt="">
                 <span>Y-FANS</span>
             </a>
         </div>
         <div class="navbar-right">
-            <!-- 홈으로 버튼 -->
-            <a href="index.html" class="nav-link">
+            <!-- 홈으로 버튼 클릭 시 상위 폴더의 index.html로 이동 -->
+            <a href="../index.html" class="nav-link">
                 <span class="content-kr">홈으로</span>
                 <span class="content-en hidden">Home</span>
             </a>
@@ -308,6 +309,7 @@
         </div>
 
         <div class="activities-grid">
+
             <!-- 통합 링크 카드 -->
             <a href="https://bevel-cannon-e38.notion.site/2b2a3667421580b488d9dcf2a3d9fccb?pvs=73" target="_blank" rel="noopener noreferrer" class="link-card">
                 <div class="link-card-content">
@@ -328,6 +330,28 @@
                     </svg>
                 </div>
             </a>
+            
+            <!-- 이번 기수 세미나 온라인 전시물 -->
+            <a href="https://bevel-cannon-e38.notion.site/Y-FANS-Seminar-Exhibition" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-content">
+                    <span class="link-card-tag">EXHIBITION</span>
+                    <h3 class="link-card-title">
+                        <span class="content-kr">이번 기수 세미나 온라인 전시물</span>
+                        <span class="content-en hidden">Seminar Online Exhibition</span>
+                    </h3>
+                    <p class="link-card-desc">
+                        <span class="content-kr">이번 기수에서 진행하는 세미나의 일정과 내용을 확인할 수 있습니다.</span>
+                        <span class="content-en hidden">You can check the schedule and content of the seminar conducted this semester.</span>
+                    </p>
+                </div>
+                <div class="link-card-icon-wrapper">
+                    <!-- 프레젠테이션/보드 아이콘 -->
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 13v-1m4 1v-3m4 3V8M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                    </svg>
+                </div>
+            </a>
+
         </div>
     </div>
 
