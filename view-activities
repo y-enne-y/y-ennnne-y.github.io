@@ -6,7 +6,7 @@
     <title>View Activities | Y-FANS</title>
     
     <!-- Favicon -->
-    <link rel="icon" href="logo-icon.png?v=3" type="image/png">
+    <link rel="icon" href="logo.png?v=3" type="image/png">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,7 +98,6 @@
 
         /* --- View Activities 전용 스타일 --- */
         .main-content {
-            /* [수정됨] 상단 여백을 8rem에서 6rem으로 조정하여 배너와의 간격을 줄임 */
             padding-top: 6rem; 
             padding-bottom: 6rem;
             max-width: 800px; 
@@ -310,8 +309,8 @@
 
         <div class="activities-grid">
 
-            <!-- 통합 링크 카드 -->
-            <a href="https://bevel-cannon-e38.notion.site/2b2a3667421580b488d9dcf2a3d9fccb?pvs=73" target="_blank" rel="noopener noreferrer" class="link-card">
+            <!-- 1. 통합 링크 카드 -->
+            <a href="https://bevel-cannon-e38.notion.site/Y-FANS-9d53df8aea0a49d9814b453423b38f52" target="_blank" rel="noopener noreferrer" class="link-card">
                 <div class="link-card-content">
                     <span class="link-card-tag">ARCHIVE</span>
                     <h3 class="link-card-title">
@@ -330,8 +329,29 @@
                     </svg>
                 </div>
             </a>
+
+            <!-- 2. [NEW] Y-PANS 워크스테이션 카드 (중간 삽입) -->
+            <a href="#" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-content">
+                    <span class="link-card-tag">WORKSTATION</span>
+                    <h3 class="link-card-title">
+                        <span class="content-kr">Y-PANS 워크스테이션</span>
+                        <span class="content-en hidden">Y-PANS Workstation</span>
+                    </h3>
+                    <p class="link-card-desc">
+                        <span class="content-kr">사회혁신적인 마인드를 지닌 학생들이 UN SDGs 및 사회 문제 10대 테마 내 사회문제해결을 목표로 활동하는 팀 프로그램입니다.</span>
+                        <span class="content-en hidden">A team program where students with a social innovation mindset aim to solve social problems within the UN SDGs.</span>
+                    </p>
+                </div>
+                <div class="link-card-icon-wrapper">
+                    <!-- 전구 아이콘 (Innovation/Idea) -->
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+            </a>
             
-            <!-- 이번 기수 세미나 온라인 전시물 -->
+            <!-- 3. 이번 기수 세미나 온라인 전시물 -->
             <a href="https://bevel-cannon-e38.notion.site/Y-FANS-Seminar-Exhibition" target="_blank" rel="noopener noreferrer" class="link-card">
                 <div class="link-card-content">
                     <span class="link-card-tag">EXHIBITION</span>
