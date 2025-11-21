@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learn More | Y-FANS</title>
     
-    <!-- Favicon -->
-    <link rel="icon" href="logo-icon.png" type="image/png">
+    <!-- 
+      [수정됨] Favicon 캐시 갱신용 쿼리스트링(?v=2) 추가 
+      브라우저가 이미지를 새로 불러오도록 강제합니다.
+    -->
+    <link rel="icon" href="logo-icon.png?v=2" type="image/png">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,7 +59,6 @@
         
         .navbar-right { display: flex; align-items: center; gap: 1rem; }
 
-        /* 네비게이션 링크 스타일 (홈으로 버튼용) */
         .nav-link {
             color: #4b5563; 
             text-decoration: none; 
@@ -97,7 +99,7 @@
         }
         .dropdown-content button:hover { background-color: #f3f4f6; color: #2563eb; }
 
-        /* --- Learn More 페이지 전용 콘텐츠 스타일 --- */
+        /* --- Learn More 페이지 스타일 --- */
         .main-content {
             padding-top: 6rem; 
             padding-bottom: 4rem;
@@ -108,92 +110,83 @@
             flex: 1;
         }
 
-        .section {
-            margin-bottom: 5rem;
-            text-align: center;
-        }
+        .section { margin-bottom: 5rem; text-align: center; }
+        .section-title { font-size: 2rem; font-weight: 900; color: #2563eb; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: -0.02em; }
+        .quote { font-size: 1.25rem; font-weight: 700; line-height: 1.6; color: #111827; margin-bottom: 1rem; word-break: keep-all; }
+        .description { font-size: 1rem; line-height: 1.7; color: #4b5563; margin-bottom: 2rem; word-break: keep-all; }
 
-        .section-title {
-            font-size: 2rem;
-            font-weight: 900;
-            color: #2563eb;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: -0.02em;
-        }
-
-        .quote {
-            font-size: 1.25rem;
-            font-weight: 700;
-            line-height: 1.6;
-            color: #111827;
-            margin-bottom: 1rem;
-            word-break: keep-all;
-        }
-
-        .description {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: #4b5563;
-            margin-bottom: 2rem;
-            word-break: keep-all;
-        }
-
-        /* 이미지 스타일 */
         .content-image {
-            width: 100%;
-            max-width: 600px;
-            height: auto;
+            width: 100%; max-width: 600px; height: auto;
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            margin: 1rem auto 2rem;
+            margin: 1rem auto 3rem; /* 이미지 아래 여백 확보 */
             display: block;
         }
 
-        /* 비전 리스트 스타일 */
         .vision-list {
-            text-align: left;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            padding: 1.5rem;
-            background-color: #f8fafc;
-            border-radius: 12px;
+            text-align: left; max-width: 600px; margin: 0 auto 2rem; padding: 1.5rem;
+            background-color: #f8fafc; border-radius: 12px;
         }
-        .vision-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-            font-size: 1.05rem;
-            line-height: 1.6;
-            color: #374151;
-        }
+        .vision-item { display: flex; align-items: flex-start; margin-bottom: 1rem; font-size: 1.05rem; line-height: 1.6; color: #374151; }
         .vision-item:last-child { margin-bottom: 0; }
-        .vision-icon {
-            margin-right: 0.75rem;
-            font-size: 1.25rem;
-            flex-shrink: 0;
-            padding-top: 0.1rem;
+        .vision-icon { margin-right: 0.75rem; font-size: 1.25rem; flex-shrink: 0; padding-top: 0.1rem; }
+
+        /* 링크 카드 스타일 */
+        .link-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to right, #eff6ff, #f0f9ff);
+            border: 1px solid #dbeafe;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            text-align: left;
+            cursor: pointer;
         }
 
-        /* 버튼 스타일 */
-        .action-btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background-color: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 9999px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        .link-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-color: #2563eb;
         }
-        .action-btn:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-1px);
+
+        .link-card-content { flex: 1; margin-right: 1rem; }
+        .link-card-tag {
+            display: inline-flex; align-items: center;
+            background-color: #ffffff; color: #2563eb;
+            font-size: 0.75rem; font-weight: 700;
+            padding: 0.25rem 0.5rem; border-radius: 9999px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
-        .action-btn:active {
-            transform: translateY(0);
+        .link-card-title {
+            font-size: 1.25rem; font-weight: 700; color: #1f2937; margin: 0 0 0.25rem 0;
+            transition: color 0.2s;
+        }
+        .link-card:hover .link-card-title { color: #2563eb; }
+        .link-card-desc { font-size: 0.9rem; color: #6b7280; line-height: 1.4; margin: 0; word-break: keep-all; }
+        
+        .link-card-icon-wrapper {
+            background-color: #ffffff;
+            padding: 0.75rem;
+            border-radius: 50%;
+            color: #2563eb;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .link-card-icon-wrapper svg { width: 24px; height: 24px; }
+
+        /* 모바일 대응 */
+        @media (max-width: 640px) {
+            .link-card { flex-direction: column; text-align: center; padding: 1.25rem; }
+            .link-card-content { margin-right: 0; margin-bottom: 1rem; }
+            .link-card-icon-wrapper { display: none; }
         }
 
         .hidden { display: none !important; }
@@ -221,7 +214,6 @@
             .section-title { font-size: 1.75rem; }
             .quote { font-size: 1.1rem; }
             .vision-list { padding: 1rem; }
-            .action-btn { width: 100%; text-align: center; }
         }
     </style>
 </head>
@@ -230,22 +222,19 @@
     <!-- 네비게이션 바 -->
     <nav class="navbar">
         <div class="navbar-left">
-            <!-- 메인 페이지로 이동하는 로고 링크 -->
             <a href="../index.html">
                 <img src="logo-icon.png" onerror="this.style.display='none'" alt="">
                 <span>Y-FANS</span>
             </a>
         </div>
         <div class="navbar-right">
-            <!-- '홈으로' 버튼 -->
             <a href="../index.html" class="nav-link">
                 <span class="content-kr">홈으로</span>
                 <span class="content-en hidden">Home</span>
             </a>
 
-            <!-- 언어 선택 드롭다운 -->
             <div class="lang-dropdown">
-                <button class="lang-btn" onclick="toggleDropdown(event)" aria-label="언어 선택 (Select Language)">
+                <button class="lang-btn" onclick="toggleDropdown(event)" aria-label="언어 선택">
                     <svg class="lang-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -279,12 +268,26 @@
                 Y-FANS is the only undergraduate food and nutrition society at Yonsei University, established in 2018.
             </p>
 
-            <!-- 업로드된 파일명(png)을 사용 -->
             <img src="certification.png" alt="Y-FANS Certification" class="content-image" onerror="this.style.display='none';">
 
-            <a href="https://bevel-cannon-e38.notion.site/Y-FANS-Members" target="_blank" rel="noopener noreferrer" class="action-btn">
-                <span class="content-kr">이번 기수 학회원 명단</span>
-                <span class="content-en hidden">Current Members List</span>
+            <!-- 학회원 명단 링크 카드 -->
+            <a href="https://bevel-cannon-e38.notion.site/2b2a36674215807db87fe7ecbb02aa80?pvs=74" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-content">
+                    <span class="link-card-tag">MEMBERS</span>
+                    <h3 class="link-card-title content-kr">이번 기수 학회원 명단</h3>
+                    <h3 class="link-card-title content-en hidden">Current Members List</h3>
+                    <p class="link-card-desc content-kr">
+                        Y-FANS를 이끌어가는 운영진과 학회원들의<br>명단과 역할을 확인해보세요.
+                    </p>
+                    <p class="link-card-desc content-en hidden">
+                        Check out the list and roles of the executives and members leading Y-FANS.
+                    </p>
+                </div>
+                <div class="link-card-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
             </a>
         </section>
 
@@ -319,12 +322,26 @@
                 </div>
             </div>
 
-            <!-- 업로드된 파일명(png)을 사용 -->
             <img src="info-graphic.png" alt="Y-FANS Vision Infographic" class="content-image" onerror="this.style.display='none';">
 
-            <a href="https://bevel-cannon-e38.notion.site/Y-FANS-Gallery" target="_blank" rel="noopener noreferrer" class="action-btn">
-                <span class="content-kr">갤러리(활동 사진) 구경하러 가기</span>
-                <span class="content-en hidden">Visit Gallery (Activity Photos)</span>
+            <!-- 갤러리 링크 카드 -->
+            <a href="https://bevel-cannon-e38.notion.site/2b2a36674215807191b2ecec452c0ee7" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-content">
+                    <span class="link-card-tag">GALLERY</span>
+                    <h3 class="link-card-title content-kr">갤러리 (활동 사진)</h3>
+                    <h3 class="link-card-title content-en hidden">Visit Gallery</h3>
+                    <p class="link-card-desc content-kr">
+                        세미나, 학술제, 친목 행사 등<br>Y-FANS의 생생한 활동 현장을 담았습니다.
+                    </p>
+                    <p class="link-card-desc content-en hidden">
+                        Photos of vivid activities including seminars, academic festivals, and social events.
+                    </p>
+                </div>
+                <div class="link-card-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
             </a>
         </section>
 
