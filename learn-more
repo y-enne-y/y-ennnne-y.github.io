@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn More | Y-FANS</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="logo-icon.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 공통 CSS 스타일 (메인 페이지와 동일한 기반) --- */
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 내비게이션 바 (Connect 페이지 스타일: 로고 + 언어선택만) */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem; 
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            height: 70px;
+        }
+        .navbar-left a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #1f2937;
+            font-weight: 700;
+        }
+        .navbar-left img { height: 1.5rem; margin-right: 0.5rem; }
+        
+        .navbar-right { display: flex; align-items: center; gap: 1rem; }
+
+        /* 언어 선택 드롭다운 */
+        .lang-dropdown { position: relative; display: flex; align-items: center; z-index: 2000; }
+        .lang-btn {
+            background: transparent; border: none; cursor: pointer;
+            width: 48px; height: 48px; padding: 0; margin: 0;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #4b5563; transition: all 0.2s ease;
+            border-radius: 50%;
+        }
+        .lang-btn:hover, .lang-dropdown.active .lang-btn { color: #2563eb; background-color: #f3f4f6; }
+        .lang-icon { width: 24px; height: 24px; pointer-events: none; }
+        
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%; 
+            background-color: #ffffff; min-width: 140px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb; border-radius: 0.5rem;
+            z-index: 3000; overflow: hidden; margin-top: 0.25rem;
+        }
+        .lang-dropdown.active .dropdown-content { display: block; }
+        
+        .dropdown-content button {
+            color: #374151; padding: 12px 16px; text-decoration: none;
+            display: block; width: 100%; text-align: left;
+            border: none; background: none; cursor: pointer;
+            font-family: inherit; font-size: 0.9rem; font-weight: 500;
+        }
+        .dropdown-content button:hover { background-color: #f3f4f6; color: #2563eb; }
+
+        /* --- Learn More 페이지 전용 콘텐츠 스타일 --- */
+        .main-content {
+            padding-top: 6rem; /* 헤더 높이 고려 */
+            padding-bottom: 4rem;
+            max-width: 800px; 
+            margin: 0 auto;
+            padding-left: 1.5rem; 
+            padding-right: 1.5rem;
+            flex: 1;
+        }
+
+        .section {
+            margin-bottom: 5rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #2563eb;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .quote {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.6;
+            color: #111827;
+            margin-bottom: 1rem;
+            word-break: keep-all;
+        }
+
+        .description {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #4b5563;
+            margin-bottom: 2rem;
+            word-break: keep-all;
+        }
+
+        /* 이미지 스타일 */
+        .content-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin: 1rem auto 2rem;
+            display: block;
+        }
+
+        /* 비전 리스트 스타일 */
+        .vision-list {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            padding: 1.5rem;
+            background-color: #f8fafc;
+            border-radius: 12px;
+        }
+        .vision-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #374151;
+        }
+        .vision-item:last-child { margin-bottom: 0; }
+        .vision-icon {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            padding-top: 0.1rem;
+        }
+
+        /* 버튼 스타일 */
+        .action-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+        .action-btn:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 유틸리티 클래스 */
+        .hidden { display: none !important; }
+
+        /* Footer */
+        footer {
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 3rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: auto;
+        }
+        .footer-content { max-width: 768px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; }
+        .footer-title { font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; font-size: 1rem; }
+        .footer-info { display: flex; flex-direction: column; gap: 0.25rem; }
+        @media (min-width: 640px) {
+            .footer-info { flex-direction: row; justify-content: center; gap: 1.5rem; }
+            .footer-info span::after { content: "|"; margin-left: 1.5rem; color: #d1d5db; }
+            .footer-info span:last-child::after { content: ""; margin: 0; }
+        }
+
+        @media (max-width: 767px) {
+            .section-title { font-size: 1.75rem; }
+            .quote { font-size: 1.1rem; }
+            .vision-list { padding: 1rem; }
+            .action-btn { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 네비게이션 바: 로고 + 언어선택 -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="index.html">
+                <img src="logo-icon.png" onerror="this.style.display='none'" alt="">
+                <span>Y-FANS</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <!-- 언어 선택 드롭다운 -->
+            <div class="lang-dropdown">
+                <button class="lang-btn" onclick="toggleDropdown(event)" aria-label="언어 선택 (Select Language)">
+                    <svg class="lang-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
+                    <button onclick="setLanguage('ko')">한국어 (Korean)</button>
+                    <button onclick="setLanguage('en')">English</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="main-content">
+        
+        <!-- 1. Introduction 섹션 -->
+        <section class="section">
+            <h2 class="section-title">Introduction</h2>
+            
+            <p class="quote content-kr">
+                “우리는 식품영양학의 깊이 있는 탐구를 통해,<br>더 건강하고 지속가능한 사회를 만드는 데 기여하고자 합니다.”
+            </p>
+            <p class="quote content-en hidden">
+                “We aim to contribute to creating a healthier and sustainable society through in-depth exploration of food and nutrition.”
+            </p>
+
+            <p class="description content-kr">
+                Y-FANS는 2018년에 설립된 연세대학교 유일의 학부생 식품영양학회입니다.
+            </p>
+            <p class="description content-en hidden">
+                Y-FANS is the only undergraduate food and nutrition society at Yonsei University, established in 2018.
+            </p>
+
+            <!-- 인증 사진 (업로드된 파일명 사용) -->
+            <img src="certification.jpg" alt="Y-FANS Certification" class="content-image" onerror="this.style.display='none';">
+
+            <a href="https://bevel-cannon-e38.notion.site/Y-FANS-Members" target="_blank" rel="noopener noreferrer" class="action-btn">
+                <span class="content-kr">이번 기수 학회원 명단</span>
+                <span class="content-en hidden">Current Members List</span>
+            </a>
+        </section>
+
+        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 4rem 0; max-width: 200px; margin-left: auto; margin-right: auto;">
+
+        <!-- 2. Vision 섹션 -->
+        <section class="section">
+            <h2 class="section-title">Vision</h2>
+            
+            <p class="quote content-kr">
+                “Y-FANS의 활동은 학문적 성장을 넘어<br>사회적 가치를 지향합니다.”
+            </p>
+            <p class="quote content-en hidden">
+                “Y-FANS' activities aim for social value<br>beyond academic growth.”
+            </p>
+
+            <div class="vision-list">
+                <div class="vision-item">
+                    <span class="vision-icon">📚</span>
+                    <span class="content-kr">식품·영양 분야의 과학적 지식을 깊이 있게 연구하고,</span>
+                    <span class="content-en hidden">Conduct in-depth research on scientific knowledge in food and nutrition,</span>
+                </div>
+                <div class="vision-item">
+                    <span class="vision-icon">📢</span>
+                    <span class="content-kr">그 지식을 대중에게 효과적으로 전달하며,</span>
+                    <span class="content-en hidden">Effectively communicate that knowledge to the public,</span>
+                </div>
+                <div class="vision-item">
+                    <span class="vision-icon">🔄</span>
+                    <span class="content-kr">대중의 식습관, 태도, 건강 행동의 긍정적 변화를 이끕니다.</span>
+                    <span class="content-en hidden">Lead positive changes in public dietary habits, attitudes, and health behaviors.</span>
+                </div>
+            </div>
+
+            <!-- 인포그래픽 이미지 (업로드된 파일명 사용) -->
+            <img src="info-graphic.jpg" alt="Y-FANS Vision Infographic" class="content-image" onerror="this.style.display='none';">
+
+            <a href="https://bevel-cannon-e38.notion.site/Y-FANS-Gallery" target="_blank" rel="noopener noreferrer" class="action-btn">
+                <span class="content-kr">갤러리(활동 사진) 구경하러 가기</span>
+                <span class="content-en hidden">Visit Gallery (Activity Photos)</span>
+            </a>
+        </section>
+
+    </div>
+
+    <!-- Footer 영역 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-title">Contacts</div>
+            <div class="footer-info">
+                <span>서울특별시 서대문구 연세로 50 삼성관</span>
+                <span>yonseiyfans@gmail.com</span>
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: #9ca3af;">
+                &copy; Y-FANS. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- 언어 전환 스크립트 (메인 페이지와 동일 로직) -->
+    <script>
+        function toggleDropdown(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const dropdown = document.querySelector('.lang-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function setLanguage(lang) {
+            const krElements = document.querySelectorAll('.content-kr');
+            const enElements = document.querySelectorAll('.content-en');
+
+            if (lang === 'ko') {
+                krElements.forEach(el => el.classList.remove('hidden'));
+                enElements.forEach(el => el.classList.add('hidden'));
+            } else if (lang === 'en') {
+                krElements.forEach(el => el.classList.add('hidden'));
+                enElements.forEach(el => el.classList.remove('hidden'));
+            }
+
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown) dropdown.classList.remove('active');
+
+            const dropdownContent = document.querySelector('.dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.style.display = 'none';
+                void dropdownContent.offsetWidth;
+                setTimeout(() => { dropdownContent.style.display = ''; }, 50);
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
