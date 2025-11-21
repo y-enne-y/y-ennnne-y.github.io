@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon | Y-FANS</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="logo-icon.png?v=3" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 공통 CSS 스타일 --- */
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 내비게이션 바 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem; 
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            height: 70px;
+        }
+        .navbar-left a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #1f2937;
+            font-weight: 700;
+        }
+        .navbar-left img { height: 1.5rem; margin-right: 0.5rem; }
+        
+        .navbar-right { display: flex; align-items: center; gap: 1rem; }
+
+        .nav-link {
+            color: #4b5563; 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: color 0.2s ease;
+            padding: 0.5rem;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .nav-link:hover { color: #2563eb; }
+
+        /* 언어 선택 드롭다운 */
+        .lang-dropdown { position: relative; display: flex; align-items: center; z-index: 2000; }
+        .lang-btn {
+            background: transparent; border: none; cursor: pointer;
+            width: 48px; height: 48px; padding: 0; margin: 0;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #4b5563; transition: all 0.2s ease;
+            border-radius: 50%;
+        }
+        .lang-btn:hover, .lang-dropdown.active .lang-btn { color: #2563eb; background-color: #f3f4f6; }
+        .lang-icon { width: 24px; height: 24px; pointer-events: none; }
+        
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%; 
+            background-color: #ffffff; min-width: 140px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb; border-radius: 0.5rem;
+            z-index: 3000; overflow: hidden; margin-top: 0.25rem;
+        }
+        .lang-dropdown.active .dropdown-content { display: block; }
+        
+        .dropdown-content button {
+            color: #374151; padding: 12px 16px; text-decoration: none;
+            display: block; width: 100%; text-align: left;
+            border: none; background: none; cursor: pointer;
+            font-family: inherit; font-size: 0.9rem; font-weight: 500;
+        }
+        .dropdown-content button:hover { background-color: #f3f4f6; color: #2563eb; }
+
+        /* --- Coming Soon 페이지 전용 스타일 --- */
+        .main-content {
+            /* 화면 중앙 정렬을 위해 flex 사용 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            
+            /* [수정됨] 헤더(70px)와의 충분한 간격을 위해 140px로 설정 */
+            padding-top: 140px; 
+            
+            /* 하단 여백(padding-bottom)을 6rem으로 넉넉하게 유지 */
+            padding-bottom: 6rem; 
+            
+            flex: 1;
+            text-align: center;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            color: #2563eb; /* 파란색 */
+            margin-bottom: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .page-desc {
+            font-size: 1.1rem;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            word-break: keep-all;
+            max-width: 600px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.875rem 2rem;
+            background-color: #2563eb;
+            color: white;
+            font-weight: 700;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+        .back-btn:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        .back-btn svg { margin-right: 0.5rem; }
+
+        .hidden { display: none !important; }
+
+        /* 모바일 대응 */
+        @media (max-width: 640px) {
+            .page-title { font-size: 1.75rem; }
+            .page-desc { font-size: 1rem; }
+            .status-icon { width: 60px; height: 60px; margin-bottom: 1.5rem; }
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 3rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: auto;
+        }
+        .footer-content { max-width: 768px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; }
+        .footer-title { font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; font-size: 1rem; }
+        .footer-info { display: flex; flex-direction: column; gap: 0.25rem; }
+        @media (min-width: 640px) {
+            .footer-info { flex-direction: row; justify-content: center; gap: 1.5rem; }
+            .footer-info span::after { content: "|"; margin-left: 1.5rem; color: #d1d5db; }
+            .footer-info span:last-child::after { content: ""; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <!-- 로고 클릭 시 메인으로 이동 -->
+            <a href="index.html">
+                <img src="logo-icon.png" onerror="this.style.display='none'" alt="">
+                <span>Y-FANS</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <!-- 홈으로 버튼 -->
+            <a href="index.html" class="nav-link">
+                <span class="content-kr">홈으로</span>
+                <span class="content-en hidden">Home</span>
+            </a>
+
+            <!-- 언어 선택 -->
+            <div class="lang-dropdown">
+                <button class="lang-btn" onclick="toggleDropdown(event)" aria-label="언어 선택">
+                    <svg class="lang-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
+                    <button onclick="setLanguage('ko')">한국어 (Korean)</button>
+                    <button onclick="setLanguage('en')">English</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="main-content">
+        
+        <!-- 아이콘 (로켓 또는 모래시계) -->
+        <svg class="status-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+            <!-- 로켓 아이콘 -->
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path>
+        </svg>
+
+        <h1 class="page-title">
+            <span class="content-kr">현재 열심히 활동 중입니다!</span>
+            <span class="content-en hidden">Activities in Progress!</span>
+        </h1>
+        
+        <p class="page-desc">
+            <span class="content-kr">
+                이번 기수 활동이 활발히 진행되고 있습니다.<br>
+                모든 활동이 종료된 후, 멋진 결과물로 찾아뵙겠습니다.<br>
+                조금만 기다려주세요.
+            </span>
+            <span class="content-en hidden">
+                The activities for this semester are currently underway.<br>
+                We will share the amazing results once the activities are concluded.<br>
+                Please stay tuned!
+            </span>
+        </p>
+
+        <!-- 이전 페이지로 돌아가기 버튼 -->
+        <a href="javascript:history.back()" class="back-btn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span class="content-kr">이전 페이지로</span>
+            <span class="content-en hidden">Go Back</span>
+        </a>
+
+    </div>
+
+    <!-- Footer 영역 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-title">Contacts</div>
+            <div class="footer-info">
+                <span>서울특별시 서대문구 연세로 50 삼성관</span>
+                <span>yonseiyfans@gmail.com</span>
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: #9ca3af;">
+                &copy; Y-FANS. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- 스크립트 -->
+    <script>
+        function toggleDropdown(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const dropdown = document.querySelector('.lang-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function setLanguage(lang) {
+            const krElements = document.querySelectorAll('.content-kr');
+            const enElements = document.querySelectorAll('.content-en');
+
+            if (lang === 'ko') {
+                krElements.forEach(el => el.classList.remove('hidden'));
+                enElements.forEach(el => el.classList.add('hidden'));
+            } else if (lang === 'en') {
+                krElements.forEach(el => el.classList.add('hidden'));
+                enElements.forEach(el => el.classList.remove('hidden'));
+            }
+
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown) dropdown.classList.remove('active');
+
+            const dropdownContent = document.querySelector('.dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.style.display = 'none';
+                void dropdownContent.offsetWidth;
+                setTimeout(() => { dropdownContent.style.display = ''; }, 50);
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
