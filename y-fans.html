@@ -199,6 +199,35 @@
             }
         }
 
+        /* [이스터에그] 숨겨진 모달 스타일 */
+        .egg-modal {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease;
+        }
+        .egg-modal.show { display: flex; }
+        .egg-content {
+            background: white; padding: 2.5rem; border-radius: 1.5rem;
+            text-align: center; max-width: 320px; width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: scale(0.9); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .egg-title { font-size: 1.5rem; font-weight: 800; color: #2563eb; margin-bottom: 0.5rem; }
+        .egg-text { font-size: 1rem; color: #4b5563; margin-bottom: 1.5rem; line-height: 1.6; word-break: keep-all; }
+        .egg-btn {
+            background: #2563eb; color: white; border: none; padding: 0.75rem 1.5rem;
+            border-radius: 9999px; font-weight: 700; cursor: pointer;
+            transition: background 0.2s;
+        }
+        .egg-btn:hover { background: #1d4ed8; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
         .hidden { display: none !important; }
 
         @media (max-width: 767px) {
@@ -214,6 +243,18 @@
 </head>
 <body>
 
+    <!-- [이스터에그] 숨겨진 제작자 모달 -->
+    <div id="easterEggModal" class="egg-modal">
+        <div class="egg-content">
+            <div class="egg-title">🎉 Found it!</div>
+            <p class="egg-text">
+                이스터에그를 발견하셨군요!<br>
+                이 웹사이트는 <strong>[7기 서기 강예은]</strong>에 의해<br>제작되었습니다. 🍀
+            </p>
+            <button class="egg-btn" onclick="closeEasterEgg()">닫기</button>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="navbar-left">
             <a href="/">
@@ -226,7 +267,7 @@
                 <span class="nav-kr content-kr">자세히 알아보기</span>
                 <span class="nav-en content-en hidden">Learn More</span>
             </a>
-            <a href="https://bevel-cannon-e38.notion.site/Y-FANS-9d53df8aea0a49d9814b453423b38f52?pvs=74" target="_blank" rel="noopener noreferrer">
+            <a href="/view-activities/">
                 <span class="nav-kr content-kr">활동 보러 가기</span>
                 <span class="nav-en content-en hidden">View Activities</span>
             </a>
@@ -256,10 +297,6 @@
             <p class="subtitle">(Yonsei-Food And Nutrition Society)</p>
         </header>
 
-        <!-- 
-          [수정됨] content-kr, content-en, hidden 클래스를 모두 제거했습니다.
-          이제 이 부분은 언어 설정 스크립트의 영향을 받지 않고 항상 표시됩니다.
-        -->
         <p class="description-kr">
             Y-FANS는 식품과 영양에 대한 학술적 탐구를 통해 심화 지식을 대중에게 전달하는 것을 목표로 하는 전공 학회입니다. 정기적인 논문 연구와 학술발표회, 그리고 선후배 간의 진로 멘토링 등 다양한 활동을 진행하고 있습니다.
         </p>
@@ -279,7 +316,11 @@
                 <span>서울특별시 서대문구 연세로 50 삼성관</span>
                 <span>yonseiyfans@gmail.com</span>
             </div>
-            <div style="margin-top: 1rem; font-size: 0.75rem; color: #9ca3af;">
+            <!-- 
+               [이스터에그] 아래 div를 3초 안에 5번 클릭하면 모달이 뜹니다. 
+               커서는 기본값(default)으로 설정되어 있어 클릭 가능함을 숨깁니다.
+            -->
+            <div id="eggTrigger" style="margin-top: 1rem; font-size: 0.75rem; color: #9ca3af; cursor: default; user-select: none;">
                 &copy; Y-FANS. All rights reserved.
             </div>
         </div>
@@ -296,7 +337,6 @@
         }
 
         function setLanguage(lang) {
-            // 상단 네비게이션 메뉴 등 content-kr/en 클래스가 붙은 요소만 제어합니다.
             const krElements = document.querySelectorAll('.content-kr');
             const enElements = document.querySelectorAll('.content-en');
 
@@ -308,7 +348,6 @@
                 enElements.forEach(el => el.classList.remove('hidden'));
             }
 
-            // 언어 선택 시 드롭다운 닫기 및 리플로우 처리
             const dropdown = document.querySelector('.lang-dropdown');
             if (dropdown) {
                 dropdown.classList.remove('active');
@@ -331,7 +370,49 @@
                 dropdown.classList.remove('active');
             }
         });
+
+        /* --- [이스터에그] 로직 시작 --- */
+        
+        // 모달 닫기 함수
+        function closeEasterEgg() {
+            document.getElementById('easterEggModal').classList.remove('show');
+        }
+
+        // 5연타 클릭 감지
+        let eggClickCount = 0;
+        let eggTimer;
+        const eggTrigger = document.getElementById('eggTrigger');
+
+        if (eggTrigger) {
+            eggTrigger.addEventListener('click', (e) => {
+                eggClickCount++;
+                
+                // 3초 지나면 카운트 초기화
+                clearTimeout(eggTimer);
+                eggTimer = setTimeout(() => {
+                    eggClickCount = 0;
+                }, 3000);
+
+                // 5번 클릭 시 발동
+                if (eggClickCount === 5) {
+                    document.getElementById('easterEggModal').classList.add('show');
+                    eggClickCount = 0; // 초기화
+                }
+            });
+        }
+        /* --- [이스터에그] 로직 끝 --- */
     </script>
 
 </body>
+<!--
+   __   __      ______ ___  _   _  _____ 
+   \ \ / /     |  ____/ _ \| \ | |/ ____|
+    \ V /______| |__ / /_\ \  \| | (___  
+     \ //______|  __||  _  | . ` |\___ \ 
+     | |       | |   | | | | |\  |____) |
+     |_|       |_|   |_| |_|_| \_|_____/ 
+     
+     Created with passion by [7기 서기 강예은].
+     Thank you for visiting Y-FANS Website!
+-->
 </html>
