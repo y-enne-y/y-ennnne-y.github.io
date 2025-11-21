@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact | Y-FANS</title>
+    <title>Connect | Y-FANS</title>
     
     <!-- Favicon -->
     <link rel="icon" href="../logo-icon.png" type="image/png">
@@ -24,6 +24,11 @@
             background-color: #f9fafb;
             color: #1f2937;
             -webkit-font-smoothing: antialiased;
+            cursor: pointer; 
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* --- 내비게이션 바 --- */
@@ -31,7 +36,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
+            padding: 0.5rem 2rem; 
             background-color: #ffffff;
             border-bottom: 1px solid #e5e7eb;
             position: fixed;
@@ -39,6 +44,7 @@
             top: 0;
             left: 0;
             z-index: 1000;
+            height: 70px; 
         }
         .navbar-left a {
             display: flex;
@@ -48,37 +54,58 @@
             font-weight: 700;
         }
         .navbar-left img { height: 1.5rem; margin-right: 0.5rem; }
-        .navbar-right { display: flex; align-items: center; gap: 1.5rem; }
+        .navbar-right { display: flex; align-items: center; gap: 1rem; }
         .navbar-right a {
             color: #4b5563; text-decoration: none; font-weight: 500; transition: color 0.2s; white-space: nowrap;
+            padding: 0.5rem;
         }
         .navbar-right a:hover { color: #2563eb; }
 
         /* --- 언어 선택 드롭다운 스타일 --- */
         .lang-dropdown {
             position: relative;
-            display: inline-block;
+            display: flex; 
+            align-items: center;
             margin-left: 0.5rem;
             z-index: 2000; 
         }
+        
         .lang-btn {
-            background: none;
+            background: transparent;
             border: none;
             cursor: pointer;
-            padding: 0.25rem;
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            margin: 0;
             display: flex;
             align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
             color: #4b5563;
-            transition: color 0.2s;
+            transition: all 0.2s ease;
+            border-radius: 50%; 
+            touch-action: manipulation;
         }
-        .lang-btn:hover { color: #2563eb; }
-        .lang-icon { width: 24px; height: 24px; }
+        
+        @media (hover: hover) {
+            .lang-btn:hover { 
+                color: #2563eb;
+                background-color: #f3f4f6; 
+            }
+        }
+
+        .lang-icon { 
+            width: 24px; 
+            height: 24px; 
+            pointer-events: none; 
+        }
         
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
-            top: 100%;
+            top: 110%; 
             background-color: #ffffff;
             min-width: 120px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -86,7 +113,7 @@
             border-radius: 0.5rem;
             z-index: 3000;
             overflow: hidden;
-            margin-top: 0.5rem;
+            margin-top: 0.25rem;
         }
         .dropdown-content button {
             color: #374151;
@@ -106,7 +133,12 @@
             background-color: #f3f4f6;
             color: #2563eb;
         }
-        .lang-dropdown:hover .dropdown-content { display: block; }
+
+        @media (min-width: 768px) and (hover: hover) {
+            .lang-dropdown:hover .dropdown-content { display: block; }
+        }
+        
+        .lang-dropdown.active .dropdown-content { display: block; }
 
         /* --- 메인 콘텐츠 영역 --- */
         .container {
@@ -114,13 +146,20 @@
             margin: 0 auto;
             padding: 8rem 1rem 4rem 1rem;
             text-align: center;
+            flex: 1; /* Footer를 하단으로 밀어내기 위함 */
         }
 
         .page-header { margin-bottom: 3rem; }
         .page-header h1 {
-            font-size: 2.5rem; font-weight: 900; color: #1f2937; margin-bottom: 0.5rem;
+            /* 파란색 타이틀 */
+            font-size: 2.5rem; font-weight: 900; color: #2563eb; margin-bottom: 1rem;
         }
-        .page-header p { color: #6b7280; font-size: 1.1rem; }
+        .page-header p { color: #6b7280; font-size: 1.1rem; margin-bottom: 0.5rem; line-height: 1.6; word-break: keep-all;}
+        
+        /* 추가 문의사항 텍스트 스타일 (약간 작게) */
+        .page-header .sub-info {
+            font-size: 0.95rem; color: #9ca3af; margin-top: 0.5rem;
+        }
 
         /* --- 카드 그리드 레이아웃 --- */
         .contact-grid {
@@ -192,7 +231,51 @@
         .btn-insta { background-color: #E1306C; color: white; }
         .btn-blog { background-color: #03C75A; color: white; }
 
-        /* 숨김 클래스 */
+        /* Footer 스타일 */
+        footer {
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 3rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: auto;
+        }
+        .footer-content {
+            max-width: 768px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .footer-title {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        @media (min-width: 640px) {
+            .footer-info {
+                flex-direction: row;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+            .footer-info span::after {
+                content: "|";
+                margin-left: 1.5rem;
+                color: #d1d5db;
+            }
+            .footer-info span:last-child::after {
+                content: "";
+                margin: 0;
+            }
+        }
+
         .hidden { display: none !important; }
 
         @media (min-width: 768px) {
@@ -207,22 +290,18 @@
     <nav class="navbar">
         <div class="navbar-left">
             <a href="/">
-                <img src="../logo-icon.png" alt="Y-FANS 로고">
+                <img src="../logo-icon.png" onerror="this.style.display='none'" alt="Y-FANS 로고">
                 <span>Y-FANS</span>
             </a>
         </div>
         <div class="navbar-right">
-            <!-- 메뉴 링크 (한국어/영어) -->
             <a href="/">
                 <span class="content-kr">홈으로</span>
                 <span class="content-en hidden">Home</span>
             </a>
             
-            <!-- '자세히 알아보기' 삭제됨 -->
-
-            <!-- 언어 선택 드롭다운 -->
             <div class="lang-dropdown">
-                <button class="lang-btn" aria-label="언어 선택">
+                <button class="lang-btn" aria-label="언어 선택" onclick="toggleDropdown(event)">
                     <svg class="lang-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -238,10 +317,17 @@
     <!-- 메인 콘텐츠 -->
     <div class="container">
         
+        <!-- [수정됨] 요청하신 텍스트 배치 적용 -->
         <div class="page-header">
             <h1>Connect with Us</h1>
+            
+            <!-- 메인 설명 -->
             <p class="content-kr">Y-FANS의 다양한 소식과 활동을 만나보세요</p>
             <p class="content-en hidden">Discover various news and activities of Y-FANS</p>
+            
+            <!-- 추가 문의사항 안내 (본문 상단으로 이동) -->
+            <p class="sub-info content-kr">추가적인 문의사항은 인스타그램 DM 또는 블로그 댓글을 이용해 주세요.</p>
+            <p class="sub-info content-en hidden">For further inquiries, please use Instagram DM or Blog comments.</p>
         </div>
 
         <div class="contact-grid">
@@ -256,13 +342,11 @@
                 <p class="card-desc content-kr">Y-FANS의 생생한 활동 모습을 가장 빠르게 만나보세요.</p>
                 <p class="card-desc content-en hidden">Check out the vivid activities of Y-FANS the fastest.</p>
                 
-                <!-- 한국어 목록 -->
                 <ul class="activity-list content-kr">
                     <li>주요 활동 카드뉴스</li>
                     <li>세미나 및 행사 홍보</li>
                     <li>학회원들의 다양한 활동 기록</li>
                 </ul>
-                <!-- 영어 목록 -->
                 <ul class="activity-list content-en hidden">
                     <li>Major activity card news</li>
                     <li>Seminar & event announcements</li>
@@ -285,13 +369,11 @@
                 <p class="card-desc content-kr">학술적 탐구 내용과 심화 지식을 글로 정리하여 공유합니다.</p>
                 <p class="card-desc content-en hidden">We summarize and share academic inquiries and advanced knowledge.</p>
                 
-                <!-- 한국어 목록 -->
                 <ul class="activity-list content-kr">
                     <li>학술 세미나 내용 간략 정리</li>
                     <li>식품/영양 전공 지식 아카이빙</li>
                     <li>정기 학술제 발표 자료</li>
                 </ul>
-                <!-- 영어 목록 -->
                 <ul class="activity-list content-en hidden">
                     <li>Summary of academic seminars</li>
                     <li>Food & Nutrition knowledge archive</li>
@@ -306,16 +388,33 @@
 
         </div>
 
-        <!-- 추가 문의 -->
-        <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.9rem;">
-            <p class="content-kr">추가적인 문의사항은 인스타그램 DM 또는 블로그 댓글을 이용해 주세요.</p>
-            <p class="content-en hidden">For further inquiries, please use Instagram DM or Blog comments.</p>
-        </div>
+        <!-- 하단 div 제거됨 (상단 page-header로 통합) -->
 
     </div>
 
-    <!-- 언어 변경 스크립트 -->
+    <!-- Footer 영역 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-title">Contacts</div>
+            <div class="footer-info">
+                <span>서울특별시 서대문구 연세로 50 삼성관</span>
+                <span>yonseiyfans@gmail.com</span>
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: #9ca3af;">
+                &copy; Y-FANS. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- 스크립트 -->
     <script>
+        function toggleDropdown(event) {
+            event.preventDefault(); 
+            event.stopPropagation(); 
+            const dropdown = document.querySelector('.lang-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
         function setLanguage(lang) {
             const krElements = document.querySelectorAll('.content-kr');
             const enElements = document.querySelectorAll('.content-en');
@@ -327,7 +426,28 @@
                 krElements.forEach(el => el.classList.add('hidden'));
                 enElements.forEach(el => el.classList.remove('hidden'));
             }
+
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown) {
+                dropdown.classList.remove('active');
+            }
+
+            const dropdownContent = document.querySelector('.dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.style.display = 'none'; 
+                void dropdownContent.offsetWidth; 
+                setTimeout(() => {
+                    dropdownContent.style.display = ''; 
+                }, 50);
+            }
         }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
     </script>
 
 </body>
