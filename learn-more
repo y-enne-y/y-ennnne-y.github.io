@@ -56,7 +56,7 @@
         
         .navbar-right { display: flex; align-items: center; gap: 1rem; }
 
-        /* [추가됨] 네비게이션 링크 스타일 (홈으로 버튼용) */
+        /* 네비게이션 링크 스타일 (홈으로 버튼용) */
         .nav-link {
             color: #4b5563; 
             text-decoration: none; 
@@ -64,7 +64,7 @@
             transition: color 0.2s ease;
             padding: 0.5rem;
             font-size: 0.95rem;
-            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            white-space: nowrap;
         }
         .nav-link:hover { color: #2563eb; }
 
@@ -237,7 +237,7 @@
             </a>
         </div>
         <div class="navbar-right">
-            <!-- [수정됨] '홈으로' 버튼 -->
+            <!-- '홈으로' 버튼 -->
             <a href="../index.html" class="nav-link">
                 <span class="content-kr">홈으로</span>
                 <span class="content-en hidden">Home</span>
@@ -279,7 +279,8 @@
                 Y-FANS is the only undergraduate food and nutrition society at Yonsei University, established in 2018.
             </p>
 
-            <img src="certification.jpg" alt="Y-FANS Certification" class="content-image" onerror="this.style.display='none';">
+            <!-- 업로드된 파일명(png)을 사용 -->
+            <img src="certification.png" alt="Y-FANS Certification" class="content-image" onerror="this.style.display='none';">
 
             <a href="https://bevel-cannon-e38.notion.site/Y-FANS-Members" target="_blank" rel="noopener noreferrer" class="action-btn">
                 <span class="content-kr">이번 기수 학회원 명단</span>
@@ -318,7 +319,8 @@
                 </div>
             </div>
 
-            <img src="info-graphic.jpg" alt="Y-FANS Vision Infographic" class="content-image" onerror="this.style.display='none';">
+            <!-- 업로드된 파일명(png)을 사용 -->
+            <img src="info-graphic.png" alt="Y-FANS Vision Infographic" class="content-image" onerror="this.style.display='none';">
 
             <a href="https://bevel-cannon-e38.notion.site/Y-FANS-Gallery" target="_blank" rel="noopener noreferrer" class="action-btn">
                 <span class="content-kr">갤러리(활동 사진) 구경하러 가기</span>
