@@ -6,7 +6,7 @@
     <title>View Activities | Y-FANS</title>
     
     <!-- Favicon -->
-    <link rel="icon" href="logo-icon.png?v=3" type="image/png">
+    <link rel="icon" href="logo.png?v=3" type="image/png">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -145,7 +145,7 @@
             margin: 0 auto;
         }
 
-        /* 링크 카드 스타일 (강조형) */
+        /* 링크 카드 스타일 (PC 기준) */
         .link-card {
             display: flex;
             align-items: center;
@@ -198,13 +198,52 @@
         .link-card:hover .link-card-icon-wrapper { transform: scale(1.1) rotate(10deg); }
         .link-card-icon-wrapper svg { width: 32px; height: 32px; }
 
-        /* 모바일 대응 */
+        /* [수정됨] 모바일 대응 최적화 */
         @media (max-width: 640px) {
             .page-title { font-size: 2rem; }
-            .intro-container { padding: 1.5rem; }
-            .link-card { flex-direction: column; text-align: center; padding: 1.5rem; }
-            .link-card-content { margin-right: 0; margin-bottom: 1.5rem; }
-            .link-card-icon-wrapper { margin: 0 auto; }
+            
+            /* 설명 영역 패딩 줄임 */
+            .intro-container { padding: 1.25rem; margin-bottom: 3rem; }
+            .info-title { font-size: 1rem; }
+            .info-text { font-size: 0.9rem; }
+
+            /* 카드 모바일 최적화 (세로 쌓임 방지 -> 가로 슬림형 유지) */
+            .link-card { 
+                padding: 1.25rem; /* 패딩 축소 */
+                /* flex-direction: row; (기본값 유지) - 가로 배치 유지 */
+                align-items: center; /* 아이콘과 텍스트 중앙 정렬 */
+            }
+            
+            .link-card-content { 
+                margin-right: 0.75rem; /* 여백 축소 */
+            }
+
+            .link-card-tag {
+                font-size: 0.65rem; /* 태그 폰트 축소 */
+                padding: 0.2rem 0.5rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .link-card-title { 
+                font-size: 1.15rem; /* 제목 폰트 축소 */
+                margin-bottom: 0.25rem;
+            }
+
+            .link-card-desc { 
+                font-size: 0.85rem; /* 설명 폰트 축소 */
+                line-height: 1.4;
+            }
+
+            /* 아이콘 크기 축소 */
+            .link-card-icon-wrapper { 
+                width: 48px; 
+                height: 48px; 
+                margin: 0; /* 중앙 정렬 해제 */
+            }
+            .link-card-icon-wrapper svg {
+                width: 24px;
+                height: 24px;
+            }
         }
 
         .hidden { display: none !important; }
@@ -310,7 +349,7 @@
         <div class="activities-grid">
 
             <!-- 1. 통합 링크 카드 -->
-            <a href="https://bevel-cannon-e38.notion.site/2b2a3667421580b488d9dcf2a3d9fccb?pvs=74" target="_blank" rel="noopener noreferrer" class="link-card">
+            <a href="https://bevel-cannon-e38.notion.site/Y-FANS-9d53df8aea0a49d9814b453423b38f52" target="_blank" rel="noopener noreferrer" class="link-card">
                 <div class="link-card-content">
                     <span class="link-card-tag">ARCHIVE</span>
                     <h3 class="link-card-title">
@@ -330,7 +369,7 @@
                 </div>
             </a>
 
-            <!-- 2. [NEW] Y-PANS 워크스테이션 카드 (중간 삽입) -->
+            <!-- 2. Y-PANS 워크스테이션 카드 (중간) -->
             <a href="#" target="_blank" rel="noopener noreferrer" class="link-card">
                 <div class="link-card-content">
                     <span class="link-card-tag">WORKSTATION</span>
@@ -344,14 +383,14 @@
                     </p>
                 </div>
                 <div class="link-card-icon-wrapper">
-                    <!-- 전구 아이콘 (Innovation/Idea) -->
+                    <!-- 전구 아이콘 -->
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                     </svg>
                 </div>
             </a>
             
-            <!-- 3. 이번 기수 세미나 온라인 전시물 -->
+            <!-- 3. 이번 기수 세미나 온라인 전시물 (하단) -->
             <a href="https://bevel-cannon-e38.notion.site/Y-FANS-Seminar-Exhibition" target="_blank" rel="noopener noreferrer" class="link-card">
                 <div class="link-card-content">
                     <span class="link-card-tag">EXHIBITION</span>
