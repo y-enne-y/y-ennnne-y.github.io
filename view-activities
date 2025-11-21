@@ -6,7 +6,7 @@
     <title>View Activities | Y-FANS</title>
     
     <!-- Favicon -->
-    <link rel="icon" href="logo.png?v=3" type="image/png">
+    <link rel="icon" href="logo-icon.png?v=3" type="image/png">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -310,7 +310,7 @@
         <div class="activities-grid">
 
             <!-- 1. 통합 링크 카드 -->
-            <a href="https://bevel-cannon-e38.notion.site/Y-FANS-9d53df8aea0a49d9814b453423b38f52" target="_blank" rel="noopener noreferrer" class="link-card">
+            <a href="https://bevel-cannon-e38.notion.site/2b2a3667421580b488d9dcf2a3d9fccb?pvs=74" target="_blank" rel="noopener noreferrer" class="link-card">
                 <div class="link-card-content">
                     <span class="link-card-tag">ARCHIVE</span>
                     <h3 class="link-card-title">
