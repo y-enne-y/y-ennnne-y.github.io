@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y-PANS Workstation | Y-FANS</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="logo-icon.png?v=3" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 공통 CSS 스타일 --- */
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 내비게이션 바 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem; 
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            height: 70px;
+        }
+        .navbar-left a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #1f2937;
+            font-weight: 700;
+        }
+        .navbar-left img { height: 1.5rem; margin-right: 0.5rem; }
+        
+        .navbar-right { display: flex; align-items: center; gap: 1rem; }
+
+        .nav-link {
+            color: #4b5563; 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: color 0.2s ease;
+            padding: 0.5rem;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .nav-link:hover { color: #2563eb; }
+
+        /* 언어 선택 드롭다운 */
+        .lang-dropdown { position: relative; display: flex; align-items: center; z-index: 2000; }
+        .lang-btn {
+            background: transparent; border: none; cursor: pointer;
+            width: 48px; height: 48px; padding: 0; margin: 0;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #4b5563; transition: all 0.2s ease;
+            border-radius: 50%;
+        }
+        .lang-btn:hover, .lang-dropdown.active .lang-btn { color: #2563eb; background-color: #f3f4f6; }
+        .lang-icon { width: 24px; height: 24px; pointer-events: none; }
+        
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%; 
+            background-color: #ffffff; min-width: 140px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb; border-radius: 0.5rem;
+            z-index: 3000; overflow: hidden; margin-top: 0.25rem;
+        }
+        .lang-dropdown.active .dropdown-content { display: block; }
+        
+        .dropdown-content button {
+            color: #374151; padding: 12px 16px; text-decoration: none;
+            display: block; width: 100%; text-align: left;
+            border: none; background: none; cursor: pointer;
+            font-family: inherit; font-size: 0.9rem; font-weight: 500;
+        }
+        .dropdown-content button:hover { background-color: #f3f4f6; color: #2563eb; }
+
+        /* --- Workstation 페이지 스타일 --- */
+        .main-content {
+            padding-top: 8rem; 
+            padding-bottom: 6rem;
+            max-width: 800px; 
+            margin: 0 auto;
+            padding-left: 1.5rem; 
+            padding-right: 1.5rem;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* 타이틀 스타일 */
+        .page-title { 
+            font-size: 3rem; 
+            font-weight: 900; 
+            color: #2563eb; 
+            margin-bottom: 0.5rem; 
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 3rem;
+        }
+        
+        /* 본문 설명 영역 스타일 */
+        .intro-text {
+            text-align: left;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 4rem;
+            word-break: keep-all;
+        }
+        .intro-text p { margin-bottom: 1.5rem; }
+        .intro-text p:last-child { margin-bottom: 0; }
+
+        /* 텍스트 강조 스타일 */
+        .text-highlight {
+            color: #2563eb; /* 파란색 */
+            font-weight: 700; /* 굵게 */
+        }
+
+        /* 카드 그리드 레이아웃 */
+        .activities-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 링크 카드 스타일 */
+        .link-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to right, #eff6ff, #dbeafe);
+            border: 1px solid #bfdbfe;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1), 0 2px 4px -1px rgba(37, 99, 235, 0.06);
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .link-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2), 0 4px 6px -2px rgba(37, 99, 235, 0.1);
+            border-color: #2563eb;
+        }
+
+        .link-card-content { flex: 1; margin-right: 1rem; }
+        .link-card-tag {
+            display: inline-flex; align-items: center;
+            background-color: #ffffff; color: #2563eb;
+            font-size: 0.75rem; font-weight: 800;
+            padding: 0.25rem 0.75rem; border-radius: 9999px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .link-card-title {
+            font-size: 1.35rem; font-weight: 800; color: #1f2937; margin: 0 0 0.5rem 0;
+            transition: color 0.2s;
+        }
+        .link-card:hover .link-card-title { color: #2563eb; }
+        .link-card-desc { font-size: 0.95rem; color: #4b5563; line-height: 1.5; margin: 0; word-break: keep-all; font-weight: 500; }
+        
+        .link-card-icon-wrapper {
+            background-color: #ffffff;
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            color: #2563eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        .link-card:hover .link-card-icon-wrapper { transform: scale(1.1) rotate(10deg); }
+        .link-card-icon-wrapper svg { width: 32px; height: 32px; }
+
+        /* 모바일 대응 */
+        @media (max-width: 640px) {
+            .page-title { font-size: 2.25rem; }
+            .page-subtitle { font-size: 1rem; margin-bottom: 2rem; }
+            
+            .intro-text { font-size: 0.95rem; margin-bottom: 3rem; }
+
+            .link-card { 
+                padding: 1.25rem; 
+                align-items: center; 
+            }
+            .link-card-content { margin-right: 0.75rem; }
+            .link-card-tag { font-size: 0.65rem; padding: 0.2rem 0.5rem; margin-bottom: 0.25rem; }
+            .link-card-title { font-size: 1.15rem; margin-bottom: 0.25rem; }
+            .link-card-desc { font-size: 0.85rem; line-height: 1.4; }
+            .link-card-icon-wrapper { width: 48px; height: 48px; margin: 0; }
+            .link-card-icon-wrapper svg { width: 24px; height: 24px; }
+        }
+
+        .hidden { display: none !important; }
+
+        /* Footer */
+        footer {
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 3rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: auto;
+        }
+        .footer-content { max-width: 768px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; }
+        .footer-title { font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; font-size: 1rem; }
+        .footer-info { display: flex; flex-direction: column; gap: 0.25rem; }
+        @media (min-width: 640px) {
+            .footer-info { flex-direction: row; justify-content: center; gap: 1.5rem; }
+            .footer-info span::after { content: "|"; margin-left: 1.5rem; color: #d1d5db; }
+            .footer-info span:last-child::after { content: ""; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <!-- 메인 페이지로 이동 -->
+            <a href="../index.html">
+                <img src="logo-icon.png" onerror="this.style.display='none'" alt="">
+                <span>Y-FANS</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <!-- 홈으로 버튼 -->
+            <a href="../index.html" class="nav-link">
+                <span class="content-kr">홈으로</span>
+                <span class="content-en hidden">Home</span>
+            </a>
+
+            <!-- 언어 선택 -->
+            <div class="lang-dropdown">
+                <button class="lang-btn" onclick="toggleDropdown(event)" aria-label="언어 선택">
+                    <svg class="lang-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
+                    <button onclick="setLanguage('ko')">한국어 (Korean)</button>
+                    <button onclick="setLanguage('en')">English</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="main-content">
+        
+        <!-- 타이틀 영역 -->
+        <header>
+            <h1 class="page-title">
+                <span class="content-kr">Y-PANS 워크스테이션</span>
+                <span class="content-en hidden">Y-PANS Workstation</span>
+            </h1>
+            <p class="page-subtitle">
+                <span class="content-kr">사회 문제 해결을 위한 식품영양 프로젝트 팀</span>
+                <span class="content-en hidden">Food & Nutrition Project Team for Social Problem Solving</span>
+            </p>
+        </header>
+
+        <!-- 본문 설명 영역 (강조 효과 적용) -->
+        <div class="intro-text">
+            <p>
+                <span class="content-kr">
+                    <span class="text-highlight">Y-PANS</span>는 '<span class="text-highlight">Yonsei-Projects Associated with Nutrition Society</span>'의 약자로, 2025-2학기 신설된 연세대학교의 식품영양 프로젝트 팀으로 Y-FANS 산하 소속 활동 팀입니다.
+                </span>
+                <span class="content-en hidden">
+                    <span class="text-highlight">Y-PANS</span> stands for '<span class="text-highlight">Yonsei-Projects Associated with Nutrition Society</span>'. It is a newly established food and nutrition project team at Yonsei University in the second semester of 2025, operating under Y-FANS.
+                </span>
+            </p>
+            <p>
+                <span class="content-kr">
+                    Y-PANS는 전공과목인 ‘식품영양학’과 관련된 심화 지식을 탐구하는 학술 활동을 넘어, <span class="text-highlight">사회 문제</span>에 식품영양학적인 관점으로 접근하여 <span class="text-highlight">해결책</span>을 제시하고, 대중들에게 식품, 영양, 건강한 삶과 관련된 지식을 널리 알리고 지속가능한 식품 발전을 위한 프로젝트를 기획하고자 합니다.
+                </span>
+                <span class="content-en hidden">
+                    Beyond academic activities exploring advanced knowledge related to 'Food and Nutrition', Y-PANS aims to approach <span class="text-highlight">social issues</span> from a nutritional perspective, propose <span class="text-highlight">solutions</span>, spread knowledge about food, nutrition, and healthy living to the public, and plan projects for sustainable food development.
+                </span>
+            </p>
+            <p>
+                <span class="content-kr">
+                    Y-PANS는 식품영양학회 소속 팀이지만 식품영양에 대한 심화된 지식을 다루는 데에 그치지 않습니다. 학술 탐구로 쌓은 지식을 기반으로 새로운 관점을 제안하고 알려지지 않은 사회문제나 현상을 관련 기관 및 대중들에게 효과적으로 전달하고, 이를 말미암아 사회적인 변화를 이끌어 <span class="text-highlight">올바르고 지속가능한 발전 방향</span>을 제시하려 합니다.
+                </span>
+                <span class="content-en hidden">
+                    Although Y-PANS is a team under the Food and Nutrition Society, it goes beyond dealing with advanced nutritional knowledge. Based on knowledge accumulated through academic inquiry, we aim to propose new perspectives, effectively communicate unknown social issues or phenomena to relevant institutions and the public, lead social change, and suggest <span class="text-highlight">correct and sustainable development directions</span>.
+                </span>
+            </p>
+        </div>
+
+        <!-- 활동 카드 목록 -->
+        <div class="activities-grid">
+            
+            <!-- 1. 과거 활동 보러가기 카드 -->
+            <a href="/coming-soon/" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-content">
+                    <span class="link-card-tag">ARCHIVE</span>
+                    <h3 class="link-card-title">
+                        <span class="content-kr">과거 활동 보러가기</span>
+                        <span class="content-en hidden">Past Activities Archive</span>
+                    </h3>
+                    <p class="link-card-desc">
+                        <span class="content-kr">이전 기수들의 프로젝트 결과물과 활동 기록을 확인해보세요.</span>
+                        <span class="content-en hidden">Check out the project results and activity records of previous semesters.</span>
+                    </p>
+                </div>
+                <div class="link-card-icon-wrapper">
+                    <!-- 시계/히스토리 아이콘 -->
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+            </a>
+
+            <!-- 2. 이번 기수 활동 보러가기 카드 -->
+            <a href="/coming-soon/" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-content">
+                    <span class="link-card-tag">CURRENT</span>
+                    <h3 class="link-card-title">
+                        <span class="content-kr">이번 기수 활동 보러가기</span>
+                        <span class="content-en hidden">Current Activities</span>
+                    </h3>
+                    <p class="link-card-desc">
+                        <span class="content-kr">현재 진행 중인 사회 문제 해결 프로젝트와 팀 활동을 소개합니다.</span>
+                        <span class="content-en hidden">Introducing ongoing social problem-solving projects and team activities.</span>
+                    </p>
+                </div>
+                <div class="link-card-icon-wrapper">
+                    <!-- 로켓/발사 아이콘 -->
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- Footer 영역 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-title">Contacts</div>
+            <div class="footer-info">
+                <span>서울특별시 서대문구 연세로 50 삼성관</span>
+                <span>yonseiyfans@gmail.com</span>
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: #9ca3af;">
+                &copy; Y-FANS. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- 스크립트 -->
+    <script>
+        function toggleDropdown(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const dropdown = document.querySelector('.lang-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function setLanguage(lang) {
+            const krElements = document.querySelectorAll('.content-kr');
+            const enElements = document.querySelectorAll('.content-en');
+
+            if (lang === 'ko') {
+                krElements.forEach(el => el.classList.remove('hidden'));
+                enElements.forEach(el => el.classList.add('hidden'));
+            } else if (lang === 'en') {
+                krElements.forEach(el => el.classList.add('hidden'));
+                enElements.forEach(el => el.classList.remove('hidden'));
+            }
+
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown) dropdown.classList.remove('active');
+
+            const dropdownContent = document.querySelector('.dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.style.display = 'none';
+                void dropdownContent.offsetWidth;
+                setTimeout(() => { dropdownContent.style.display = ''; }, 50);
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
