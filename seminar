@@ -257,7 +257,7 @@
             display: inline-block;
         }
 
-        /* --- [수정됨] 숨겨진 오버레이 스타일 --- */
+        /* --- 숨겨진 오버레이 스타일 --- */
         .food-overlay {
             position: absolute;
             top: 0;
@@ -314,7 +314,7 @@
             background-color: #f3f4f6;
         }
 
-        /* --- [신규] 상세 모달 스타일 --- */
+        /* --- 상세 모달 스타일 --- */
         .detail-modal {
             display: none; 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -323,7 +323,7 @@
             align-items: center; justify-content: center;
             backdrop-filter: blur(5px);
             animation: fadeIn 0.3s ease;
-            overflow-y: auto; /* 스크롤 가능 */
+            overflow-y: hidden; /* 전체 화면 스크롤 방지 */
             padding: 1rem;
         }
         .detail-modal.show { display: flex; }
@@ -346,6 +346,7 @@
             padding: 2rem;
             border-bottom: 1px solid #e5e7eb;
             position: relative;
+            flex-shrink: 0; /* 헤더 크기 고정 */
         }
         .detail-close-btn {
             position: absolute; top: 1.5rem; right: 1.5rem;
@@ -359,7 +360,8 @@
 
         .detail-body {
             padding: 2.5rem;
-            overflow-y: auto;
+            overflow-y: auto; /* 내부만 스크롤 */
+            flex-grow: 1;
         }
         
         .mechanism-box {
@@ -467,6 +469,7 @@
     <div id="detailModal" class="detail-modal">
         <div class="detail-content" onclick="event.stopPropagation()">
             <div class="detail-header">
+                <!-- 타이틀에도 다국어 태그 적용을 위해 innerHTML 사용 예정 -->
                 <h2 id="modalTitle" class="text-2xl font-bold text-gray-900"></h2>
                 <p id="modalSubtitle" class="text-gray-500 mt-1"></p>
                 <button class="detail-close-btn" onclick="closeDetailModal()">
@@ -508,7 +511,7 @@
 
     <!-- 메인 콘텐츠 -->
     <div class="main-content">
-        
+        <!-- ... Hero Section & PART 1 & PART 2 (이전과 동일, 생략) ... -->
         <!-- Hero Section -->
         <section class="hero-section">
             <span class="seminar-badge content-kr">제7회 Y-FANS 학술 세미나</span>
@@ -900,7 +903,9 @@
 
     <!-- 스크립트 -->
     <script>
-        // --- [1] 기본 기능: 드롭다운, 언어설정, 이스터에그 ---
+        // 전역 변수 설정
+        let currentLang = 'ko'; // 기본 언어 설정
+
         function toggleDropdown(event) {
             event.preventDefault();
             event.stopPropagation();
@@ -909,6 +914,8 @@
         }
 
         function setLanguage(lang) {
+            currentLang = lang; // 현재 언어 상태 업데이트
+
             const krElements = document.querySelectorAll('.content-kr');
             const enElements = document.querySelectorAll('.content-en');
 
@@ -931,6 +938,7 @@
             }
         });
 
+        /* --- [이스터에그 Step 4] 작동 로직 --- */
         function closeEasterEgg() {
             document.getElementById('easterEggModal').classList.remove('show');
         }
@@ -953,177 +961,262 @@
         }
 
         // --- [2] 상세 모달 데이터 및 로직 ---
+        // [수정됨] title과 subtitle에도 다국어 태그 적용
         const modalData = {
             'sourdough': {
-                title: "사워도우 (Sourdough)",
-                subtitle: "천연 발효의 과학",
+                title: `<span class="content-kr">사워도우 (Sourdough)</span><span class="content-en hidden">Sourdough</span>`,
+                subtitle: `<span class="content-kr">천연 발효의 과학</span><span class="content-en hidden">Science of Natural Fermentation</span>`,
                 content: `
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🔬 미네랄 흡수 증가 (Phytase Activation)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🔬 미네랄 흡수 증가 (Phytase Activation)</span>
+                            <span class="content-en hidden">🔬 Increased Mineral Absorption (Phytase Activation)</span>
+                        </div>
                         <div class="mechanism-desc">
-                            통밀에는 미네랄 흡수를 방해하는 피트산(Phytic acid)이 존재합니다. 사워도우 발효 과정에서 pH가 5.5 이하로 낮아지면 곡물 내 내인성 피타아제(Phytase) 효소가 활성화됩니다. 이 효소는 피트산을 분해하여 철분, 아연, 마그네슘과 같은 필수 미네랄의 생체 이용률을 획기적으로 높여줍니다.
+                            <span class="content-kr">통밀에는 미네랄 흡수를 방해하는 피트산(Phytic acid)이 존재합니다. 사워도우 발효 과정에서 pH가 5.5 이하로 낮아지면 곡물 내 내인성 피타아제(Phytase) 효소가 활성화됩니다. 이 효소는 피트산을 분해하여 철분, 아연, 마그네슘과 같은 필수 미네랄의 생체 이용률을 획기적으로 높여줍니다.</span>
+                            <span class="content-en hidden">Whole wheat contains phytic acid, which hinders mineral absorption. During sourdough fermentation, when pH drops below 5.5, endogenous phytase enzymes are activated. This breaks down phytic acid, significantly increasing the bioavailability of essential minerals like iron, zinc, and magnesium.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🩸 혈당 조절 및 유기산 생성</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🩸 혈당 조절 및 유기산 생성</span>
+                            <span class="content-en hidden">🩸 Glycemic Control & Organic Acid Production</span>
+                        </div>
                         <div class="mechanism-desc">
-                            발효 중 젖산균이 생성하는 젖산(Lactic acid)과 초산(Acetic acid)은 전분의 소화 속도를 늦추는 역할을 합니다. 유기산은 위 배출 속도를 지연시키고 소화 효소의 접근을 제한하여 식후 혈당 급상승을 억제합니다.
+                            <span class="content-kr">발효 중 젖산균이 생성하는 젖산(Lactic acid)과 초산(Acetic acid)은 전분의 소화 속도를 늦추는 역할을 합니다. 유기산은 위 배출 속도를 지연시키고 소화 효소의 접근을 제한하여 식후 혈당 급상승을 억제합니다.</span>
+                            <span class="content-en hidden">Lactic and acetic acids produced during fermentation slow down starch digestion. Organic acids delay gastric emptying and limit enzyme access, suppressing post-meal blood sugar spikes.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🍞 글루텐 분해 및 소화 용이성</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🍞 글루텐 분해 및 소화 용이성</span>
+                            <span class="content-en hidden">🍞 Gluten Breakdown & Digestibility</span>
+                        </div>
                         <div class="mechanism-desc">
-                            산성 환경에서 활성화된 프로테아제(Protease)가 글루텐 단백질을 부분적으로 분해합니다. 이는 글루텐 민감성이 있는 사람들에게 소화 부담을 덜어줄 수 있습니다. (단, 셀리악병 환자에게는 여전히 주의가 필요합니다.)
+                            <span class="content-kr">산성 환경에서 활성화된 프로테아제(Protease)가 글루텐 단백질을 부분적으로 분해합니다. 이는 글루텐 민감성이 있는 사람들에게 소화 부담을 덜어줄 수 있습니다. (단, 셀리악병 환자에게는 여전히 주의가 필요합니다.)</span>
+                            <span class="content-en hidden">Proteases activated in acidic environments partially break down gluten proteins. This can ease digestion for those with gluten sensitivity (though caution is still advised for celiac patients).</span>
                         </div>
                     </div>
                 `
             },
             'oatmeal': {
-                title: "오트밀 (Oatmeal)",
-                subtitle: "심혈관 건강의 수호자",
+                title: `<span class="content-kr">오트밀 (Oatmeal)</span><span class="content-en hidden">Oatmeal</span>`,
+                subtitle: `<span class="content-kr">심혈관 건강의 수호자</span><span class="content-en hidden">Guardian of Cardiovascular Health</span>`,
                 content: `
                     <div class="mechanism-box">
-                        <div class="mechanism-title">❤️ 콜레스테롤 감소 (Cholesterol Lowering)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">❤️ 콜레스테롤 감소 (Cholesterol Lowering)</span>
+                            <span class="content-en hidden">❤️ Cholesterol Lowering</span>
+                        </div>
                         <div class="mechanism-desc">
-                            귀리의 핵심 성분인 베타글루칸(Oat β-glucan)은 장내에서 점성이 높은 젤(Gel)을 형성합니다. 이 젤은 담즙산을 감싸 대변으로 배출시킵니다. 간은 부족해진 담즙산을 보충하기 위해 혈중 콜레스테롤을 사용하게 되며, 결과적으로 혈중 LDL 콜레스테롤 수치가 감소합니다.
+                            <span class="content-kr">귀리의 핵심 성분인 베타글루칸(Oat β-glucan)은 장내에서 점성이 높은 젤(Gel)을 형성합니다. 이 젤은 담즙산을 감싸 대변으로 배출시킵니다. 간은 부족해진 담즙산을 보충하기 위해 혈중 콜레스테롤을 사용하게 되며, 결과적으로 혈중 LDL 콜레스테롤 수치가 감소합니다.</span>
+                            <span class="content-en hidden">Beta-glucan forms a viscous gel in the gut, trapping bile acids for excretion. The liver uses blood cholesterol to replenish bile acids, resulting in lower LDL cholesterol levels.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🛡️ 항산화 작용 (Avenanthramides)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🛡️ 항산화 작용 (Avenanthramides)</span>
+                            <span class="content-en hidden">🛡️ Antioxidant Action (Avenanthramides)</span>
+                        </div>
                         <div class="mechanism-desc">
-                            귀리에만 존재하는 항산화 성분인 아베난쓰라마이드(Avenanthramides)는 Nrf2 경로를 활성화합니다. 이는 세포 내 항산화 효소 생성을 촉진하고 염증 반응을 억제하여 혈관 건강을 보호합니다.
+                            <span class="content-kr">귀리에만 존재하는 항산화 성분인 아베난쓰라마이드(Avenanthramides)는 Nrf2 경로를 활성화합니다. 이는 세포 내 항산화 효소 생성을 촉진하고 염증 반응을 억제하여 혈관 건강을 보호합니다.</span>
+                            <span class="content-en hidden">Avenanthramides, unique to oats, activate the Nrf2 pathway. This promotes intracellular antioxidant enzyme production and suppresses inflammation, protecting vascular health.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">📉 혈당 조절 (Glycemic Control)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">📉 혈당 조절 (Glycemic Control)</span>
+                            <span class="content-en hidden">📉 Glycemic Control</span>
+                        </div>
                         <div class="mechanism-desc">
-                            높은 점도의 베타글루칸은 위에서 음식물의 이동 속도를 늦추고, 소장에서 포도당의 흡수를 지연시켜 식후 혈당 스파이크를 완화합니다.
+                            <span class="content-kr">높은 점도의 베타글루칸은 위에서 음식물의 이동 속도를 늦추고, 소장에서 포도당의 흡수를 지연시켜 식후 혈당 스파이크를 완화합니다.</span>
+                            <span class="content-en hidden">High-viscosity beta-glucan slows gastric emptying and delays glucose absorption in the small intestine, mitigating post-meal blood sugar spikes.</span>
                         </div>
                     </div>
                 `
             },
             'peanutbutter': {
-                title: "땅콩버터 (Peanut Butter)",
-                subtitle: "에너지와 포만감의 균형",
+                title: `<span class="content-kr">땅콩버터 (Peanut Butter)</span><span class="content-en hidden">Peanut Butter</span>`,
+                subtitle: `<span class="content-kr">에너지와 포만감의 균형</span><span class="content-en hidden">Balance of Energy and Satiety</span>`,
                 content: `
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🩸 지질 프로필 개선 (Lipid Profile)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🩸 지질 프로필 개선 (Lipid Profile)</span>
+                            <span class="content-en hidden">🩸 Lipid Profile Improvement</span>
+                        </div>
                         <div class="mechanism-desc">
-                            땅콩버터 지방의 약 50% 이상을 차지하는 올레산(Oleic acid)은 단일불포화지방산입니다. 올레산은 간에서 콜레스테롤 합성을 조절하는 효소인 HMG-CoA 환원효소를 억제하여 나쁜 콜레스테롤(LDL)을 낮추고 좋은 콜레스테롤(HDL)을 유지하는 데 도움을 줍니다.
+                            <span class="content-kr">땅콩버터 지방의 약 50% 이상을 차지하는 올레산(Oleic acid)은 단일불포화지방산입니다. 올레산은 간에서 콜레스테롤 합성을 조절하는 효소인 HMG-CoA 환원효소를 억제하여 나쁜 콜레스테롤(LDL)을 낮추고 좋은 콜레스테롤(HDL)을 유지하는 데 도움을 줍니다.</span>
+                            <span class="content-en hidden">Oleic acid, making up over 50% of peanut butter fat, inhibits HMG-CoA reductase in the liver, lowering LDL cholesterol while maintaining HDL levels.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🍽️ 포만감 호르몬 조절 (Satiety)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🍽️ 포만감 호르몬 조절 (Satiety)</span>
+                            <span class="content-en hidden">🍽️ Satiety Hormone Regulation</span>
+                        </div>
                         <div class="mechanism-desc">
-                            고단백 식품인 땅콩버터 섭취는 장내 세포를 자극하여 GLP-1, PYY, CCK와 같은 식욕 억제 호르몬 분비를 촉진합니다. 동시에 식욕을 부르는 그렐린(Ghrelin) 호르몬을 억제하여 체중 관리에 기여합니다.
+                            <span class="content-kr">고단백 식품인 땅콩버터 섭취는 장내 세포를 자극하여 GLP-1, PYY, CCK와 같은 식욕 억제 호르몬 분비를 촉진합니다. 동시에 식욕을 부르는 그렐린(Ghrelin) 호르몬을 억제하여 체중 관리에 기여합니다.</span>
+                            <span class="content-en hidden">High-protein peanut butter stimulates satiety hormones like GLP-1, PYY, and CCK, while suppressing the hunger hormone ghrelin, aiding in weight management.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🧬 항노화 효과 (Telomere Protection)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🧬 항노화 효과 (Telomere Protection)</span>
+                            <span class="content-en hidden">🧬 Anti-aging (Telomere Protection)</span>
+                        </div>
                         <div class="mechanism-desc">
-                            레스베라트롤과 피토스테롤 등 풍부한 항산화 성분은 산화 스트레스를 줄여 세포 노화의 지표인 텔로미어(Telomere) 길이가 짧아지는 것을 방지하는 데 도움을 줄 수 있습니다.
+                            <span class="content-kr">레스베라트롤과 피토스테롤 등 풍부한 항산화 성분은 산화 스트레스를 줄여 세포 노화의 지표인 텔로미어(Telomere) 길이가 짧아지는 것을 방지하는 데 도움을 줄 수 있습니다.</span>
+                            <span class="content-en hidden">Rich antioxidants like resveratrol and phytosterols reduce oxidative stress, helping prevent the shortening of telomeres, a marker of cellular aging.</span>
                         </div>
                     </div>
                 `
             },
             'blackseed': {
-                title: "블랙씨드 오일 (Black Seed Oil)",
-                subtitle: "숨겨진 보석 (Hidden Gem)",
+                title: `<span class="content-kr">블랙씨드 오일 (Black Seed Oil)</span><span class="content-en hidden">Black Seed Oil</span>`,
+                subtitle: `<span class="content-kr">숨겨진 보석 (Hidden Gem)</span><span class="content-en hidden">Hidden Gem</span>`,
                 content: `
                     <div class="mechanism-box">
-                        <div class="mechanism-title">⚔️ 강력한 항염·항암 작용 (Thymoquinone)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">⚔️ 강력한 항염·항암 작용 (Thymoquinone)</span>
+                            <span class="content-en hidden">⚔️ Potent Anti-inflammatory & Anti-cancer (Thymoquinone)</span>
+                        </div>
                         <div class="mechanism-desc">
-                            핵심 성분인 티모퀴논(Thymoquinone, TQ)은 암세포의 증식을 억제하고 세포 사멸(Apoptosis)을 유도합니다. 또한 염증 매개 인자를 차단하여 만성 염증을 완화하는 강력한 효과를 가집니다.
+                            <span class="content-kr">핵심 성분인 티모퀴논(Thymoquinone, TQ)은 암세포의 증식을 억제하고 세포 사멸(Apoptosis)을 유도합니다. 또한 염증 매개 인자를 차단하여 만성 염증을 완화하는 강력한 효과를 가집니다.</span>
+                            <span class="content-en hidden">Thymoquinone (TQ) inhibits cancer cell proliferation and induces apoptosis. It also blocks inflammatory mediators, providing powerful relief from chronic inflammation.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🩸 대사 조절 (Metabolic Regulation)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🩸 대사 조절 (Metabolic Regulation)</span>
+                            <span class="content-en hidden">🩸 Metabolic Regulation</span>
+                        </div>
                         <div class="mechanism-desc">
-                            티모퀴논은 인슐린 감수성을 높이고 간에서의 포도당 신생합성을 억제하여 혈당 조절에 기여합니다. 또한 총 콜레스테롤과 중성지방을 낮추는 지질 대사 개선 효과가 입증되었습니다.
+                            <span class="content-kr">티모퀴논은 인슐린 감수성을 높이고 간에서의 포도당 신생합성을 억제하여 혈당 조절에 기여합니다. 또한 총 콜레스테롤과 중성지방을 낮추는 지질 대사 개선 효과가 입증되었습니다.</span>
+                            <span class="content-en hidden">TQ improves insulin sensitivity and inhibits gluconeogenesis in the liver. It also lowers total cholesterol and triglycerides, improving lipid metabolism.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🛡️ 면역 조절 (Immune Modulation)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🛡️ 면역 조절 (Immune Modulation)</span>
+                            <span class="content-en hidden">🛡️ Immune Modulation</span>
+                        </div>
                         <div class="mechanism-desc">
-                            T세포와 자연살해세포(NK Cell)의 활성을 강화하여 면역 시스템을 조절하는 천연 면역 강화제로 작용합니다.
+                            <span class="content-kr">T세포와 자연살해세포(NK Cell)의 활성을 강화하여 면역 시스템을 조절하는 천연 면역 강화제로 작용합니다.</span>
+                            <span class="content-en hidden">Acts as a natural immune booster by enhancing the activity of T-cells and NK cells.</span>
                         </div>
                     </div>
                 `
             },
             'alt_carb': {
-                title: "대체 탄수화물 (곤약밥 & 저항성 전분)",
-                subtitle: "장 건강과 혈당 관리",
+                title: `<span class="content-kr">대체 탄수화물 (곤약밥 & 저항성 전분)</span><span class="content-en hidden">Alternative Carbs (Konjac Rice & Resistant Starch)</span>`,
+                subtitle: `<span class="content-kr">장 건강과 혈당 관리</span><span class="content-en hidden">Gut Health & Blood Sugar Management</span>`,
                 content: `
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🍚 곤약밥 (Konjac Glucomannan)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🍚 곤약밥 (Konjac Glucomannan)</span>
+                            <span class="content-en hidden">🍚 Konjac Rice (Konjac Glucomannan)</span>
+                        </div>
                         <div class="mechanism-desc">
-                            곤약의 주성분인 글루코만난(KGM)은 수분을 흡수해 최대 100배까지 팽창합니다. 이 겔(Gel) 덩어리가 위벽을 자극해 뇌에 포만감 신호를 보내고, 소화 효소가 음식물에 접근하는 것을 물리적으로 차단하여 칼로리 흡수를 줄입니다.
+                            <span class="content-kr">곤약의 주성분인 글루코만난(KGM)은 수분을 흡수해 최대 100배까지 팽창합니다. 이 겔(Gel) 덩어리가 위벽을 자극해 뇌에 포만감 신호를 보내고, 소화 효소가 음식물에 접근하는 것을 물리적으로 차단하여 칼로리 흡수를 줄입니다.</span>
+                            <span class="content-en hidden">Glucomannan (KGM) expands up to 100x with water. This gel stimulates the stomach wall to signal satiety and physically blocks digestive enzymes, reducing calorie absorption.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🌾 저항성 전분 (Resistant Starch)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🌾 저항성 전분 (Resistant Starch)</span>
+                            <span class="content-en hidden">🌾 Resistant Starch</span>
+                        </div>
                         <div class="mechanism-desc">
-                            소장에서 소화되지 않고 대장으로 이동한 전분은 미생물에 의해 발효됩니다. 이 과정에서 부티르산(Butyrate)과 같은 단쇄지방산(SCFA)이 생성됩니다. 부티르산은 대장 상피세포의 에너지원이 되며, 염증 신호 경로(NF-kB)를 억제하여 장 건강을 지킵니다.
+                            <span class="content-kr">소장에서 소화되지 않고 대장으로 이동한 전분은 미생물에 의해 발효됩니다. 이 과정에서 부티르산(Butyrate)과 같은 단쇄지방산(SCFA)이 생성됩니다. 부티르산은 대장 상피세포의 에너지원이 되며, 염증 신호 경로(NF-kB)를 억제하여 장 건강을 지킵니다.</span>
+                            <span class="content-en hidden">Resistant starch ferments in the colon, producing short-chain fatty acids like butyrate. Butyrate fuels colon cells and inhibits NF-kB inflammation pathways, protecting gut health.</span>
                         </div>
                     </div>
                 `
             },
             'alt_protein': {
-                title: "대체 단백질 (배양육 & 식물성)",
-                subtitle: "지속가능한 단백질의 미래",
+                title: `<span class="content-kr">대체 단백질 (배양육 & 식물성)</span><span class="content-en hidden">Alternative Protein (Cultured & Plant-based)</span>`,
+                subtitle: `<span class="content-kr">지속가능한 단백질의 미래</span><span class="content-en hidden">Future of Sustainable Protein</span>`,
                 content: `
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🧫 배양육 (Cultured Meat)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🧫 배양육 (Cultured Meat)</span>
+                            <span class="content-en hidden">🧫 Cultured Meat</span>
+                        </div>
                         <div class="mechanism-desc">
-                            가축의 근육 위성세포를 분리하여 체외에서 배양합니다. 스캐폴드(지지체)를 이용해 세포가 입체적으로 자라게 하여 실제 고기와 유사한 조직감을 만듭니다. 무균 환경 생산으로 항생제 내성 위험이 없습니다.
+                            <span class="content-kr">가축의 근육 위성세포를 분리하여 체외에서 배양합니다. 스캐폴드(지지체)를 이용해 세포가 입체적으로 자라게 하여 실제 고기와 유사한 조직감을 만듭니다. 무균 환경 생산으로 항생제 내성 위험이 없습니다.</span>
+                            <span class="content-en hidden">Muscle satellite cells are cultured in vitro. Scaffolds enable 3D growth, mimicking real meat texture. Sterile production eliminates antibiotic resistance risks.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🌿 식물성 단백질 (Plant-based)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🌿 식물성 단백질 (Plant-based)</span>
+                            <span class="content-en hidden">🌿 Plant-based Protein</span>
+                        </div>
                         <div class="mechanism-desc">
-                            콩이나 완두 등에서 추출한 단백질은 류신(Leucine)을 공급하여 근육 합성을 조절하는 mTOR 경로를 활성화합니다. 또한 식물성 단백질 펩타이드는 간세포의 LDL 수용체 발현을 높여 혈중 콜레스테롤을 낮추는 기전을 가집니다.
+                            <span class="content-kr">콩이나 완두 등에서 추출한 단백질은 류신(Leucine)을 공급하여 근육 합성을 조절하는 mTOR 경로를 활성화합니다. 또한 식물성 단백질 펩타이드는 간세포의 LDL 수용체 발현을 높여 혈중 콜레스테롤을 낮추는 기전을 가집니다.</span>
+                            <span class="content-en hidden">Plant proteins provide leucine, activating the mTOR pathway for muscle synthesis. Peptides also increase LDL receptor expression in the liver, lowering blood cholesterol.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🦠 미생물 발효 (Microbial Fermentation)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🦠 미생물 발효 (Microbial Fermentation)</span>
+                            <span class="content-en hidden">🦠 Microbial Fermentation</span>
+                        </div>
                         <div class="mechanism-desc">
-                            미생물이 단백질을 분해하여 저분자 펩타이드를 생성, 소화 흡수율을 높입니다. 발효 펩타이드는 Nrf2 경로를 활성화하여 항산화 효소를 만들고 세포를 보호합니다.
+                            <span class="content-kr">미생물이 단백질을 분해하여 저분자 펩타이드를 생성, 소화 흡수율을 높입니다. 발효 펩타이드는 Nrf2 경로를 활성화하여 항산화 효소를 만들고 세포를 보호합니다.</span>
+                            <span class="content-en hidden">Microbes break down proteins into peptides, improving absorption. Fermented peptides activate the Nrf2 pathway, producing antioxidant enzymes for cell protection.</span>
                         </div>
                     </div>
                 `
             },
             'alt_lipid': {
-                title: "대체 지방 (MCT & 해조류 오일)",
-                subtitle: "스마트한 에너지와 항산화",
+                title: `<span class="content-kr">대체 지방 (MCT & 해조류 오일)</span><span class="content-en hidden">Alternative Lipids (MCT & Algae Oil)</span>`,
+                subtitle: `<span class="content-kr">스마트한 에너지와 항산화</span><span class="content-en hidden">Smart Energy & Antioxidant</span>`,
                 content: `
                     <div class="mechanism-box">
-                        <div class="mechanism-title">⚡ MCT 오일 (Medium-Chain Triglyceride)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">⚡ MCT 오일 (Medium-Chain Triglyceride)</span>
+                            <span class="content-en hidden">⚡ MCT Oil</span>
+                        </div>
                         <div class="mechanism-desc">
-                            중쇄지방산은 림프관을 거치지 않고 문맥(Portal Vein)을 통해 간으로 직접 운반됩니다. 간에서 빠르게 베타 산화 과정을 거쳐 케톤체로 전환되며, 이는 뇌와 신체의 즉각적인 에너지원으로 사용되어 체지방으로 축적될 틈을 주지 않습니다.
+                            <span class="content-kr">중쇄지방산은 림프관을 거치지 않고 문맥(Portal Vein)을 통해 간으로 직접 운반됩니다. 간에서 빠르게 베타 산화 과정을 거쳐 케톤체로 전환되며, 이는 뇌와 신체의 즉각적인 에너지원으로 사용되어 체지방으로 축적될 틈을 주지 않습니다.</span>
+                            <span class="content-en hidden">MCTs go directly to the liver via the portal vein. They are quickly beta-oxidized into ketone bodies, providing instant energy for the brain and body without being stored as fat.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🌊 해조류 오일 (Algae Oil)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🌊 해조류 오일 (Algae Oil)</span>
+                            <span class="content-en hidden">🌊 Algae Oil</span>
+                        </div>
                         <div class="mechanism-desc">
-                            미세조류에서 추출한 DHA/EPA는 간세포 핵 내의 PPAR-alpha를 활성화하여 지방산 산화를 촉진하고 지방 합성을 억제합니다. 또한 Nrf2-ARE 경로를 통해 항산화 효소 생성을 유도하여 세포 손상을 방지합니다.
+                            <span class="content-kr">미세조류에서 추출한 DHA/EPA는 간세포 핵 내의 PPAR-alpha를 활성화하여 지방산 산화를 촉진하고 지방 합성을 억제합니다. 또한 Nrf2-ARE 경로를 통해 항산화 효소 생성을 유도하여 세포 손상을 방지합니다.</span>
+                            <span class="content-en hidden">DHA/EPA from microalgae activate PPAR-alpha, promoting fat oxidation and inhibiting synthesis. They also induce antioxidant enzymes via the Nrf2-ARE pathway to prevent cell damage.</span>
                         </div>
                     </div>
                 `
             },
             'upcycling': {
-                title: "푸드 업사이클링 (Food Upcycling)",
-                subtitle: "버려지는 것에서 가치를 찾다",
+                title: `<span class="content-kr">푸드 업사이클링 (Food Upcycling)</span><span class="content-en hidden">Food Upcycling</span>`,
+                subtitle: `<span class="content-kr">버려지는 것에서 가치를 찾다</span><span class="content-en hidden">Finding Value in Waste</span>`,
                 content: `
                     <div class="mechanism-box">
-                        <div class="mechanism-title">♻️ 자원 순환 메커니즘</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">♻️ 자원 순환 메커니즘</span>
+                            <span class="content-en hidden">♻️ Resource Circulation Mechanism</span>
+                        </div>
                         <div class="mechanism-desc">
-                            식품 제조 부산물(맥주박, 콩비지 등)은 여전히 단백질과 식이섬유가 풍부합니다. 이를 매립하는 대신 수거하여 저온 건조 및 분쇄 공정을 거치면 '리너지 가루'와 같은 고영양 식품 원료로 재탄생합니다.
+                            <span class="content-kr">식품 제조 부산물(맥주박, 콩비지 등)은 여전히 단백질과 식이섬유가 풍부합니다. 이를 매립하는 대신 수거하여 저온 건조 및 분쇄 공정을 거치면 '리너지 가루'와 같은 고영양 식품 원료로 재탄생합니다.</span>
+                            <span class="content-en hidden">Byproducts like spent grain are rich in nutrients. Instead of landfills, they are collected, dried, and ground into high-nutrient ingredients like 'Renergy Flour'.</span>
                         </div>
                     </div>
                     <div class="mechanism-box">
-                        <div class="mechanism-title">🌍 환경적 가치 (Environmental Impact)</div>
+                        <div class="mechanism-title">
+                            <span class="content-kr">🌍 환경적 가치 (Environmental Impact)</span>
+                            <span class="content-en hidden">🌍 Environmental Impact</span>
+                        </div>
                         <div class="mechanism-desc">
-                            폐기 시 발생하는 메탄 가스를 방지하고, 새로운 원료 생산에 필요한 물과 토지 사용을 줄여 탄소 배출을 획기적으로 감축합니다. 이는 단순 재활용을 넘어 경제적 가치를 창출하는 순환 경제 모델입니다.
+                            <span class="content-kr">폐기 시 발생하는 메탄 가스를 방지하고, 새로운 원료 생산에 필요한 물과 토지 사용을 줄여 탄소 배출을 획기적으로 감축합니다. 이는 단순 재활용을 넘어 경제적 가치를 창출하는 순환 경제 모델입니다.</span>
+                            <span class="content-en hidden">Preventing methane from waste and reducing water/land use for new materials drastically cuts carbon emissions. It's a circular economy model creating economic value beyond recycling.</span>
                         </div>
                     </div>
                 `
@@ -1134,12 +1227,23 @@
             const data = modalData[key];
             if (!data) return;
 
-            document.getElementById('modalTitle').innerText = data.title;
-            document.getElementById('modalSubtitle').innerText = data.subtitle;
+            // [수정됨] innerText 대신 innerHTML 사용 (다국어 태그 포함)
+            document.getElementById('modalTitle').innerHTML = data.title;
+            document.getElementById('modalSubtitle').innerHTML = data.subtitle;
             document.getElementById('modalBody').innerHTML = data.content;
             
+            // [핵심] 현재 언어 설정에 맞춰 모달 내용 즉시 업데이트
+            // setLanguage를 다시 호출하여 동적으로 추가된 요소들의 hidden 클래스 토글
+            setLanguage(currentLang);
+
+            // [Fix] 스크롤 위치 초기화
+            const modalBody = document.getElementById('modalBody');
+            const detailModal = document.getElementById('detailModal');
+            if (modalBody) modalBody.scrollTop = 0;
+            if (detailModal) detailModal.scrollTop = 0;
+            
             document.getElementById('detailModal').classList.add('show');
-            document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+            // document.body.style.overflow = 'hidden'; // 전체 화면 스크롤 방지 (CSS에서 처리하는 것이 나을 수 있음, 모달 내부 스크롤을 위해 잠시 주석)
         }
 
         function closeDetailModal() {
