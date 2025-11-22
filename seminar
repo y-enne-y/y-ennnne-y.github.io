@@ -208,8 +208,10 @@
             border: 1px solid #f3f4f6;
             display: flex;
             flex-direction: column;
+            position: relative; /* 오버레이 위치 기준 */
+            cursor: pointer;
         }
-        .food-card:hover {
+        .food-card:hover, .food-card.active {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
@@ -253,6 +255,47 @@
             padding: 0.5rem;
             border-radius: 0.5rem;
             display: inline-block;
+        }
+
+        /* --- [수정됨] 숨겨진 오버레이 스타일 --- */
+        .food-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 58, 138, 0.95); /* 진한 파란색 반투명 배경 */
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none; /* 평소엔 클릭 방지 */
+        }
+        
+        /* 호버하거나 active 클래스가 붙으면 보임 */
+        .food-card:hover .food-overlay,
+        .food-card.active .food-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .overlay-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #93c5fd;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .overlay-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            word-break: keep-all;
         }
 
         /* Team Colors */
@@ -431,7 +474,7 @@
 
             <div class="food-grid">
                 <!-- 1. 사워도우 -->
-                <div class="food-card">
+                <div class="food-card" onclick="toggleCard(this)">
                     <div class="food-header">
                         <span class="food-tag">건강 빵</span>
                         <h3 class="food-title">사워도우 (Sourdough)</h3>
@@ -447,10 +490,23 @@
                         </p>
                         <span class="key-benefit">✨ Gut Health & GI Control</span>
                     </div>
+                    <!-- 숨겨진 오버레이 (기전 설명) -->
+                    <div class="food-overlay">
+                        <h4 class="overlay-title content-kr">과학적 기전</h4>
+                        <h4 class="overlay-title content-en hidden">Mechanism</h4>
+                        <p class="overlay-text content-kr">
+                            <strong>미네랄 흡수:</strong> 발효 중 pH 저하 → 곡물의 내인성 피타아제(Phytase) 활성화 → 피트산 분해 → 미네랄 생체이용률 증가<br><br>
+                            <strong>혈당 조절:</strong> 유기산(젖산, 초산) 생성 → 위 배출 속도 지연 및 전분 소화 효소 억제
+                        </p>
+                        <p class="overlay-text content-en hidden">
+                            <strong>Mineral Absorption:</strong> Low pH activates Phytase → Breaks down phytic acid → Increases bioavailability.<br><br>
+                            <strong>Blood Sugar:</strong> Organic acids delay gastric emptying and inhibit starch digestion enzymes.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- 2. 오트밀 -->
-                <div class="food-card">
+                <div class="food-card" onclick="toggleCard(this)">
                     <div class="food-header">
                         <span class="food-tag">슈퍼푸드</span>
                         <h3 class="food-title">오트밀 (Oatmeal)</h3>
@@ -466,10 +522,22 @@
                         </p>
                         <span class="key-benefit">❤️ Cardiovascular Health</span>
                     </div>
+                    <div class="food-overlay">
+                        <h4 class="overlay-title content-kr">과학적 기전</h4>
+                        <h4 class="overlay-title content-en hidden">Mechanism</h4>
+                        <p class="overlay-text content-kr">
+                            <strong>콜레스테롤 감소:</strong> 베타글루칸이 장내에서 젤(Gel) 형성 → 담즙산 배설 촉진 → 간에서 콜레스테롤 소모하여 담즙산 재합성 → 혈중 LDL 감소<br><br>
+                            <strong>항산화:</strong> Avenanthramides 성분이 Nrf2 경로 활성화 → 강력한 항산화 및 항염 효과
+                        </p>
+                        <p class="overlay-text content-en hidden">
+                            <strong>Cholesterol:</strong> Beta-glucan forms gel → Promotes bile acid excretion → Liver uses cholesterol to synthesize bile → LDL decreases.<br><br>
+                            <strong>Antioxidant:</strong> Avenanthramides activate Nrf2 pathway → Anti-inflammatory effects.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- 3. 땅콩버터 -->
-                <div class="food-card">
+                <div class="food-card" onclick="toggleCard(this)">
                     <div class="food-header">
                         <span class="food-tag">에너지</span>
                         <h3 class="food-title">땅콩버터 (Peanut Butter)</h3>
@@ -485,10 +553,22 @@
                         </p>
                         <span class="key-benefit">⚡ Energy & Satiety</span>
                     </div>
+                    <div class="food-overlay">
+                        <h4 class="overlay-title content-kr">과학적 기전</h4>
+                        <h4 class="overlay-title content-en hidden">Mechanism</h4>
+                        <p class="overlay-text content-kr">
+                            <strong>지질 개선:</strong> 올레산(MUFA) → HMG-CoA 환원효소 억제 → 콜레스테롤 합성 감소<br><br>
+                            <strong>포만감:</strong> 고단백 섭취 → GLP-1, PYY, CCK 등 식욕 억제 호르몬 분비 촉진 & 그렐린(식욕 촉진) 억제
+                        </p>
+                        <p class="overlay-text content-en hidden">
+                            <strong>Lipid Profile:</strong> Oleic acid inhibits HMG-CoA reductase → Reduces cholesterol synthesis.<br><br>
+                            <strong>Satiety:</strong> High protein stimulates satiety hormones (GLP-1, PYY) & suppresses Ghrelin.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- 4. 블랙씨드오일 -->
-                <div class="food-card" style="border-color: #2563eb; background-color: #f0f9ff;">
+                <div class="food-card" style="border-color: #2563eb; background-color: #f0f9ff;" onclick="toggleCard(this)">
                     <div class="food-header" style="background-color: #dbeafe;">
                         <span class="food-tag" style="background-color: #2563eb; color: white;">HIDDEN GEM</span>
                         <h3 class="food-title">블랙씨드 오일</h3>
@@ -503,6 +583,18 @@
                             Thymoquinone component provides powerful anti-inflammatory, anti-cancer, and metabolic improvement effects.
                         </p>
                         <span class="key-benefit">💎 Potent Anti-inflammatory</span>
+                    </div>
+                    <div class="food-overlay">
+                        <h4 class="overlay-title content-kr">과학적 기전</h4>
+                        <h4 class="overlay-title content-en hidden">Mechanism</h4>
+                        <p class="overlay-text content-kr">
+                            <strong>항염/항암:</strong> 티모퀴논(TQ) → 암세포 증식 억제 및 세포 사멸 유도, 염증 매개 인자 차단<br><br>
+                            <strong>대사 조절:</strong> 인슐린 감수성 증가 및 간의 당신생 억제 → 혈당 및 지질 프로필 개선
+                        </p>
+                        <p class="overlay-text content-en hidden">
+                            <strong>Anti-inflammatory:</strong> Thymoquinone induces cancer cell apoptosis & blocks inflammatory factors.<br><br>
+                            <strong>Metabolism:</strong> Increases insulin sensitivity & inhibits gluconeogenesis → Improves blood glucose/lipids.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -558,7 +650,7 @@
 
             <div class="food-grid">
                 <!-- 1. 대체 탄수화물 -->
-                <div class="food-card">
+                <div class="food-card" onclick="toggleCard(this)">
                     <div class="food-header">
                         <span class="food-tag" style="color: #059669; background-color: #ecfdf5;">대체 탄수화물</span>
                         <h3 class="food-title">곤약밥 & 저항성 전분</h3>
@@ -574,10 +666,22 @@
                         </p>
                         <span class="key-benefit" style="color: #059669; background-color: #ecfdf5;">📉 Low GI & Gut Health</span>
                     </div>
+                    <div class="food-overlay" style="background: rgba(6, 78, 59, 0.95);">
+                        <h4 class="overlay-title content-kr" style="color: #6ee7b7;">과학적 기전</h4>
+                        <h4 class="overlay-title content-en hidden" style="color: #6ee7b7;">Mechanism</h4>
+                        <p class="overlay-text content-kr">
+                            <strong>곤약밥(KGM):</strong> 수분 흡수 100배 팽창 → 위벽 자극하여 포만감 유도 & 소화 효소 접근 차단<br><br>
+                            <strong>저항성 전분(RS):</strong> 대장 도달 후 미생물 발효 → 부티르산(SCFA) 생성 → 장 상피세포 에너지원 & 항염 효과
+                        </p>
+                        <p class="overlay-text content-en hidden">
+                            <strong>KGM:</strong> Expands 100x → Induces satiety & blocks digestive enzymes.<br><br>
+                            <strong>RS:</strong> Ferments in colon → Produces Butyrate (SCFA) → Energy for gut cells & Anti-inflammatory.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- 2. 대체 단백질 -->
-                <div class="food-card">
+                <div class="food-card" onclick="toggleCard(this)">
                     <div class="food-header">
                         <span class="food-tag" style="color: #059669; background-color: #ecfdf5;">대체 단백질</span>
                         <h3 class="food-title">배양육 & 식물성 단백질</h3>
@@ -593,10 +697,22 @@
                         </p>
                         <span class="key-benefit" style="color: #059669; background-color: #ecfdf5;">🌱 Sustainable Protein</span>
                     </div>
+                    <div class="food-overlay" style="background: rgba(6, 78, 59, 0.95);">
+                        <h4 class="overlay-title content-kr" style="color: #6ee7b7;">과학적 기전</h4>
+                        <h4 class="overlay-title content-en hidden" style="color: #6ee7b7;">Mechanism</h4>
+                        <p class="overlay-text content-kr">
+                            <strong>배양육:</strong> 근육 위성세포 분리 → 스캐폴드(지지체)에서 입체 배양 → 조직화<br><br>
+                            <strong>식물성 단백질:</strong> 류신(Leucine) 공급 → mTOR 경로 활성화 → 근육 합성 촉진
+                        </p>
+                        <p class="overlay-text content-en hidden">
+                            <strong>Cultured Meat:</strong> Stem cells on scaffolds → 3D tissue formation.<br><br>
+                            <strong>Plant Protein:</strong> Provides Leucine → Activates mTOR pathway → Promotes muscle synthesis.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- 3. 대체 지방 -->
-                <div class="food-card">
+                <div class="food-card" onclick="toggleCard(this)">
                     <div class="food-header">
                         <span class="food-tag" style="color: #059669; background-color: #ecfdf5;">대체 지방</span>
                         <h3 class="food-title">MCT & 해조류 오일</h3>
@@ -612,10 +728,22 @@
                         </p>
                         <span class="key-benefit" style="color: #059669; background-color: #ecfdf5;">🧠 Brain Energy & Clean Omega</span>
                     </div>
+                    <div class="food-overlay" style="background: rgba(6, 78, 59, 0.95);">
+                        <h4 class="overlay-title content-kr" style="color: #6ee7b7;">과학적 기전</h4>
+                        <h4 class="overlay-title content-en hidden" style="color: #6ee7b7;">Mechanism</h4>
+                        <p class="overlay-text content-kr">
+                            <strong>MCT 대사:</strong> 문맥(Portal Vein) 통해 간으로 직행 → 베타 산화 → 케톤체 생성 (빠른 에너지원)<br><br>
+                            <strong>해조류 오일:</strong> Nrf2-ARE 활성화 → 항산화 효소 발현 증가 → 세포 손상 방지
+                        </p>
+                        <p class="overlay-text content-en hidden">
+                            <strong>MCT:</strong> Direct transport to liver → Beta-oxidation → Ketone bodies (Fast energy).<br><br>
+                            <strong>Algae Oil:</strong> Activates Nrf2-ARE → Increases antioxidant enzymes → Protects cells.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- 4. 푸드 업사이클링 -->
-                <div class="food-card">
+                <div class="food-card" onclick="toggleCard(this)">
                     <div class="food-header">
                         <span class="food-tag" style="color: #059669; background-color: #ecfdf5;">순환 경제</span>
                         <h3 class="food-title">푸드 업사이클링</h3>
@@ -630,6 +758,18 @@
                             Drastically reduces carbon emissions and water usage.
                         </p>
                         <span class="key-benefit" style="color: #059669; background-color: #ecfdf5;">♻️ Zero Waste</span>
+                    </div>
+                    <div class="food-overlay" style="background: rgba(6, 78, 59, 0.95);">
+                        <h4 class="overlay-title content-kr" style="color: #6ee7b7;">환경적 기전 (Value)</h4>
+                        <h4 class="overlay-title content-en hidden" style="color: #6ee7b7;">Environmental Value</h4>
+                        <p class="overlay-text content-kr">
+                            <strong>부산물 재가공:</strong> 저온 건조 및 효소 처리를 통해 영양소(식이섬유, 단백질) 보존<br><br>
+                            <strong>탄소 저감:</strong> 폐기물 매립 시 발생하는 메탄 가스 방지 및 자원 순환 효율 극대화
+                        </p>
+                        <p class="overlay-text content-en hidden">
+                            <strong>Upcycling:</strong> Preserves nutrients via low-temp drying & enzyme treatment.<br><br>
+                            <strong>Carbon Reduction:</strong> Prevents methane from landfills & maximizes resource circulation.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -690,6 +830,16 @@
                 dropdown.classList.remove('active');
             }
         });
+
+        /* --- 모바일에서 클릭 시 카드 뒤집기 효과 (Toggle) --- */
+        function toggleCard(card) {
+            // 이미 활성화된 다른 카드들은 닫기 (선택사항: 한 번에 하나만 보고 싶다면 주석 해제)
+            // document.querySelectorAll('.food-card.active').forEach(c => {
+            //     if(c !== card) c.classList.remove('active');
+            // });
+            
+            card.classList.toggle('active');
+        }
 
         /* --- [이스터에그 Step 4] 작동 로직 --- */
         function closeEasterEgg() {
