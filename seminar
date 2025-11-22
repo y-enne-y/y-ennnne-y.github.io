@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seminar Exhibition | Y-FANS</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="logo-icon.png?v=3" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 공통 CSS 스타일 --- */
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- 내비게이션 바 --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem; 
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            height: 70px;
+        }
+        .navbar-left a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #1f2937;
+            font-weight: 700;
+        }
+        .navbar-left img { height: 1.5rem; margin-right: 0.5rem; }
+        .navbar-right { display: flex; align-items: center; gap: 1rem; }
+        .nav-link {
+            color: #4b5563; text-decoration: none; font-weight: 500; 
+            transition: color 0.2s ease; padding: 0.5rem; font-size: 0.95rem; white-space: nowrap;
+        }
+        .nav-link:hover { color: #2563eb; }
+
+        /* 언어 선택 드롭다운 */
+        .lang-dropdown { position: relative; display: flex; align-items: center; z-index: 2000; }
+        .lang-btn {
+            background: transparent; border: none; cursor: pointer;
+            width: 48px; height: 48px; padding: 0; margin: 0;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #4b5563; transition: all 0.2s ease; border-radius: 50%;
+        }
+        .lang-btn:hover, .lang-dropdown.active .lang-btn { color: #2563eb; background-color: #f3f4f6; }
+        .lang-icon { width: 24px; height: 24px; pointer-events: none; }
+        
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%; 
+            background-color: #ffffff; min-width: 140px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb; border-radius: 0.5rem;
+            z-index: 3000; overflow: hidden; margin-top: 0.25rem;
+        }
+        .lang-dropdown.active .dropdown-content { display: block; }
+        .dropdown-content button {
+            color: #374151; padding: 12px 16px; text-decoration: none;
+            display: block; width: 100%; text-align: left;
+            border: none; background: none; cursor: pointer;
+            font-family: inherit; font-size: 0.9rem; font-weight: 500;
+        }
+        .dropdown-content button:hover { background-color: #f3f4f6; color: #2563eb; }
+
+        /* --- 세미나 페이지 스타일 --- */
+        .main-content {
+            padding-top: 70px; /* 헤더 높이 */
+            flex: 1;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+            padding: 6rem 1.5rem;
+            text-align: center;
+        }
+        .seminar-badge {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #1f2937;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        .hero-title span { color: #2563eb; }
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 3rem;
+            font-weight: 500;
+        }
+        .hero-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            color: #4b5563;
+            font-weight: 600;
+        }
+        .hero-info-item { display: flex; align-items: center; gap: 0.5rem; }
+
+        /* Part Section Common */
+        .part-section {
+            padding: 6rem 1.5rem;
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+        .part-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .part-label {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .part-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+        .part-desc {
+            font-size: 1.1rem;
+            color: #6b7280;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            word-break: keep-all;
+        }
+
+        /* Concept Box (FVI, Re-Reborn) */
+        .concept-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+        .concept-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+        .concept-item h4 { font-weight: 700; color: #2563eb; margin-bottom: 0.5rem; }
+        .concept-item p { font-size: 0.9rem; color: #4b5563; line-height: 1.5; word-break: keep-all; }
+
+        /* Food Cards Grid */
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .food-card {
+            background: white;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #f3f4f6;
+            display: flex;
+            flex-direction: column;
+        }
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .food-header {
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .food-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #2563eb;
+            background-color: #eff6ff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        .food-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin: 0;
+        }
+        .food-body {
+            padding: 1.5rem;
+            flex: 1;
+        }
+        .food-desc {
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            word-break: keep-all;
+        }
+        .key-benefit {
+            font-size: 0.85rem;
+            color: #2563eb;
+            font-weight: 600;
+            background-color: #f0f9ff;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            display: inline-block;
+        }
+
+        /* Team Colors */
+        .bg-relight { background-color: #fff; }
+        .bg-rebirth { background-color: #f8fafc; }
+
+        /* Responsive */
+        @media (max-width: 767px) {
+            .hero-title { font-size: 2.5rem; }
+            .hero-info { flex-direction: column; gap: 0.5rem; align-items: center; }
+            .part-title { font-size: 2rem; }
+            .concept-box { padding: 1.5rem; }
+        }
+
+        .hidden { display: none !important; }
+
+        /* Footer */
+        footer {
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 3rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: auto;
+        }
+        .footer-content { max-width: 768px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; }
+        .footer-title { font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; font-size: 1rem; }
+        .footer-info { display: flex; flex-direction: column; gap: 0.25rem; }
+        @media (min-width: 640px) {
+            .footer-info { flex-direction: row; justify-content: center; gap: 1.5rem; }
+            .footer-info span::after { content: "|"; margin-left: 1.5rem; color: #d1d5db; }
+            .footer-info span:last-child::after { content: ""; margin: 0; }
+        }
+
+        /* --- [이스터에그 Step 1] 모달 스타일 --- */
+        .egg-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); z-index: 9999;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(4px); animation: fadeIn 0.3s ease;
+        }
+        .egg-modal.show { display: flex; }
+        .egg-content {
+            background: white; padding: 2.5rem; border-radius: 1.5rem;
+            text-align: center; max-width: 320px; width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: scale(0.9); 
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .egg-title { font-size: 1.5rem; font-weight: 800; color: #2563eb; margin-bottom: 0.5rem; }
+        .egg-text { font-size: 1rem; color: #4b5563; margin-bottom: 1.5rem; line-height: 1.6; word-break: keep-all; }
+        .egg-btn {
+            background: #2563eb; color: white; border: none; padding: 0.75rem 1.5rem;
+            border-radius: 9999px; font-weight: 700; cursor: pointer; outline: none;
+            transition: background 0.2s;
+        }
+        .egg-btn:hover { background: #1d4ed8; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- [이스터에그 Step 2] 숨겨진 모달 창 -->
+    <div id="easterEggModal" class="egg-modal">
+        <div class="egg-content">
+            <div class="egg-title">🎉 Found it!</div>
+            <p class="egg-text">
+                이스터에그를 발견하셨군요!<br>
+                이 웹사이트는 <strong>[7기 서기 강예은]</strong>이<br>제작했습니다. 🍀
+            </p>
+            <button class="egg-btn" onclick="closeEasterEgg()">닫기</button>
+        </div>
+    </div>
+
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="index.html">
+                <img src="logo-icon.png" onerror="this.style.display='none'" alt="">
+                <span>Y-FANS</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <a href="index.html" class="nav-link">
+                <span class="content-kr">홈으로</span>
+                <span class="content-en hidden">Home</span>
+            </a>
+            <div class="lang-dropdown">
+                <button class="lang-btn" onclick="toggleDropdown(event)" aria-label="언어 선택">
+                    <svg class="lang-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
+                    <button onclick="setLanguage('ko')">한국어 (Korean)</button>
+                    <button onclick="setLanguage('en')">English</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="main-content">
+        
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <span class="seminar-badge content-kr">제7회 Y-FANS 학술 세미나</span>
+            <span class="seminar-badge content-en hidden">7th Y-FANS Academic Seminar</span>
+            
+            <h1 class="hero-title">
+                RE:<span>FOOD</span>
+            </h1>
+            <p class="hero-subtitle content-kr">재조명과 재탄생의 가치</p>
+            <p class="hero-subtitle content-en hidden">Value of Rediscovery and Rebirth</p>
+            
+            <div class="hero-info">
+                <div class="hero-info-item">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span>2025. 12. 01 (Mon)</span>
+                </div>
+                <div class="hero-info-item">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span class="content-kr">연세대학교 삼성관 최이순홀</span>
+                    <span class="content-en hidden">Choi Yi-soon Hall, Samsung Hall</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART 1: 재조명팀 -->
+        <section class="part-section bg-relight">
+            <div class="part-header">
+                <span class="part-label">PART 1</span>
+                <h2 class="part-title content-kr">식품의 재조명</h2>
+                <h2 class="part-title content-en hidden">The Re-light of Food</h2>
+                <p class="part-desc content-kr">
+                    전통적으로 소비되어 온 식품들이 현대 과학과 만나 새로운 가치를 인정받고 있습니다. 
+                    단순한 유행을 넘어 영양학적 근거를 바탕으로 재평가된 '숨겨진 보석'들을 소개합니다.
+                </p>
+                <p class="part-desc content-en hidden">
+                    Traditional foods are being re-evaluated with modern science. 
+                    Introducing 'Hidden Gems' backed by nutritional evidence beyond simple trends.
+                </p>
+            </div>
+
+            <!-- FVI Concept -->
+            <div class="concept-box">
+                <h3 class="concept-title">FVI (Food Value Index)</h3>
+                <p class="content-kr">재조명 식품의 가치를 정량적으로 평가하기 위해 개발된 새로운 척도입니다.</p>
+                <p class="content-en hidden">A new metric developed to quantitatively evaluate the value of re-light foods.</p>
+                
+                <div class="concept-grid">
+                    <div class="concept-item">
+                        <h4>S (Scientific Backing)</h4>
+                        <p class="content-kr">과학적 근거의 확실성</p>
+                        <p class="content-en hidden">Certainty of scientific evidence</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4>R (Relevance)</h4>
+                        <p class="content-kr">시장 잠재력 및 수요 부합성</p>
+                        <p class="content-en hidden">Market potential & Demand relevance</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4>H (Hype)</h4>
+                        <p class="content-kr">현재 대중의 인지도 (낮을수록 잠재력 높음)</p>
+                        <p class="content-en hidden">Current public awareness</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4>A (Adoption)</h4>
+                        <p class="content-kr">소비자 수용성 및 편의성</p>
+                        <p class="content-en hidden">Consumer acceptance & Convenience</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-grid">
+                <!-- 1. 사워도우 -->
+                <div class="food-card">
+                    <div class="food-header">
+                        <span class="food-tag">건강 빵</span>
+                        <h3 class="food-title">사워도우 (Sourdough)</h3>
+                    </div>
+                    <div class="food-body">
+                        <p class="food-desc content-kr">
+                            천연 발효종을 사용하여 피트산을 분해하고 미네랄 흡수율을 높입니다. 
+                            발효 과정에서 생성된 유기산이 혈당 조절에 도움을 줍니다.
+                        </p>
+                        <p class="food-desc content-en hidden">
+                            Uses natural leaven to break down phytic acid and increase mineral absorption. 
+                            Organic acids produced during fermentation help regulate blood sugar.
+                        </p>
+                        <span class="key-benefit">✨ Gut Health & GI Control</span>
+                    </div>
+                </div>
+
+                <!-- 2. 오트밀 -->
+                <div class="food-card">
+                    <div class="food-header">
+                        <span class="food-tag">슈퍼푸드</span>
+                        <h3 class="food-title">오트밀 (Oatmeal)</h3>
+                    </div>
+                    <div class="food-body">
+                        <p class="food-desc content-kr">
+                            베타글루칸(Beta-glucan)이 풍부하여 콜레스테롤 수치를 낮추고 심혈관 건강을 개선합니다.
+                            높은 점도로 포만감을 유지시켜 줍니다.
+                        </p>
+                        <p class="food-desc content-en hidden">
+                            Rich in Beta-glucan, lowering cholesterol levels and improving cardiovascular health. 
+                            Maintains satiety with high viscosity.
+                        </p>
+                        <span class="key-benefit">❤️ Cardiovascular Health</span>
+                    </div>
+                </div>
+
+                <!-- 3. 땅콩버터 -->
+                <div class="food-card">
+                    <div class="food-header">
+                        <span class="food-tag">에너지</span>
+                        <h3 class="food-title">땅콩버터 (Peanut Butter)</h3>
+                    </div>
+                    <div class="food-body">
+                        <p class="food-desc content-kr">
+                            올레산이 풍부하여 혈관 건강에 도움을 주며, 높은 단백질 함량으로 
+                            식욕 억제 호르몬 분비를 촉진해 체중 조절에 기여합니다.
+                        </p>
+                        <p class="food-desc content-en hidden">
+                            Rich in oleic acid helping vascular health, and contributes to weight control 
+                            by stimulating appetite-suppressing hormones with high protein content.
+                        </p>
+                        <span class="key-benefit">⚡ Energy & Satiety</span>
+                    </div>
+                </div>
+
+                <!-- 4. 블랙씨드오일 -->
+                <div class="food-card" style="border-color: #2563eb; background-color: #f0f9ff;">
+                    <div class="food-header" style="background-color: #dbeafe;">
+                        <span class="food-tag" style="background-color: #2563eb; color: white;">HIDDEN GEM</span>
+                        <h3 class="food-title">블랙씨드 오일</h3>
+                    </div>
+                    <div class="food-body">
+                        <p class="food-desc content-kr">
+                            높은 과학적 근거와 시장 잠재력을 가졌으나 아직 인지도가 낮은 '숨겨진 보석'.
+                            티모퀴논(Thymoquinone) 성분이 강력한 항염, 항암 및 대사 개선 효과를 냅니다.
+                        </p>
+                        <p class="food-desc content-en hidden">
+                            A 'Hidden Gem' with high scientific backing but low awareness.
+                            Thymoquinone component provides powerful anti-inflammatory, anti-cancer, and metabolic improvement effects.
+                        </p>
+                        <span class="key-benefit">💎 Potent Anti-inflammatory</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr style="border: 0; border-top: 1px solid #e5e7eb;">
+
+        <!-- PART 2: 재탄생팀 -->
+        <section class="part-section bg-rebirth">
+            <div class="part-header">
+                <span class="part-label" style="color: #059669;">PART 2</span>
+                <h2 class="part-title content-kr">식품의 재탄생</h2>
+                <h2 class="part-title content-en hidden">The Rebirth of Food</h2>
+                <p class="part-desc content-kr">
+                    기후 위기와 자원 고갈에 대응하여, 과학 기술을 통해 가치가 없던 재료를 고부가가치 식품으로 재탄생시킵니다.
+                    단순한 대체를 넘어 '미래적 가치'를 창출합니다.
+                </p>
+                <p class="part-desc content-en hidden">
+                    Responding to climate crisis and resource depletion, we transform valueless materials into high-value foods through science.
+                    Creating 'Futuristic Value' beyond simple replacement.
+                </p>
+            </div>
+
+            <!-- Re-Reborn Concept -->
+            <div class="concept-box">
+                <h3 class="concept-title">Re-Reborn (재탄생의 재탄생)</h3>
+                <p class="content-kr">5가지 핵심 기준을 통해 재탄생 식품의 잠재력을 평가합니다.</p>
+                <p class="content-en hidden">Evaluating the potential of reborn foods through 5 core criteria.</p>
+                
+                <div class="concept-grid">
+                    <div class="concept-item">
+                        <h4 style="color: #059669;">영양 및 기능성</h4>
+                        <p class="content-kr">Nutritional & Functional Value</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4 style="color: #059669;">지속가능성</h4>
+                        <p class="content-kr">Sustainability & Ethics</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4 style="color: #059669;">기술 성숙도</h4>
+                        <p class="content-kr">Tech Maturity & Cost</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4 style="color: #059669;">규제 및 안전성</h4>
+                        <p class="content-kr">Regulation & Safety</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4 style="color: #059669;">시장 확장성</h4>
+                        <p class="content-kr">Market Scalability</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-grid">
+                <!-- 1. 대체 탄수화물 -->
+                <div class="food-card">
+                    <div class="food-header">
+                        <span class="food-tag" style="color: #059669; background-color: #ecfdf5;">대체 탄수화물</span>
+                        <h3 class="food-title">곤약밥 & 저항성 전분</h3>
+                    </div>
+                    <div class="food-body">
+                        <p class="food-desc content-kr">
+                            <strong>곤약밥:</strong> 글루코만난(KGM) 겔 구조를 이용해 칼로리를 낮추고 포만감을 줍니다.<br>
+                            <strong>저항성 전분(RS):</strong> 소화되지 않고 대장에서 발효되어 단쇄지방산(SCFA)을 생성, 장 건강을 돕습니다.
+                        </p>
+                        <p class="food-desc content-en hidden">
+                            <strong>Konjac Rice:</strong> Lowers calories and provides satiety using Glucomannan gel structure.<br>
+                            <strong>Resistant Starch:</strong> Ferments in the large intestine to produce SCFA, aiding gut health.
+                        </p>
+                        <span class="key-benefit" style="color: #059669; background-color: #ecfdf5;">📉 Low GI & Gut Health</span>
+                    </div>
+                </div>
+
+                <!-- 2. 대체 단백질 -->
+                <div class="food-card">
+                    <div class="food-header">
+                        <span class="food-tag" style="color: #059669; background-color: #ecfdf5;">대체 단백질</span>
+                        <h3 class="food-title">배양육 & 식물성 단백질</h3>
+                    </div>
+                    <div class="food-body">
+                        <p class="food-desc content-kr">
+                            <strong>배양육:</strong> 줄기세포 배양 기술로 항생제 없는 깨끗한 고기를 생산합니다.<br>
+                            <strong>미생물 발효:</strong> 미생물이 단백질을 분해하여 소화율과 생체이용률을 극대화합니다.
+                        </p>
+                        <p class="food-desc content-en hidden">
+                            <strong>Cultured Meat:</strong> Produces clean meat without antibiotics via stem cell culture.<br>
+                            <strong>Microbial Fermentation:</strong> Maximizes digestibility and bioavailability.
+                        </p>
+                        <span class="key-benefit" style="color: #059669; background-color: #ecfdf5;">🌱 Sustainable Protein</span>
+                    </div>
+                </div>
+
+                <!-- 3. 대체 지방 -->
+                <div class="food-card">
+                    <div class="food-header">
+                        <span class="food-tag" style="color: #059669; background-color: #ecfdf5;">대체 지방</span>
+                        <h3 class="food-title">MCT & 해조류 오일</h3>
+                    </div>
+                    <div class="food-body">
+                        <p class="food-desc content-kr">
+                            <strong>MCT 오일:</strong> 빠르게 에너지로 전환되어 체지방 축적을 억제합니다.<br>
+                            <strong>해조류 오일:</strong> 미세조류에서 추출한 오메가-3로 중금속 걱정 없는 식물성 오일입니다.
+                        </p>
+                        <p class="food-desc content-en hidden">
+                            <strong>MCT Oil:</strong> Quickly converts to energy, suppressing body fat accumulation.<br>
+                            <strong>Algae Oil:</strong> Plant-based Omega-3 extracted from microalgae, free from heavy metals.
+                        </p>
+                        <span class="key-benefit" style="color: #059669; background-color: #ecfdf5;">🧠 Brain Energy & Clean Omega</span>
+                    </div>
+                </div>
+
+                <!-- 4. 푸드 업사이클링 -->
+                <div class="food-card">
+                    <div class="food-header">
+                        <span class="food-tag" style="color: #059669; background-color: #ecfdf5;">순환 경제</span>
+                        <h3 class="food-title">푸드 업사이클링</h3>
+                    </div>
+                    <div class="food-body">
+                        <p class="food-desc content-kr">
+                            맥주박, 콩비지 등 부산물을 영양가 높은 식품 원료(리너지 가루 등)로 재탄생시킵니다.
+                            탄소 배출과 물 사용량을 획기적으로 줄입니다.
+                        </p>
+                        <p class="food-desc content-en hidden">
+                            Rebirths byproducts like spent grain and okara into nutritious ingredients.
+                            Drastically reduces carbon emissions and water usage.
+                        </p>
+                        <span class="key-benefit" style="color: #059669; background-color: #ecfdf5;">♻️ Zero Waste</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer 영역 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-title">Contacts</div>
+            <div class="footer-info">
+                <span>서울특별시 서대문구 연세로 50 삼성관</span>
+                <span>yonseiyfans@gmail.com</span>
+            </div>
+            <!-- [이스터에그 Step 3] id="eggTrigger" -->
+            <div id="eggTrigger" style="margin-top: 1rem; font-size: 0.75rem; color: #9ca3af; cursor: default; user-select: none;">
+                &copy; Y-FANS. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- 스크립트 -->
+    <script>
+        function toggleDropdown(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const dropdown = document.querySelector('.lang-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function setLanguage(lang) {
+            const krElements = document.querySelectorAll('.content-kr');
+            const enElements = document.querySelectorAll('.content-en');
+
+            if (lang === 'ko') {
+                krElements.forEach(el => el.classList.remove('hidden'));
+                enElements.forEach(el => el.classList.add('hidden'));
+            } else if (lang === 'en') {
+                krElements.forEach(el => el.classList.add('hidden'));
+                enElements.forEach(el => el.classList.remove('hidden'));
+            }
+
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown) dropdown.classList.remove('active');
+
+            const dropdownContent = document.querySelector('.dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.style.display = 'none';
+                void dropdownContent.offsetWidth;
+                setTimeout(() => { dropdownContent.style.display = ''; }, 50);
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        /* --- [이스터에그 Step 4] 작동 로직 --- */
+        function closeEasterEgg() {
+            document.getElementById('easterEggModal').classList.remove('show');
+        }
+
+        let eggClickCount = 0;
+        let eggTimer;
+        const eggTrigger = document.getElementById('eggTrigger');
+
+        if (eggTrigger) {
+            eggTrigger.addEventListener('mousedown', (e) => { e.preventDefault(); });
+            eggTrigger.addEventListener('click', (e) => {
+                eggClickCount++;
+                clearTimeout(eggTimer);
+                eggTimer = setTimeout(() => { eggClickCount = 0; }, 3000);
+                if (eggClickCount === 5) {
+                    document.getElementById('easterEggModal').classList.add('show');
+                    eggClickCount = 0; 
+                }
+            });
+        }
+    </script>
+</body>
+</html>
